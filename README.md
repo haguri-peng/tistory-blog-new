@@ -2,7 +2,7 @@
 
 🐸 [Haguri & Peng's Blog](https://haguri-peng.tistory.com) 🐧
 
-`Vue3` + `Typescript` + `Vite`을 통해 환경을 구성하였으며,
+`Vue3` + `Typescript` + `Vite`을 통해 환경을 구성하였으며,  
 [Ex-Repository](https://github.com/haguri-peng/tistory-blog/) 의 소스를 리팩토링 하였습니다.
 
 ## Vue
@@ -60,42 +60,42 @@ export const useCategoryStore = defineStore('category', () => {
 
 ### Modal
 
-- [Gitart Vue Dialog](https://github.com/gitart-group/vue-dialog)
+- [Gitart Vue Dialog](https://github.com/gitart-group/vue-dialog)  
   (댓글 및 방명록 등록 시 Modal 사용)
 
 ## Libraries
 
-- [axios](https://axios-http.com)
+- [Axios](https://axios-http.com)
 - [htmlparser2](https://github.com/fb55/htmlparser2#readme)
-- [jquery](https://jquery.com)
-- [lodash](https://lodash.com)
+- [jQuery](https://jquery.com)
+- [Lodash](https://lodash.com)
 - [tailwindcss](https://tailwindcss.com)
 
 ## Color
 
-[Color Hunt](https://colorhunt.co/palette/fcf8e894b49fdf786176549a)
+[Color Hunt](https://colorhunt.co/palette/fcf8e894b49fdf786176549a)  
 <img src="./public/color.png" width="300px" height="300px"></img>
 
 ## Tistory
 
-Tistory 에서 제공하는 `Open API` 를 활용 ([Tistory Open API](https://tistory.github.io/document-tistory-apis/))
+Tistory 에서 제공하는 `Open API` 를 활용 ([Tistory Open API](https://tistory.github.io/document-tistory-apis/))  
 제공해주는 Open API 에 한계가 있어 이를 감안하고 개발하였으니 참고 바랍니다.
 
-모바일 페이지의 URI(/m)에서 REST api로 제공해주는 게 있어서 구현할 수 있는 부분은 최대한 구현하고 있습니다.
+모바일 페이지의 URI(/m)에서 REST API 로 제공해주는 게 있어서 그걸 활용하여 최대한 구현하고 있습니다.
 
-참, Open API는 2024년 2월까지 순차적으로 서비스가 종료됩니다.
+참, Open API는 2024년 2월까지 순차적으로 서비스가 종료됩니다.  
 [서비스 종료 안내 링크](https://notice.tistory.com/2664)
 
 ### 댓글
 
-댓글의 수정/삭제 기능을 구현하였으나 Open API 에서 로그인한 사용자의 정보를 알 수 없어(사용자 검증 문제) 실질적으로 사용할 수 없습니다.
-(적용 가능한지 재확인중 😅)
+댓글의 수정/삭제 기능을 구현하였으나 Open API 에서 로그인한 사용자의 정보를 알 수 없어(사용자 검증 문제) 실질적으로 사용할 수 없습니다.  
+(적용 가능한지 재확인중 😅)  
 로그인한 사용자를 알 수 없기에 댓글 등록 시, 블로그 주소 정보를 입력하고 댓글을 입력해야 등록할 수 있습니다.
 
 ### 공지사항 및 방명록
 
-Open API 에서 제공하지 않음.
-방명록 작업 완료
+Open API 에서 제공하지 않음.  
+방명록 작업 완료  
 공지사항은 확인중..
 
 ## ⚙️ Configuration
