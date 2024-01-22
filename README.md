@@ -118,3 +118,15 @@ If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has a
    1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
    2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
 2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+
+### Build & Deploy
+
+`npm run build`
+
+정상적으로 빌드되면, `dist` 폴더의 `index.html`, `index-[name].js` 파일 내에서 `/images/` 로 시작하는 경로 값을 수동으로 변경해서 최종 스킨에 업로드해야 합니다.
+
+`https://tistory4.daumcdn.net/tistory/2876097/skin/`  
+/tistory/ 경로 다음에 나오는 숫자 값이 Tistory 블로그마다 가지고 있는 고유 ID 값인 것 같은데, 이 값은 실제 배포한 다음에 console 창에 error 로 나타나는 값을 확인해야 확인할 수 있습니다.
+
+실제 설정되는 값은 다음과 같습니다.  
+`https://tistory4.daumcdn.net/tistory/2876097/skin/images/index-OYSrlsaS.js`
