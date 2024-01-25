@@ -33,51 +33,44 @@
       </div>
       <div class="actions flex justify-end">
         <button class="btn submit bg-violet-300" @click="submit">등록</button>
-        <button class="btn close bg-violet-300" @click="close">닫기</button>
+        <button class="btn close bg-violet-500" @click="close">닫기</button>
       </div>
     </div>
   </GDialog>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, toRefs, watch, watchEffect } from 'vue';
+import { ref, reactive, toRefs, watch } from 'vue';
 
 const emit = defineEmits<{
   (
     e: 'closeModal',
     action: string,
-    objData?: { blogName: string; comment: string; secret: boolean },
+    objData?: {
+      blogName: string;
+      comment: string;
+      secret: boolean;
+    },
   ): void;
 }>();
+
 const props = defineProps({
   showModal: Boolean,
   type: String,
 });
-
 const { showModal, type } = toRefs(props);
 
-// data
-const dialogState = ref(false);
-const modalType = ref(type);
-
 const title = ref('');
-const blogName = ref('');
-const comment = ref('');
-let arrChk = reactive([]);
-
-// set title
+const modalType = ref(type);
 if (modalType.value == 'comment') {
   title.value = '댓글';
 } else if (modalType.value == 'guestbook') {
   title.value = '방명록';
 }
 
-// methods
-const clearModal = () => {
-  blogName.value = '';
-  comment.value = '';
-  arrChk.length = 0;
-};
+const blogName = ref('');
+const comment = ref('');
+let arrChk = reactive([]);
 const submit = () => {
   // input validation
   if (modalType.value == 'comment' && blogName.value == '') {
@@ -98,21 +91,23 @@ const submit = () => {
   clearModal();
   emit('closeModal', 'submit', objData);
 };
+const clearModal = () => {
+  blogName.value = '';
+  comment.value = '';
+  arrChk.length = 0;
+};
+
+const onClose = () => {
+  close();
+};
 const close = () => {
   clearModal();
   emit('closeModal', 'close');
 };
-const onClose = () => {
-  close();
-};
 
-// watch
+const dialogState = ref(false);
 watch(showModal, (val) => {
   dialogState.value = val;
-});
-// watchEffect
-watchEffect(() => {
-  // console.log('dialogState >> ' + dialogState.value);
 });
 </script>
 

@@ -86,16 +86,13 @@ import _ from 'lodash';
 const emit = defineEmits<{
   (e: 'movePage', pageNum?: number): void;
 }>();
+
 const props = defineProps<{
   page: PageInfo;
 }>();
-
 const { page } = toRefs(props);
 
-// data
 const showPageCnt = 5;
-
-// computed
 const showPreviousIcon = computed(() => page.value.currentPage > showPageCnt);
 const showNextIcon = computed(
   () =>
@@ -104,7 +101,6 @@ const showNextIcon = computed(
     page.value.totalPage,
 );
 
-// methods
 const getPageNum = (n: number) =>
   Math.floor((page.value.currentPage - 1) / showPageCnt) * showPageCnt + n;
 const clickPageNum = (evt: Event) => {

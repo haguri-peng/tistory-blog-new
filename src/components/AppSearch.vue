@@ -67,21 +67,28 @@ import $ from 'jquery';
 import { debounce } from 'lodash';
 
 const route = useRoute();
-const router = useRouter();
+const paramType = computed(() => route.params.type.toString());
+const paramKeyword = computed(() => route.params.keyword.toString());
 
-// data
+const router = useRouter();
+const moveContent = (id: number) => {
+  router.push(`/${id}`);
+};
+onBeforeRouteUpdate((to, from) => {
+  if (to.path.indexOf('/search') > -1) {
+    if (to.path != from.path) {
+      initData();
+      search(paramType.value, paramKeyword.value);
+    }
+  }
+});
+
 const isFirstLoading = ref(false);
 const isLast = ref(true);
 const page = ref(1);
 const total = ref(0);
 const items: SearchInfo[] = reactive([]);
 const showNextIcon = ref(false);
-
-// computed
-const paramType = computed(() => route.params.type.toString());
-const paramKeyword = computed(() => route.params.keyword.toString());
-
-// methods
 const search = async (type: string, keyword: string) => {
   if (page.value == 1) {
     isFirstLoading.value = true;
@@ -96,10 +103,10 @@ const search = async (type: string, keyword: string) => {
     data = res.data;
   }
 
-  if (data.code == '200') {
-    isLast.value = data.result.isLast;
-    total.value = data.result.total;
-    for (const item of data.result.items) {
+  if (data!.code == 200) {
+    isLast.value = data!.result.isLast;
+    total.value = data!.result.total;
+    for (const item of data!.result.items) {
       items.push(item);
     }
   }
@@ -112,23 +119,10 @@ const initData = () => {
   items.length = 0;
   showNextIcon.value = false;
 };
-const moveContent = (id: number) => {
-  router.push(`/${id}`);
-};
-
-onBeforeRouteUpdate((to, from) => {
-  if (to.path.indexOf('/search') > -1) {
-    if (to.path != from.path) {
-      initData();
-      search(paramType.value, paramKeyword.value);
-    }
-  }
-});
 
 onMounted(() => {
   search(paramType.value, paramKeyword.value);
 
-  // const that = this;
   $(window).scroll(
     debounce(() => {
       if (isLast.value) {

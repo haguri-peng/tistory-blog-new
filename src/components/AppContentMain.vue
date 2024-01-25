@@ -1,5 +1,4 @@
 <template>
-  <!-- <div v-html="content"></div> -->
   <div v-html="modContent" class="contentMain"></div>
 </template>
 
@@ -17,17 +16,14 @@ const emit = defineEmits<{
   (e: 'refreshAside'): void;
   (e: 'refreshAppHeight'): void;
 }>();
+
 const props = defineProps<{
   content: string;
 }>();
-
 const { content } = toRefs(props);
 
-// data
 const isUpdated = ref(false);
 const modContent = ref('');
-
-// watch
 watch(content, (val) => {
   const dom = htmlparser2.parseDocument(val);
 
@@ -94,10 +90,6 @@ watch(modContent, (val) => {
 });
 
 onMounted(() => {
-  // window.onload = () => {
-  //   emit('refreshAside');
-  //   emit('refreshAppHeight');
-  // };
   document.addEventListener('DOMContentLoaded', emitEvent);
 
   twttr.ready((twttr) => {
@@ -135,8 +127,11 @@ onUpdated(() => {
   $('div.contentMain ul, div.contentMain ol').css('padding-left', '30px');
   $('div.contentMain p').css('margin', '5px 0');
 });
+function emitEvent() {
+  emit('refreshAside');
+  emit('refreshAppHeight');
+}
 
-// function
 function adfitLoader() {
   if (typeof window['adfit'] === 'function') {
     return Promise.resolve();
@@ -159,10 +154,6 @@ function getTenpingHtml() {
       mediaid="2876097" 
       tenping-ad-display-type="UD8Mia8gyIoT5Z2MT6VB3Q%3d%3d">
     </tenping>`;
-}
-function emitEvent() {
-  emit('refreshAside');
-  emit('refreshAppHeight');
 }
 </script>
 

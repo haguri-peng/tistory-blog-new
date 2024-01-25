@@ -21,23 +21,18 @@
 
 <script setup lang="ts">
 import { ref, toRefs, watch, onUpdated } from 'vue';
-
 import $ from 'jquery';
 
 const emit = defineEmits<{
   (e: 'closeSearchModal', type: string, keyword?: string): void;
 }>();
-const props = defineProps<{
-  showSearch: Boolean;
-}>();
 
+const props = defineProps<{
+  showSearch: boolean;
+}>();
 const { showSearch } = toRefs(props);
 
-const searchInput = ref<HTMLInputElement>();
-const dialogState = ref(false);
 const inputKeyword = ref('');
-
-// methods
 const searchKeyword = () => {
   if (inputKeyword.value == '') {
     alert('검색어를 입력해주세요.');
@@ -48,20 +43,19 @@ const searchKeyword = () => {
   resetData();
 };
 
+const dialogState = ref(false);
 const close = () => {
   emit('closeSearchModal', 'close');
   resetData();
 };
-
 const resetData = () => {
   dialogState.value = false;
   inputKeyword.value = '';
 };
 
-// watch
-// props.showSearch
+const searchInput = ref<HTMLInputElement>();
 watch(showSearch, (val) => {
-  dialogState.value = val.valueOf();
+  dialogState.value = val;
 
   setTimeout(() => {
     if (val) {
@@ -71,6 +65,7 @@ watch(showSearch, (val) => {
 });
 
 onUpdated(() => {
+  // set background & border
   $('.g-dialog-content')
     .css('--g-dialog-content-bg', 'rgba(118, 84, 154, 0.66)')
     .css('border', '2px solid rgb(118, 84, 154)');

@@ -116,12 +116,12 @@
             <span
               v-for="n in (comment.level == 1
                 ? comment.level + 1
-                : comment.level) - 2"
+                : comment.level!) - 2"
               :key="n"
             >
               &nbsp;&nbsp;&nbsp;&nbsp;
             </span>
-            <span v-if="comment.level > 1">└─</span>
+            <span v-if="comment.level! > 1">└─</span>
             <font-awesome-icon
               icon="fa-solid fa-house-user"
               :title="comment.name"
@@ -148,12 +148,12 @@
             <ul style="list-style: none; display: none">
               <li
                 @click="
-                  modComment(comment.id, comment.parentId, comment.comment)
+                  modComment(comment.id!, comment.parentId!, comment.comment!)
                 "
               >
                 수정
               </li>
-              <li @click="delComment(comment.id, comment.homepage)">삭제</li>
+              <li @click="delComment(comment.id!, comment.homepage!)">삭제</li>
             </ul>
           </div>
         </div>
@@ -250,41 +250,35 @@ import {
 import { searchReaction, postReaction, deleteReaction } from '@/api/posts';
 import { PostInfo, Comment, CommentInput } from '@/types';
 import { useCommentStore } from '@/store/comment';
+import { isNullStr } from '@/utils/utils';
 
 import $ from 'jquery';
 import _ from 'lodash';
 import axios, { AxiosResponse } from 'axios';
 
-const commentStore = useCommentStore();
 const route = useRoute();
 const router = useRouter();
+const moveCategory = () => {
+  router.push(`/category/${categoryId.value}`);
+};
+const searchTag = async (tag: string) => {
+  router.push(`/search/tags/${tag}`);
+};
 
-const contents = ref<HTMLDivElement>();
+const commentStore = useCommentStore();
+const { setCommentInfo } = commentStore;
 
-// data
+const content = ref('');
+const isContent = computed(() => (content.value == '' ? false : true));
+
+const title = ref('');
+const getUnescapedTitle = computed(() => _.unescape(title.value));
+
 const postId = ref('');
 const categoryId = ref('');
-const title = ref('');
-const content = ref('');
 const tags: string[] = reactive([]);
 const date = ref('');
 const acceptComment = ref(false);
-const comments: Comment[] = reactive([]);
-const categoryName = ref('');
-const recentTagData: string[] = reactive([]);
-const intervalId = ref<number | NodeJS.Timeout>(0);
-const showModal = ref(false);
-const reactionCount = ref(0);
-const isReactionCheck = ref(false);
-
-// Comment
-const { setCommentInfo } = commentStore;
-
-// computed
-const isContent = computed(() => (content.value == '' ? false : true));
-const getUnescapedTitle = computed(() => _.unescape(title.value));
-
-// methods
 const getContent = async () => {
   const { data } = await fetchPost(route.params.id.toString());
   if (data.tistory.status == '200') {
@@ -334,6 +328,8 @@ const getContent = async () => {
     });
   }
 };
+
+const comments: Comment[] = reactive([]);
 const getComments = async () => {
   comments.length = 0;
 
@@ -354,8 +350,8 @@ const getComments = async () => {
                 'id',
                 comment.parentId,
               ]);
-              comment.level = parent.level + 1;
-              return getParentDate(parent);
+              comment.level = parent!.level! + 1;
+              return getParentDate(parent!);
             }
           }
           return getParentDate(comment);
@@ -363,13 +359,11 @@ const getComments = async () => {
         'date',
       ]);
 
-      // console.log(data.tistory.item.comments);
-      // console.log(treeSortComments);
-
       comments.push(...treeSortComments);
     }
   }
 };
+const showModal = ref(false);
 const addComment = () => {
   // @ts-ignore
   const { user } = window.initData;
@@ -400,7 +394,7 @@ const hideModal = async (action: string, objData?: CommentInput) => {
           alert('댓글이 수정되었습니다.');
           getComments();
         } else {
-          alert(data.tistory.error_message);
+          alert(data.tistory.result);
         }
       } else {
         // 등록
@@ -411,12 +405,13 @@ const hideModal = async (action: string, objData?: CommentInput) => {
           getComments();
           setHeight();
         } else {
-          alert(data.tistory.error_message);
+          alert(data.tistory.result);
         }
       }
     } catch (err) {
-      // @ts-ignore
-      alert(err.response.data.tistory.error_message);
+      if (axios.isAxiosError<AxiosResponse>(err)) {
+        alert(err.message);
+      }
     }
   }
 };
@@ -425,15 +420,13 @@ const modComment = (
   parentCommentId: string,
   comment: string,
 ) => {
-  // vuex 댓글 부분 세팅
+  // 댓글 부분 세팅
   const commentInfo = {
     parentCommentId,
     commentId,
     comment,
   };
-  // console.log(commentInfo);
 
-  // store.dispatch('setCommentInfo', commentInfo);
   setCommentInfo(commentInfo);
   showModal.value = true;
 };
@@ -444,7 +437,6 @@ const delComment = async (commentId: string, homepage: string) => {
       postId: postId.value,
       commentId,
     };
-    // console.log(objData);
 
     try {
       const { data } = await deleteComment(objData);
@@ -454,32 +446,17 @@ const delComment = async (commentId: string, homepage: string) => {
         getComments();
         setHeight();
       } else {
-        console.error(data.tistory.error_message);
+        console.error(data.tistory.result);
       }
     } catch (err) {
-      if (axios.isAxiosError<AxiosResponse, any>(err)) {
+      if (axios.isAxiosError<AxiosResponse>(err)) {
         alert(err.message);
       }
     }
   }
 };
-const gotoTop = () => {
-  window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-};
-const gotoComments = () => {
-  const commentsEl = document.querySelector('div.comments') as HTMLElement;
-  commentsEl.scrollIntoView({ behavior: 'smooth' });
-};
-const openCommenterPage = (url: string) => {
-  window.open(url, '_blank');
-};
-const toggleCommentModDelBtn = (el: HTMLElement) => {
-  $(el).parent().find('ul').toggle();
-};
-const commentModDelOut = (evt: MouseEvent) => {
-  const el = evt.target as HTMLElement;
-  $(el).parent().find('ul').hide();
-};
+
+const categoryName = ref('');
 const getCategoryList = async () => {
   const { data } = await fetchCategoryList();
   if (data.tistory.status == '200') {
@@ -487,13 +464,14 @@ const getCategoryList = async () => {
       'id',
       categoryId.value,
     ]);
-    // console.log(currentCategory);
 
     if (currentCategory != null) {
       categoryName.value = currentCategory.label.replace(/\//g, ' > ');
     }
   }
 };
+
+const recentTagData: string[] = reactive([]);
 const getTagList = async () => {
   const { data } = await fetchPostList();
   if (data.tistory.status == '200') {
@@ -515,6 +493,8 @@ const getTagList = async () => {
     recentTagData.push(...tagList);
   }
 };
+
+const contents = ref<HTMLDivElement>();
 const setHeight = (delay = 1000) => {
   setTimeout(setAppHeight, delay);
 };
@@ -573,7 +553,6 @@ const setAsideSection = () => {
           .filter(function () {
             return $(this).text() == asideText;
           });
-        // console.log(clickEl);
 
         if (clickEl.length > 0) {
           const eleTop = clickEl[0].offsetTop;
@@ -593,7 +572,6 @@ const setAsideSection = () => {
           .filter(function () {
             return $(this).text() == asideText;
           });
-        // console.log(el);
 
         if (el.length > 0) {
           const headerHeight = 60;
@@ -608,12 +586,9 @@ const setAsideSection = () => {
     $('div.aside').fadeIn();
   }, 500);
 };
-const moveCategory = () => {
-  router.push(`/category/${categoryId.value}`);
-};
-const searchTag = async (tag: string) => {
-  router.push(`/search/tags/${tag}`);
-};
+
+const reactionCount = ref(0);
+const isReactionCheck = ref(false);
 const getReaction = () => {
   if (postId.value != '') {
     searchReaction(postId.value).then(({ data }) => {
@@ -632,6 +607,27 @@ const toggleReaction = () => {
   }
 };
 
+const gotoTop = () => {
+  window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+};
+const gotoComments = () => {
+  const commentsEl = document.querySelector('div.comments') as HTMLElement;
+  commentsEl.scrollIntoView({ behavior: 'smooth' });
+};
+const openCommenterPage = (url: string | undefined) => {
+  if (!isNullStr(url)) {
+    window.open(url, '_blank');
+  }
+};
+const toggleCommentModDelBtn = (el: HTMLElement) => {
+  $(el).parent().find('ul').toggle();
+};
+const commentModDelOut = (evt: MouseEvent) => {
+  const el = evt.target as HTMLElement;
+  $(el).parent().find('ul').hide();
+};
+
+const intervalId = ref<number | NodeJS.Timeout>(0);
 onMounted(() => {
   getContent();
   getComments();
@@ -646,22 +642,6 @@ onUnmounted(() => {
   $('#app').css('height', 'auto');
   clearInterval(intervalId.value);
 });
-
-// function
-function isNullStr(str = '') {
-  str = str.trim();
-  if (
-    str == null ||
-    str == 'undefined' ||
-    str.length == 0 ||
-    typeof str == 'undefined' ||
-    str == ''
-  ) {
-    return true;
-  } else {
-    return false;
-  }
-}
 </script>
 
 <style scoped>

@@ -45,37 +45,31 @@ import { ref, reactive, toRefs, computed, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import { getGuestbookInit } from '@/api/posts';
+import { GuestbookInitRes } from '@/api/axiosResTypes';
 import { CommentInput } from '@/types';
 import { useCommentStore } from '@/store/comment';
 
 const emit = defineEmits<{
   (e: 'closeModal', action: string, objData?: CommentInput): void;
 }>();
+
 const props = defineProps<{
   showModal: boolean;
 }>();
-
 const { showModal } = toRefs(props);
 
 const commentStore = useCommentStore();
+const { getCommentInfo } = storeToRefs(commentStore);
+const getParentCommentId = computed(() => getCommentInfo.value.parentCommentId);
+const getCommentId = computed(() => getCommentInfo.value.commentId);
+const getModComment = computed(() => getCommentInfo.value.modComment);
+const { clearCommentInfo } = commentStore;
 
-// data
 const dialogState = ref(false);
 const blogName = ref('');
 const comment = ref('');
 let arrChk = reactive([]);
 const mode = ref('');
-
-// Comment
-const { getCommentInfo } = storeToRefs(commentStore);
-const { clearCommentInfo } = commentStore;
-
-// computed
-const getParentCommentId = computed(() => getCommentInfo.value.parentCommentId);
-const getCommentId = computed(() => getCommentInfo.value.commentId);
-const getModComment = computed(() => getCommentInfo.value.modComment);
-
-// methods
 const submit = () => {
   if (blogName.value == '') {
     alert('블로그 주소는 필수입니다.');
@@ -112,18 +106,15 @@ const resetData = () => {
   arrChk.length = 0;
   mode.value = '';
 
-  // store.dispatch('clearCommentInfo');
   clearCommentInfo();
 };
 
-// watch
-watch(showModal, (val: boolean) => {
+watch(showModal, (val) => {
   dialogState.value = val;
 
   if (val) {
     // 로그인한 사용자의 정보를 가져온다.
     getRequestUser()
-      // @ts-ignore
       .then(({ data }) => {
         if (data.code == 200) {
           const reqUser = data.result.requestUser;
@@ -140,10 +131,8 @@ watch(getModComment, (val) => {
   comment.value = val || '';
 });
 
-// function
-function getRequestUser() {
-  // @ts-ignore
-  return new Promise((resolve, reject) => {
+function getRequestUser(): GuestbookInitRes {
+  return new Promise((resolve) => {
     resolve(getGuestbookInit());
   });
 }

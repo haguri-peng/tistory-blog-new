@@ -68,25 +68,8 @@ import { Guestbook, GuestbookPost } from '@/types';
 
 import _ from 'lodash';
 
-const guestbook = ref<HTMLInputElement>();
-
-// data
-const count = ref(0);
-const isLast = ref(true);
-const gbList: Guestbook[] = reactive([]);
-const reqUserId = ref('');
+const reqUserId = ref<number>();
 const reqUserRole = ref('');
-// Modal
-const showModal = ref(false);
-const modalType = ref('guestbook');
-
-// methods
-const getCount = async () => {
-  const { data } = await getGuestbookCount();
-  if (data.data.count > 0) {
-    count.value = data.data.count;
-  }
-};
 const getReqUserInfo = async () => {
   const { data } = await getGuestbookInit();
   if (data.code == 200) {
@@ -95,6 +78,10 @@ const getReqUserInfo = async () => {
     reqUserRole.value = reqUser.role;
   }
 };
+
+const count = ref(0);
+const isLast = ref(true);
+const gbList: Guestbook[] = reactive([]);
 const getData = async () => {
   gbList.length = 0;
   getCount();
@@ -103,8 +90,7 @@ const getData = async () => {
     const { data } = await getGuestbook();
     if (!_.isEmpty(data.data)) {
       for (const item of data.data.items) {
-        const gb = item as Guestbook;
-        gbList.push(gb);
+        gbList.push(item);
       }
 
       isLast.value = data.data.isLast;
@@ -114,16 +100,21 @@ const getData = async () => {
     }
   } while (!isLast.value);
 };
-const handleNewLine = (str: string) => str.replace(/(?:\r\n|\r|\n)/g, '</br>');
-const moveUrl = (url: string) => {
-  if (url != '') {
-    window.open(url, '_blank');
+const getCount = async () => {
+  const { data } = await getGuestbookCount();
+  if (data.data.count > 0) {
+    count.value = data.data.count;
   }
 };
+
+const guestbook = ref<HTMLInputElement>();
 const setAppHeight = () => {
   const top = 100;
   $('#app').css('height', guestbook.value!.clientHeight + top + 'px');
 };
+
+const showModal = ref(false);
+const modalType = ref('guestbook');
 const addGuestbook = () => {
   // @ts-ignore
   const { user } = window.initData;
@@ -166,6 +157,13 @@ const closeModal = async (
     } catch (err) {
       alert('에러가 발생하였습니다.');
     }
+  }
+};
+
+const handleNewLine = (str: string) => str.replace(/(?:\r\n|\r|\n)/g, '</br>');
+const moveUrl = (url: string) => {
+  if (url != '') {
+    window.open(url, '_blank');
   }
 };
 

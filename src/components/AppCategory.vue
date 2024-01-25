@@ -27,36 +27,23 @@ import { ref, reactive, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
-import {
-  fetchCategoryList,
-  fetchPostListByCategory,
-  // fetchPostList,
-} from '../api/index';
+import { fetchCategoryList, fetchPostListByCategory } from '../api/index';
 import { PageInfo, PostInfo } from '@/types';
 import { useCategoryStore } from '@/store/category';
 import _ from 'lodash';
 
-// const store = useStore();
-const categoryStore = useCategoryStore();
 const route = useRoute();
 const router = useRouter();
 
-// data
-const postList: PostInfo[] = reactive([]);
-// const searchPostList = reactive([]);
-const pageInfo = reactive({}) as PageInfo;
-const isLoading = ref(false);
-const categoryName = ref('');
-
-// Category
+const categoryStore = useCategoryStore();
 const { getCategoryInfo } = storeToRefs(categoryStore);
-const { setCategoryInfo: setCategory } = categoryStore;
-
-// computed
 const getCategoryId = computed(() => getCategoryInfo.value.id);
 const getPageNum = computed(() => getCategoryInfo.value.page);
+const { setCategoryInfo: setCategory } = categoryStore;
 
-// methods
+const postList: PostInfo[] = reactive([]);
+const pageInfo = reactive({}) as PageInfo;
+const isLoading = ref(false);
 const fetchPostByCategory = async (pageNum?: number) => {
   isLoading.value = true;
   postList.length = 0;
@@ -71,7 +58,7 @@ const fetchPostByCategory = async (pageNum?: number) => {
 
   if (data.tistory.status == '200') {
     // 페이징 정보 세팅
-    pageInfo.currentPage = data.tistory.item.page;
+    pageInfo.currentPage = Number(data.tistory.item.page);
     pageInfo.totalPage = Math.ceil(
       Number(data.tistory.item.totalCount) / Number(data.tistory.item.count),
     );
@@ -91,15 +78,8 @@ const fetchPostByCategory = async (pageNum?: number) => {
   }
   isLoading.value = false;
 };
-const moveContent = (id: string) => {
-  isLoading.value = true;
-  router.push(`/${id}`);
-};
-const setCategoryInfo = (categoryInfo: { id: string; page: number }) => {
-  // 카테고리 및 페이지 번호를 vuex에 세팅
-  // store.dispatch('setCategoryInfo', categoryInfo);
-  setCategory(categoryInfo);
-};
+
+const categoryName = ref('');
 const getCategoryList = async () => {
   const { data } = await fetchCategoryList();
 
@@ -113,6 +93,15 @@ const getCategoryList = async () => {
       categoryName.value = currentCategory.label.replace(/\//g, ' > ');
     }
   }
+};
+const setCategoryInfo = (categoryInfo: { id: string; page: number }) => {
+  // 카테고리 및 페이지 번호를 store에 세팅
+  setCategory(categoryInfo);
+};
+
+const moveContent = (id: string) => {
+  isLoading.value = true;
+  router.push(`/${id}`);
 };
 
 onMounted(() => {

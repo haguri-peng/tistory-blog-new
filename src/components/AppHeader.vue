@@ -84,29 +84,30 @@ import { Category } from '@/types';
 import $ from 'jquery';
 import _ from 'lodash';
 
-const router = useRouter();
-
 const emit = defineEmits<{
   (e: 'showSearchInput'): void;
   (e: 'moveCategory', categoryId: string): void;
 }>();
+
 const props = defineProps<{
   categoryList: Category[];
 }>();
-
 const { categoryList } = toRefs(props);
-
-// data
-const activeCategory = ref('');
-const recentCategoryIds: string[] = reactive([]);
-const subCategoryList: Category[] = reactive([]);
-
-// computed
 const getTopCategory = computed(() =>
   _.filter(categoryList.value, (c) => c.parent == ''),
 );
 
-// methods
+const router = useRouter();
+const moveHome = () => {
+  router.push('/');
+};
+const moveGuestbook = () => {
+  router.push('/guestbook');
+};
+
+const activeCategory = ref('');
+const recentCategoryIds: string[] = reactive([]);
+const subCategoryList: Category[] = reactive([]);
 const fetchPost = async (pageNum: number) => {
   const { data } = await fetchPostList(pageNum);
   if (data.tistory.status == '200') {
@@ -116,7 +117,6 @@ const fetchPost = async (pageNum: number) => {
       (p) => p.visibility == '20',
     );
     recentCategoryIds.push(..._.keys(_.countBy(recentPosts, 'categoryId')));
-    // console.log(recentCategoryIds);
   }
 };
 const showFlag = (categoryId: string) => {
@@ -129,7 +129,6 @@ const showFlag = (categoryId: string) => {
       .map((c) => c.parent)
       .compact()
       .value();
-    // console.log(parentIds);
     return parentIds.includes(categoryId) ? 'N' : '';
   }
 };
@@ -145,7 +144,6 @@ const clickCategory = (categoryId: string, subFlag?: string) => {
     categoryList.value,
     (c) => c.parent == categoryId,
   );
-  // console.log(subCategory);
 
   subCategoryList.length = 0;
   if (subCategory.length == 0) {
@@ -154,17 +152,12 @@ const clickCategory = (categoryId: string, subFlag?: string) => {
     subCategoryList.push(...subCategory);
   }
 };
-const hideSubCategory = () => {
-  $('div.subCategory').slideUp(400);
-};
+
 const subCategoryOut = () => {
   hideSubCategory();
 };
-const moveHome = () => {
-  router.push('/');
-};
-const moveGuestbook = () => {
-  router.push('/guestbook');
+const hideSubCategory = () => {
+  $('div.subCategory').slideUp(400);
 };
 
 onMounted(() => {
