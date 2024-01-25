@@ -1,5 +1,11 @@
 import axios from 'axios';
 import { GuestbookPost } from '@/types';
+import {
+  GuestbookInitRes,
+  SearchRes,
+  GuestbookCountRes,
+  GuestbookRes,
+} from '@/api/axiosResTypes';
 
 // axios 초기화
 function createInstance() {
@@ -11,14 +17,14 @@ function createInstance() {
 const instance = createInstance();
 
 // 글 검색
-function searchPosts(keyword: string, page: number, size: number) {
+function searchPosts(keyword: string, page: number, size: number): SearchRes {
   return instance.get(
     `/search/posts.json?keyword=${keyword}&page=${page - 1}&size=${size || 20}`,
   );
 }
 
 // Tag 검색
-function searchTags(keyword: string, page: number, size: number) {
+function searchTags(keyword: string, page: number, size: number): SearchRes {
   return instance.get(
     `/search/tags.json?keyword=${keyword}&page=${page - 1}&size=${size || 20}`,
   );
@@ -40,17 +46,17 @@ function deleteReaction(postId: string) {
 }
 
 // Guest Book count
-function getGuestbookCount() {
+function getGuestbookCount(): GuestbookCountRes {
   return instance.get('/api/guestbook/count');
 }
 
 // Guest Book init (get requestUser's info)
-function getGuestbookInit() {
+function getGuestbookInit(): GuestbookInitRes {
   return instance.get('/guestbook/init.json');
 }
 
 // get Guest Book
-function getGuestbook(size?: number) {
+function getGuestbook(size?: number): GuestbookRes {
   return instance.get(`/api/guestbook?size=${size || 30}`);
 }
 

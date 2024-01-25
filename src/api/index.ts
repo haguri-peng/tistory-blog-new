@@ -1,5 +1,12 @@
 import axios from 'axios';
 import { CommentInput } from '@/types';
+import {
+  CategoryRes,
+  PostRes,
+  PostLstRes,
+  CommentsRes,
+  ProcessCommentRes,
+} from '@/api/axiosResTypes';
 
 // axios 초기화
 function createInstance() {
@@ -24,7 +31,7 @@ function fetchBlogInfo() {
 }
 
 // 카테고리 목록
-function fetchCategoryList() {
+function fetchCategoryList(): CategoryRes {
   const queryString =
     'access_token=' +
     params.accessToken +
@@ -36,7 +43,7 @@ function fetchCategoryList() {
 }
 
 // 글 목록
-function fetchPostList(pageNum?: number) {
+function fetchPostList(pageNum?: number): PostLstRes {
   const queryString =
     'access_token=' +
     params.accessToken +
@@ -50,7 +57,10 @@ function fetchPostList(pageNum?: number) {
 }
 
 // 카테고리별 글 목록
-function fetchPostListByCategory(categoryId: string, pageNum: number) {
+function fetchPostListByCategory(
+  categoryId: string,
+  pageNum: number,
+): PostLstRes {
   const queryString =
     'access_token=' +
     params.accessToken +
@@ -69,7 +79,7 @@ function fetchPostListByCategory(categoryId: string, pageNum: number) {
 }
 
 // 글 읽기
-function fetchPost(postId: string) {
+function fetchPost(postId: string): PostRes {
   const queryString =
     'access_token=' +
     params.accessToken +
@@ -83,7 +93,7 @@ function fetchPost(postId: string) {
 }
 
 // 게시글 댓글 목록
-function fetchComments(postId: string) {
+function fetchComments(postId: string): CommentsRes {
   const queryString =
     'access_token=' +
     params.accessToken +
@@ -97,7 +107,7 @@ function fetchComments(postId: string) {
 }
 
 // 댓글 작성
-function insertComment(data: CommentInput) {
+function insertComment(data: CommentInput): ProcessCommentRes {
   let queryString =
     'access_token=' +
     params.accessToken +
@@ -124,7 +134,7 @@ function insertComment(data: CommentInput) {
 }
 
 // 댓글 수정
-function modifyComment(data: CommentInput) {
+function modifyComment(data: CommentInput): ProcessCommentRes {
   let queryString =
     'access_token=' +
     params.accessToken +
@@ -153,7 +163,7 @@ function modifyComment(data: CommentInput) {
 }
 
 // 댓글 삭제
-function deleteComment(data: CommentInput) {
+function deleteComment(data: CommentInput): ProcessCommentRes {
   const queryString =
     'access_token=' +
     params.accessToken +
