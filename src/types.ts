@@ -35,6 +35,7 @@ interface Category {
   parent: string;
   label: string;
   entries: string;
+  entriesInLogin: string;
 }
 
 interface CategoryInfo {
@@ -107,7 +108,7 @@ interface Comment {
   visibility: string;
   comment: string;
   open: string;
-  level: number;
+  level?: number;
 }
 
 interface CommentInput {
