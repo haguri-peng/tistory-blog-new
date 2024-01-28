@@ -72,11 +72,28 @@
       <p class="date">작성일시: {{ date }}</p>
     </div>
 
+    <!-- adsense_display -->
+    <ins
+      class="adsbygoogle"
+      style="display: inline-block; width: 728px; height: 90px"
+      data-ad-client="ca-pub-6187932165258053"
+      data-ad-slot="2842718663"
+    ></ins>
+
     <AppContentMain
       :content="content"
       @refreshAside="setAsideSection"
       @refreshAppHeight="setHeight"
     />
+
+    <!-- adsense_multiflex -->
+    <ins
+      class="adsbygoogle"
+      style="display: block"
+      data-ad-format="autorelaxed"
+      data-ad-client="ca-pub-6187932165258053"
+      data-ad-slot="2087795028"
+    ></ins>
 
     <div class="tags">
       Tags
