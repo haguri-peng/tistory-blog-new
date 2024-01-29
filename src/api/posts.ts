@@ -5,6 +5,8 @@ import {
   SearchRes,
   GuestbookCountRes,
   GuestbookRes,
+  ReactionRes,
+  ReactionToggleRes,
 } from '@/api/axiosResTypes';
 
 // axios 초기화
@@ -31,17 +33,17 @@ function searchTags(keyword: string, page: number, size: number): SearchRes {
 }
 
 // Reaction 검색
-function searchReaction(postId: string) {
+function searchReaction(postId: string): ReactionRes {
   return instance.get(`/${postId}/reaction.json`);
 }
 
 // post Reaction
-function postReaction(postId: string) {
+function postReaction(postId: string): ReactionToggleRes {
   return instance.post(`/${postId}/reaction.json`);
 }
 
 // delete Reaction
-function deleteReaction(postId: string) {
+function deleteReaction(postId: string): ReactionToggleRes {
   return instance.delete(`/${postId}/reaction.json`);
 }
 

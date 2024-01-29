@@ -32,46 +32,42 @@ import { BlogInfo, Category } from '@/types';
 import _ from 'lodash';
 
 const router = useRouter();
+const moveCategory = (id: string) => {
+  showLoadingSpinner();
+  router.push(`/category/${id}`);
+};
 
-// data
-const isLoading = ref(true);
-const category: Category[] = reactive([]);
 const postCnt = ref(0);
 const loginId = ref('');
 const loginUserId = ref('');
-const showSearch = ref(false);
-
-// methods
 const fetchBlog = async () => {
   const { data } = await fetchBlogInfo();
   const blogInfo: BlogInfo = data.tistory.item;
-  // console.log(data);
-
   postCnt.value =
     Number(_.find(blogInfo.blogs, ['name', 'haguri-peng'])?.statistics.post) ||
     0;
   loginId.value = blogInfo.id || '';
   loginUserId.value = blogInfo.userId || '';
 };
+
+const category: Category[] = reactive([]);
 const fetchCategory = async () => {
   const { data } = await fetchCategoryList();
-  // console.log(data.tistory);
-
   if (data.tistory.status == '200') {
     const categories: Category[] = data.tistory.item.categories;
     category.push(..._.filter(categories, (c) => Number(c.entries) > 0));
   }
 };
+
+const isLoading = ref(true);
 const showLoadingSpinner = () => {
   isLoading.value = true;
   setTimeout(() => {
     isLoading.value = false;
   }, 300);
 };
-const moveCategory = (id: string) => {
-  showLoadingSpinner();
-  router.push(`/category/${id}`);
-};
+
+const showSearch = ref(false);
 const showSearchInput = () => {
   showSearch.value = true;
 };

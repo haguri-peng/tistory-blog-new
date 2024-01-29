@@ -609,7 +609,7 @@ const isReactionCheck = ref(false);
 const getReaction = () => {
   if (postId.value != '') {
     searchReaction(postId.value).then(({ data }) => {
-      if (data.code == '200') {
+      if (data.code == 200) {
         reactionCount.value = data.result.count;
         isReactionCheck.value = data.result.isCheck;
       }

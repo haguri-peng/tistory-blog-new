@@ -1,5 +1,20 @@
 import { AxiosResponse } from 'axios';
-import { Category, PostInfo, SearchInfo, Guestbook, Comment } from '@/types';
+import {
+  BlogInfo,
+  Category,
+  PostInfo,
+  SearchInfo,
+  Guestbook,
+  Comment,
+} from '@/types';
+
+interface BlogInfoFetch {
+  tistory: {
+    status: string;
+    item: BlogInfo;
+  };
+}
+type BlogInfoRes = Promise<AxiosResponse<BlogInfoFetch>>;
 
 interface CategoryFetch {
   tistory: {
@@ -133,7 +148,24 @@ interface ProcessComment {
 }
 type ProcessCommentRes = Promise<AxiosResponse<ProcessComment>>;
 
+interface ReactionFetch {
+  code: number;
+  message: string;
+  result: { count: number; isCheck: boolean };
+  count: number;
+  isCheck: boolean;
+}
+type ReactionRes = Promise<AxiosResponse<ReactionFetch>>;
+
+interface ReactionToggle {
+  code: number;
+  message: string;
+  result: { isSuccess: boolean };
+}
+type ReactionToggleRes = Promise<AxiosResponse<ReactionToggle>>;
+
 export type {
+  BlogInfoRes,
   CategoryRes,
   PostRes,
   PostLstRes,
@@ -143,4 +175,6 @@ export type {
   GuestbookRes,
   CommentsRes,
   ProcessCommentRes,
+  ReactionRes,
+  ReactionToggleRes,
 };

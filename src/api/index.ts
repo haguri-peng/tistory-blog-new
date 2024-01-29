@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { CommentInput } from '@/types';
 import {
+  BlogInfoRes,
   CategoryRes,
   PostRes,
   PostLstRes,
@@ -24,7 +25,7 @@ const params = {
 };
 
 // 블로그 정보
-function fetchBlogInfo() {
+function fetchBlogInfo(): BlogInfoRes {
   const queryString =
     'access_token=' + params.accessToken + '&output=' + params.outputType;
   return instance.get(`/blog/info?${queryString}`);
