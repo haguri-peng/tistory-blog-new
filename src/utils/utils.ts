@@ -1,11 +1,13 @@
-function isNullStr(str = '') {
-  str = str.trim();
+import { type Ref, toRef } from 'vue';
+
+function isNullStr(str: string | Ref<string> | undefined) {
+  const orgnMsg = toRef((str || '').toString().trim());
   if (
-    str == null ||
-    str == 'undefined' ||
-    str.length == 0 ||
-    typeof str == 'undefined' ||
-    str == ''
+    orgnMsg.value == null ||
+    orgnMsg.value == 'undefined' ||
+    orgnMsg.value.length == 0 ||
+    typeof orgnMsg.value == 'undefined' ||
+    orgnMsg.value == ''
   ) {
     return true;
   } else {

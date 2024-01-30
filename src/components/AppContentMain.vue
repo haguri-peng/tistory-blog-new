@@ -126,9 +126,6 @@ onUpdated(() => {
   // 별도로 CSS 설정
   $('div.contentMain ul, div.contentMain ol').css('padding-left', '30px');
   $('div.contentMain p').css('margin', '5px 0');
-
-  // Adsense
-  (adsbygoogle = window.adsbygoogle || []).push({});
 });
 function emitEvent() {
   emit('refreshAside');

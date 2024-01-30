@@ -25,11 +25,6 @@
       <ul class="list-none pl-2"></ul>
     </div>
     <div class="image">
-      <!-- <img
-        src="../images/fat_haguri.png"
-        alt=""
-        style="width: 150px; height: 200px; margin-top: 50px; float: left"
-      /> -->
       <!-- Coupang Dynamic Banner -->
       <!-- <iframe
         src="https://ads-partners.coupang.com/widgets.html?id=639317&template=carousel&trackingCode=AF6597674&subId=&width=250&height=250"
@@ -286,7 +281,7 @@ const commentStore = useCommentStore();
 const { setCommentInfo } = commentStore;
 
 const content = ref('');
-const isContent = computed(() => (content.value == '' ? false : true));
+const isContent = computed(() => (isNullStr(content) ? false : true));
 
 const title = ref('');
 const getUnescapedTitle = computed(() => _.unescape(title.value));
@@ -648,6 +643,10 @@ const intervalId = ref<number | NodeJS.Timeout>(0);
 onMounted(() => {
   getContent();
   getComments();
+
+  // @ts-ignore
+  // Adsense
+  (adsbygoogle = window.adsbygoogle || []).push({});
 
   intervalId.value = setInterval(setAppHeight, 100);
 
