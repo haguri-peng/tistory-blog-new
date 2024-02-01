@@ -247,11 +247,14 @@
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
+import $ from 'jquery';
+import _ from 'lodash';
+import axios, { AxiosResponse } from 'axios';
+
 import AppContentMain from '@/components/AppContentMain.vue';
 import AppComment from '@/components/AppComment.vue';
 
 import {
-  fetchCategoryList,
   fetchPostList,
   fetchPost,
   fetchComments,
@@ -262,11 +265,7 @@ import {
 import { searchReaction, postReaction, deleteReaction } from '@/api/posts';
 import { PostInfo, Comment, CommentInput } from '@/types';
 import { useCommentStore } from '@/store/comment';
-import { isNullStr } from '@/utils/utils';
-
-import $ from 'jquery';
-import _ from 'lodash';
-import axios, { AxiosResponse } from 'axios';
+import { isNullStr, getCategoryPath } from '@/utils/utils';
 
 const route = useRoute();
 const router = useRouter();
@@ -288,6 +287,7 @@ const getUnescapedTitle = computed(() => _.unescape(title.value));
 
 const postId = ref('');
 const categoryId = ref('');
+const categoryName = ref('');
 const tags: string[] = reactive([]);
 const date = ref('');
 const acceptComment = ref(false);
@@ -302,8 +302,9 @@ const getContent = async () => {
     date.value = data.tistory.item.date;
     acceptComment.value = data.tistory.item.acceptComment == '1' ? true : false; // 댓글 허용 여부(허용: 1, 비허용: 0)
 
-    // 카테고리 목록 조회
-    getCategoryList();
+    // 카테고리 경로(path) 조회
+    const categoryPath = await getCategoryPath(categoryId.value);
+    categoryName.value = categoryPath || '';
 
     // 최근글 5개에서 태그 정보를 가져온다.
     getTagList();
@@ -464,21 +465,6 @@ const delComment = async (commentId: string, homepage: string) => {
       if (axios.isAxiosError<AxiosResponse>(err)) {
         alert(err.message);
       }
-    }
-  }
-};
-
-const categoryName = ref('');
-const getCategoryList = async () => {
-  const { data } = await fetchCategoryList();
-  if (data.tistory.status == '200') {
-    const currentCategory = _.find(data.tistory.item.categories, [
-      'id',
-      categoryId.value,
-    ]);
-
-    if (currentCategory != null) {
-      categoryName.value = currentCategory.label.replace(/\//g, ' > ');
     }
   }
 };
