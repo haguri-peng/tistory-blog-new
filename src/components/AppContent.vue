@@ -172,9 +172,11 @@
         <div class="comment" v-if="comment.visibility == '0'">
           승인 대기중인 댓글입니다.
         </div>
-        <div class="comment" v-else>
-          {{ comment.comment }}
-        </div>
+        <div
+          class="comment"
+          v-else
+          v-html="handleNewLine(comment.comment)"
+        ></div>
       </div>
     </div>
 
@@ -265,7 +267,7 @@ import {
 import { searchReaction, postReaction, deleteReaction } from '@/api/posts';
 import { PostInfo, Comment, CommentInput } from '@/types';
 import { useCommentStore } from '@/store/comment';
-import { isNullStr, getCategoryPath } from '@/utils/utils';
+import { isNullStr, getCategoryPath, handleNewLine } from '@/utils/utils';
 
 const route = useRoute();
 const router = useRouter();

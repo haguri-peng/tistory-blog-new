@@ -33,4 +33,8 @@ async function getCategoryPath(categoriId: string) {
   }
 }
 
-export { isNullStr, getCategoryPath };
+function handleNewLine(str: string) {
+  return str.replace(/(?:\r\n|\r|\n)/g, '</br>');
+}
+
+export { isNullStr, getCategoryPath, handleNewLine };

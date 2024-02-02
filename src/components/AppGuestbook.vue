@@ -56,8 +56,10 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted } from 'vue';
+import _ from 'lodash';
 
 import ModalComment from '@/components/common/ModalComment.vue';
+
 import {
   getGuestbookCount,
   getGuestbookInit,
@@ -65,8 +67,7 @@ import {
   postGuestbook,
 } from '@/api/posts';
 import { Guestbook, GuestbookPost } from '@/types';
-
-import _ from 'lodash';
+import { handleNewLine } from '@/utils/utils';
 
 const reqUserId = ref<number>();
 const reqUserRole = ref('');
@@ -160,7 +161,6 @@ const closeModal = async (
   }
 };
 
-const handleNewLine = (str: string) => str.replace(/(?:\r\n|\r|\n)/g, '</br>');
 const moveUrl = (url: string) => {
   if (url != '') {
     window.open(url, '_blank');
