@@ -119,7 +119,7 @@ function insertComment(data: CommentInput): ProcessCommentRes {
     '&postId=' +
     data.postId +
     '&content=' +
-    data.content +
+    encodeURIComponent(data.content || '') +
     '&secret=' +
     data.secret;
 

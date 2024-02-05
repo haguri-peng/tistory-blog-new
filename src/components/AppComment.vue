@@ -82,7 +82,7 @@ const submit = () => {
 
   const objData: CommentInput = {
     blogName: blogName.value,
-    content: comment.value.replace(/\n/g, '  '), // 개행문자는 공백 2칸으로 치환
+    content: comment.value,
     secret: arrChk.length > 0 ? 1 : 0, // 1: 비밀댓글, 0: 공개댓글
     parentId: getParentCommentId.value,
   };

@@ -149,7 +149,7 @@ const closeModal = async (
       };
 
       const { data } = await postGuestbook(postData);
-      if (data.code == 'OK') {
+      if (data != null && data != undefined) {
         alert('정상적으로 등록되었습니다.');
         getData();
       } else {
