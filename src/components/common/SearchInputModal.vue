@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, watch, onUpdated } from 'vue';
+import { ref, toRefs, watch, nextTick, onUpdated } from 'vue';
 import $ from 'jquery';
 
 const emit = defineEmits<{
@@ -33,7 +33,9 @@ const props = defineProps<{
 const { showSearch } = toRefs(props);
 
 const inputKeyword = ref('');
-const searchKeyword = () => {
+const searchKeyword = async () => {
+  await nextTick();
+
   if (inputKeyword.value == '') {
     alert('검색어를 입력해주세요.');
     return;
