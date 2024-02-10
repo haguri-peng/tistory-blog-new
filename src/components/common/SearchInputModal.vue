@@ -38,6 +38,7 @@ const searchKeyword = async () => {
 
   if (inputKeyword.value == '') {
     alert('검색어를 입력해주세요.');
+    searchInput.value!.focus();
     return;
   }
 
@@ -56,8 +57,10 @@ const resetData = () => {
 };
 
 const searchInput = ref<HTMLInputElement>();
-watch(showSearch, (val) => {
+watch(showSearch, async (val) => {
   dialogState.value = val;
+
+  await nextTick();
 
   setTimeout(() => {
     if (val) {
