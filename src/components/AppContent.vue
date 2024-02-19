@@ -628,13 +628,17 @@ const commentModDelOut = (evt: MouseEvent) => {
 };
 
 const intervalId = ref<number | NodeJS.Timeout>(0);
+const setAdsense = () => {
+  // @ts-ignore
+  (adsbygoogle = window.adsbygoogle || []).push({});
+};
 onMounted(() => {
+  // Adsense
+  setAdsense();
+  _.delay(setAdsense, 100);
+
   getContent();
   getComments();
-
-  // @ts-ignore
-  // Adsense
-  (adsbygoogle = window.adsbygoogle || []).push({});
 
   intervalId.value = setInterval(setAppHeight, 100);
 
