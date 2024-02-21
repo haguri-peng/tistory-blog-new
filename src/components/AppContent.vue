@@ -84,7 +84,7 @@
     <!-- adsense_multiflex -->
     <ins
       class="adsbygoogle"
-      style="display: inline-block; width: 360px; height: 800px"
+      style="display: inline-block; width: 728px; height: 400px"
       data-ad-client="ca-pub-6187932165258053"
       data-ad-slot="2087795028"
     ></ins>
