@@ -2,10 +2,7 @@ import { reactive, computed } from 'vue';
 import { defineStore } from 'pinia';
 
 import { CategoryInfo } from '@/types';
-
-const setValue = <T>(obj: T, key: keyof T, value: T[keyof T]) => {
-  obj[key] = value;
-};
+import { setValue } from '@/utils/utils';
 
 export const useCategoryStore = defineStore('category', () => {
   const categoryInfo = reactive(<CategoryInfo>{});

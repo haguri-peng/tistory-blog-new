@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 import { fetchCategoryList } from '@/api/index';
 
-function isNullStr(str: string | Ref<string> | undefined) {
+const isNullStr = (str: string | Ref<string> | undefined) => {
   const orgnMsg = toRef((str || '').toString().trim());
   if (
     orgnMsg.value == null ||
@@ -16,7 +16,7 @@ function isNullStr(str: string | Ref<string> | undefined) {
   } else {
     return false;
   }
-}
+};
 
 async function getCategoryPath(categoriId: string) {
   let result = '';
@@ -33,8 +33,10 @@ async function getCategoryPath(categoriId: string) {
   }
 }
 
-function handleNewLine(str: string) {
-  return str.replace(/(?:\r\n|\r|\n)/g, '</br>');
-}
+const handleNewLine = (str: string) => str.replace(/(?:\r\n|\r|\n)/g, '</br>');
 
-export { isNullStr, getCategoryPath, handleNewLine };
+const setValue = <T>(obj: T, key: keyof T, value: T[keyof T]) => {
+  obj[key] = value;
+};
+
+export { isNullStr, getCategoryPath, handleNewLine, setValue };
