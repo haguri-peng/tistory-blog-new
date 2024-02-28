@@ -21,30 +21,30 @@ const instance = createInstance();
 // 글 검색
 function searchPosts(keyword: string, page: number, size: number): SearchRes {
   return instance.get(
-    `/search/posts.json?keyword=${keyword}&page=${page - 1}&size=${size || 20}`,
+    `/api/search/post?keyword=${keyword}&page=${page - 1}&size=${size || 20}`,
   );
 }
 
 // Tag 검색
 function searchTags(keyword: string, page: number, size: number): SearchRes {
   return instance.get(
-    `/search/tags.json?keyword=${keyword}&page=${page - 1}&size=${size || 20}`,
+    `/api/search/tag?keyword=${keyword}&page=${page - 1}&size=${size || 20}`,
   );
 }
 
 // Reaction 검색
 function searchReaction(postId: string): ReactionRes {
-  return instance.get(`/${postId}/reaction.json`);
+  return instance.get(`/api/${postId}/reaction`);
 }
 
 // post Reaction
 function postReaction(postId: string): ReactionToggleRes {
-  return instance.post(`/${postId}/reaction.json`);
+  return instance.post(`/api/${postId}/reaction`);
 }
 
 // delete Reaction
 function deleteReaction(postId: string): ReactionToggleRes {
-  return instance.delete(`/${postId}/reaction.json`);
+  return instance.delete(`/api/${postId}/reaction`);
 }
 
 // Guest Book count
@@ -54,7 +54,7 @@ function getGuestbookCount(): GuestbookCountRes {
 
 // Guest Book init (get requestUser's info)
 function getGuestbookInit(): GuestbookInitRes {
-  return instance.get('/guestbook/init.json');
+  return instance.get('/api/blog/init');
 }
 
 // get Guest Book

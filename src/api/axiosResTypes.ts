@@ -70,9 +70,7 @@ interface PostListFetch {
 type PostLstRes = Promise<AxiosResponse<PostListFetch>>;
 
 interface GuestbookInit {
-  code: number;
-  message: string;
-  result: {
+  data: {
     config: {
       allowComment: boolean;
       allowCommentToGuest: boolean;
@@ -82,10 +80,9 @@ interface GuestbookInit {
       useGuestbookRecognition: boolean;
       isSupport: boolean;
     };
-    requestUser: {
+    viewer: {
       id: number;
       name: string;
-      profileImage: string;
       homepage: string;
       role: string;
       canManage: boolean;
@@ -96,13 +93,11 @@ interface GuestbookInit {
 type GuestbookInitRes = Promise<AxiosResponse<GuestbookInit>>;
 
 interface SearchTagsPosts {
-  code: number;
-  message: string;
-  result: {
-    items: SearchInfo[];
+  data: {
     isLast: boolean;
+    items: SearchInfo[];
     nextPage: boolean;
-    total: number;
+    totalItems: number;
   };
 }
 type SearchRes = Promise<AxiosResponse<SearchTagsPosts>>;
@@ -149,11 +144,10 @@ interface ProcessComment {
 type ProcessCommentRes = Promise<AxiosResponse<ProcessComment>>;
 
 interface ReactionFetch {
-  code: number;
-  message: string;
-  result: { count: number; isCheck: boolean };
-  count: number;
-  isCheck: boolean;
+  data: {
+    count: number;
+    isCheck: boolean;
+  };
 }
 type ReactionRes = Promise<AxiosResponse<ReactionFetch>>;
 

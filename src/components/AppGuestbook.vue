@@ -69,12 +69,12 @@ import {
 import { Guestbook, GuestbookPost } from '@/types';
 import { handleNewLine } from '@/utils/utils';
 
-const reqUserId = ref<number>();
+const reqUserId = ref(0);
 const reqUserRole = ref('');
 const getReqUserInfo = async () => {
   const { data } = await getGuestbookInit();
-  if (data.code == 200) {
-    const reqUser = data.result.requestUser;
+  if (data.data.viewer != null) {
+    const reqUser = data.data.viewer;
     reqUserId.value = reqUser.id;
     reqUserRole.value = reqUser.role;
   }

@@ -116,8 +116,8 @@ watch(showModal, (val) => {
     // 로그인한 사용자의 정보를 가져온다.
     getRequestUser()
       .then(({ data }) => {
-        if (data.code == 200) {
-          const reqUser = data.result.requestUser;
+        if (data.data != null) {
+          const reqUser = data.data.viewer;
           blogName.value = reqUser.homepage
             .replace('https://', '')
             .replace('.tistory.com', '');

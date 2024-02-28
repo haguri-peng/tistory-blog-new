@@ -25,8 +25,8 @@
           <div class="summary">{{ item.summary }}</div>
         </div>
         <img
-          v-if="item.thumbnailUrl != null"
-          :src="item.thumbnailUrl"
+          v-if="item.thumbnail != null && item.thumbnail != ''"
+          :src="item.thumbnail"
           alt=""
           style="width: 150px; height: 150px"
         />
@@ -103,10 +103,10 @@ const search = async (type: string, keyword: string) => {
     data = res.data;
   }
 
-  if (data!.code == 200) {
-    isLast.value = data!.result.isLast;
-    total.value = data!.result.total;
-    for (const item of data!.result.items) {
+  if (data!.data.totalItems > 0) {
+    isLast.value = data!.data.isLast;
+    total.value = data!.data.totalItems;
+    for (const item of data!.data.items) {
       items.push(item);
     }
   }

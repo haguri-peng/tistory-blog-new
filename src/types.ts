@@ -70,17 +70,26 @@ interface GuestbookPost {
 }
 
 interface SearchInfo {
-  id: number;
-  title: string;
-  summary: string;
+  authorId: number;
+  authorProfileImage: string;
+  authorProfileNickname: string;
+  blogId: number;
+  blogName: string;
+  categoryId: number;
+  categoryName: string;
   commentCount: number;
-  reactionCount: number;
-  published: string;
-  thumbnailUrl: string;
+  id: number;
   path: string;
+  profile: string;
+  published: string;
+  reactionCount: number;
   // restrictType: null;
+  summary: string;
+  tags: string[];
+  thumbnail: string;
+  title: string;
+  url: string;
   visibility: string;
-  visibilityLabel: string;
 }
 
 interface PageInfo {
