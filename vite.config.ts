@@ -10,5 +10,17 @@ export default defineConfig({
   },
   build: {
     assetsDir: 'images',
+    rollupOptions: {
+      output: {
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            // const module = id.split('node_modules/').pop().split('/')[0];
+            // return `vendor-${module}`;
+            return `vendor`;
+          }
+        },
+      },
+    },
+    chunkSizeWarningLimit: 2000,
   },
 });
