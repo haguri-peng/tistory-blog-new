@@ -89,6 +89,12 @@
       data-ad-slot="2087795028"
     ></ins>
 
+    <AppRelatedPost
+      :tagList="tags"
+      :categoryId="categoryId"
+      @moveContent="moveContent"
+    />
+
     <div class="tags">
       Tags
       <font-awesome-icon icon="fa-solid fa-tags" class="mr-5" />
@@ -254,6 +260,7 @@ import axios, { AxiosResponse } from 'axios';
 
 import AppContentMain from '@/components/AppContentMain.vue';
 import AppComment from '@/components/AppComment.vue';
+import AppRelatedPost from '@/components/AppRelatedPost.vue';
 
 import {
   fetchPostList,
@@ -270,6 +277,9 @@ import { isNullStr, getCategoryPath, handleNewLine } from '@/utils/utils';
 
 const route = useRoute();
 const router = useRouter();
+const moveContent = (id: number) => {
+  router.push(`/${id}`);
+};
 const moveCategory = () => {
   router.push(`/category/${categoryId.value}`);
 };
@@ -289,7 +299,8 @@ const getUnescapedTitle = computed(() => _.unescape(title.value));
 const postId = ref('');
 const categoryId = ref('');
 const categoryName = ref('');
-const tags: string[] = reactive([]);
+// let tags: string[] = reactive([]);
+let tags: string[] = [];
 const date = ref('');
 const acceptComment = ref(false);
 const getContent = async () => {
@@ -299,7 +310,7 @@ const getContent = async () => {
     categoryId.value = data.tistory.item.categoryId;
     title.value = data.tistory.item.title;
     content.value = data.tistory.item.content;
-    tags.push(...data.tistory.item.tags.tag);
+    tags = [...data.tistory.item.tags.tag];
     date.value = data.tistory.item.date;
     acceptComment.value = data.tistory.item.acceptComment == '1' ? true : false; // 댓글 허용 여부(허용: 1, 비허용: 0)
 
@@ -591,10 +602,8 @@ const isReactionCheck = ref(false);
 const getReaction = () => {
   if (postId.value != '') {
     searchReaction(postId.value).then(({ data }) => {
-      if (data.code == 200) {
-        reactionCount.value = data.result.count;
-        isReactionCheck.value = data.result.isCheck;
-      }
+      reactionCount.value = data.data.count;
+      isReactionCheck.value = data.data.isCheck;
     });
   }
 };
@@ -692,7 +701,7 @@ div.title p.date {
 }
 div.tags {
   color: #76549a;
-  margin-top: 20px;
+  margin-top: 50px;
   padding: 0 50px;
 }
 div.tags span.tag {
