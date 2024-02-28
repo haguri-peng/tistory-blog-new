@@ -8,7 +8,7 @@
 
     <LoadingSpinner v-if="isLoading" />
     <div class="app-contents" v-else>
-      <router-view></router-view>
+      <router-view :key="route.fullPath"></router-view>
     </div>
 
     <!-- Search Modal -->
@@ -25,12 +25,13 @@ import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import SearchInputModal from '@/components/common/SearchInputModal.vue';
 
 import { ref, reactive, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 import { fetchBlogInfo, fetchCategoryList } from '@/api/index';
 import { BlogInfo, Category } from '@/types';
 import _ from 'lodash';
 
+const route = useRoute();
 const router = useRouter();
 const moveCategory = (id: string) => {
   showLoadingSpinner();
