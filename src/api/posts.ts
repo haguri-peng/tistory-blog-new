@@ -7,6 +7,9 @@ import {
   GuestbookRes,
   ReactionRes,
   ReactionToggleRes,
+  EntryPostsRes,
+  CategoryRes,
+  PostInfoRes,
 } from '@/api/axiosResTypes';
 
 // axios 초기화
@@ -67,6 +70,35 @@ function postGuestbook(postData: GuestbookPost) {
   return instance.post('/api/guestbook', postData);
 }
 
+// Entry Posts (default page is 0)
+const searchEntryPosts = (page = 0): EntryPostsRes => {
+  let size = 30;
+  if (page > 0) {
+    size = 10;
+  }
+  return instance.get(`/api/entry/0/POST?page=${page}&size=${size}`);
+};
+
+// Categories
+const getCategories = (): CategoryRes => instance.get('/api/categories');
+
+const getFirstPostListByCategory = (categoryPath: string): PostInfoRes => {
+  return instance.get(`/category/${categoryPath}`, { responseType: 'text' });
+};
+
+const getPostListByCategory = (
+  categoryId: string,
+  pageNum: number,
+): EntryPostsRes => {
+  return instance.get(
+    `/api/entry/${categoryId}/POST?page=${pageNum - 1}&size=10`,
+  );
+};
+
+const getPostInfo = (postId?: string | number | undefined): PostInfoRes => {
+  return instance.get(`/${postId || ''}`, { responseType: 'text' });
+};
+
 export {
   searchPosts,
   searchTags,
@@ -77,4 +109,9 @@ export {
   getGuestbookInit,
   getGuestbook,
   postGuestbook,
+  searchEntryPosts,
+  getCategories,
+  getFirstPostListByCategory,
+  getPostListByCategory,
+  getPostInfo,
 };

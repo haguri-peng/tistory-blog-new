@@ -48,7 +48,7 @@
         Recent Tags <font-awesome-icon icon="fa-solid fa-tags" />
       </div>
       <div class="mt-1">
-        <span v-for="(tag, idx) in recentTagData" :key="idx">
+        <!-- <span v-for="(tag, idx) in recentTagData" :key="idx">
           <button
             type="button"
             class="font-bold border-none mr-1"
@@ -56,7 +56,7 @@
           >
             #{{ tag }}
           </button>
-        </span>
+        </span> -->
       </div>
     </div>
   </div>
@@ -263,7 +263,7 @@ import AppComment from '@/components/AppComment.vue';
 import AppRelatedPost from '@/components/AppRelatedPost.vue';
 
 import {
-  fetchPostList,
+  // fetchPostList,
   fetchPost,
   fetchComments,
   insertComment,
@@ -273,13 +273,18 @@ import {
 import { searchReaction, postReaction, deleteReaction } from '@/api/posts';
 import { PostInfo, Comment, CommentInput } from '@/types';
 import { useCommentStore } from '@/store/comment';
-import { isNullStr, getCategoryPath, handleNewLine } from '@/utils/utils';
+import {
+  moveContent,
+  isNullStr,
+  // getCategoryPath,
+  handleNewLine,
+} from '@/utils/utils';
 
 const route = useRoute();
 const router = useRouter();
-const moveContent = (id: number) => {
-  router.push(`/${id}`);
-};
+// const moveContent = (id: number) => {
+//   router.push(`/${id}`);
+// };
 const moveCategory = () => {
   router.push(`/category/${categoryId.value}`);
 };
@@ -314,12 +319,12 @@ const getContent = async () => {
     date.value = data.tistory.item.date;
     acceptComment.value = data.tistory.item.acceptComment == '1' ? true : false; // 댓글 허용 여부(허용: 1, 비허용: 0)
 
-    // 카테고리 경로(path) 조회
-    const categoryPath = await getCategoryPath(categoryId.value);
-    categoryName.value = categoryPath || '';
+    // // 카테고리 경로(path) 조회
+    // const categoryPath = await getCategoryPath(categoryId.value);
+    // categoryName.value = categoryPath || '';
 
     // 최근글 5개에서 태그 정보를 가져온다.
-    getTagList();
+    // getTagList();
 
     // aside 영역 세팅
     // content 부분을 세팅하는 딜레이가 있어서 적정한 timeout을 줘서 처리(0.5초)
@@ -481,28 +486,28 @@ const delComment = async (commentId: string, homepage: string) => {
   }
 };
 
-const recentTagData: string[] = reactive([]);
-const getTagList = async () => {
-  const { data } = await fetchPostList();
-  if (data.tistory.status == '200') {
-    // 최근글 5개만
-    const postList: PostInfo[] = _.take(data.tistory.item.posts, 5);
+// const recentTagData: string[] = reactive([]);
+// const getTagList = async () => {
+//   const { data } = await fetchPostList();
+//   if (data.tistory.status == '200') {
+//     // 최근글 5개만
+//     const postList: PostInfo[] = _.take(data.tistory.item.posts, 5);
 
-    let tagList: string[] = [];
-    for (const post of postList) {
-      const { data } = await fetchPost(post.id);
-      if (data.tistory.status == '200') {
-        tagList = _.flatten([
-          ...tagList,
-          ...(data.tistory.item.tags.tag || []),
-        ]);
-      }
-    }
+//     let tagList: string[] = [];
+//     for (const post of postList) {
+//       const { data } = await fetchPost(post.id);
+//       if (data.tistory.status == '200') {
+//         tagList = _.flatten([
+//           ...tagList,
+//           ...(data.tistory.item.tags.tag || []),
+//         ]);
+//       }
+//     }
 
-    tagList = _.uniq(tagList);
-    recentTagData.push(...tagList);
-  }
-};
+//     tagList = _.uniq(tagList);
+//     recentTagData.push(...tagList);
+//   }
+// };
 
 const contents = ref<HTMLDivElement>();
 const setHeight = (delay = 1000) => {

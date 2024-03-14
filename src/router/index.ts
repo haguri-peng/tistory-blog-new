@@ -17,7 +17,7 @@ const routes = [
     component: AppContent,
   },
   {
-    path: '/category/:categoryId',
+    path: '/category/:categoryPath+',
     component: AppCategory,
   },
   {

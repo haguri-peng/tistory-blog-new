@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { CommentInput } from '@/types';
 import {
-  BlogInfoRes,
-  CategoryRes,
+  // BlogInfoRes,
+  // CategoryRes,
   PostRes,
-  PostLstRes,
+  // PostLstRes,
   CommentsRes,
   ProcessCommentRes,
 } from '@/api/axiosResTypes';
@@ -24,60 +24,60 @@ const params = {
   outputType: 'json',
 };
 
-// 블로그 정보
-function fetchBlogInfo(): BlogInfoRes {
-  const queryString =
-    'access_token=' + params.accessToken + '&output=' + params.outputType;
-  return instance.get(`/blog/info?${queryString}`);
-}
-
-// 카테고리 목록
-function fetchCategoryList(): CategoryRes {
-  const queryString =
-    'access_token=' +
-    params.accessToken +
-    '&output=' +
-    params.outputType +
-    '&blogName=' +
-    params.blogName;
-  return instance.get(`/category/list?${queryString}`);
-}
-
-// 글 목록
-function fetchPostList(pageNum?: number): PostLstRes {
-  const queryString =
-    'access_token=' +
-    params.accessToken +
-    '&output=' +
-    params.outputType +
-    '&blogName=' +
-    params.blogName +
-    '&page=' +
-    (pageNum || 1);
-  return instance.get(`/post/list?${queryString}`);
-}
-
-// 카테고리별 글 목록
-function fetchPostListByCategory(
-  categoryId: string,
-  pageNum: number,
-): PostLstRes {
-  const queryString =
-    'access_token=' +
-    params.accessToken +
-    '&output=' +
-    params.outputType +
-    '&blogName=' +
-    params.blogName +
-    '&page=' +
-    (pageNum || 1);
-  return instance.get(`/post/list?${queryString}`, {
-    params: {
-      categoryId,
-      // visibility: '20', // 발행된 건만
-    },
-  });
-}
+// // 블로그 정보
+// function fetchBlogInfo(): BlogInfoRes {
+//   const queryString =
+//     'access_token=' + params.accessToken + '&output=' + params.outputType;
+//   return instance.get(`/blog/info?${queryString}`);
+// }
+//
+// // 카테고리 목록
+// function fetchCategoryList(): CategoryRes {
+//   const queryString =
+//     'access_token=' +
+//     params.accessToken +
+//     '&output=' +
+//     params.outputType +
+//     '&blogName=' +
+//     params.blogName;
+//   return instance.get(`/category/list?${queryString}`);
+// }
+//
+// // 글 목록
+// function fetchPostList(pageNum?: number): PostLstRes {
+//   const queryString =
+//     'access_token=' +
+//     params.accessToken +
+//     '&output=' +
+//     params.outputType +
+//     '&blogName=' +
+//     params.blogName +
+//     '&page=' +
+//     (pageNum || 1);
+//   return instance.get(`/post/list?${queryString}`);
+// }
+//
+// // 카테고리별 글 목록
+// function fetchPostListByCategory(
+//   categoryId: string,
+//   pageNum: number,
+// ): PostLstRes {
+//   const queryString =
+//     'access_token=' +
+//     params.accessToken +
+//     '&output=' +
+//     params.outputType +
+//     '&blogName=' +
+//     params.blogName +
+//     '&page=' +
+//     (pageNum || 1);
+//   return instance.get(`/post/list?${queryString}`, {
+//     params: {
+//       categoryId,
+//       // visibility: '20', // 발행된 건만
+//     },
+//   });
+// }
 
 // 글 읽기
 function fetchPost(postId: string): PostRes {
@@ -181,10 +181,10 @@ function deleteComment(data: CommentInput): ProcessCommentRes {
 }
 
 export {
-  fetchBlogInfo,
-  fetchCategoryList,
-  fetchPostList,
-  fetchPostListByCategory,
+  // fetchBlogInfo,
+  // fetchCategoryList,
+  // fetchPostList,
+  // fetchPostListByCategory,
   fetchPost,
   fetchComments,
   insertComment,

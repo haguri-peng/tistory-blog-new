@@ -26,14 +26,14 @@
           </font-awesome-layers>
         </li>
         <li
-          v-for="category in getTopCategory"
+          v-for="category in categoryList"
           :key="category.id"
           :class="{ active: activeCategory == category.id }"
           :data-category-id="category.id"
-          @click="clickCategory(category.id)"
+          @click="clickCategory(category.id, category.path)"
         >
           <span class="menu"> {{ category.name }}</span>
-          <span class="font-light"> [{{ category.entries }}] </span>
+          <span class="font-light"> [{{ category.entryCount }}] </span>
           <span class="newFlag"> {{ showFlag(category.id) }} </span>
         </li>
         <li @click="$emit('showSearchInput')">
@@ -53,10 +53,10 @@
       <ul>
         <li
           v-for="subCategory in subCategoryList"
-          @click="clickCategory(subCategory.id, 'sub')"
+          @click="clickCategory(subCategory.id, subCategory.path, 'sub')"
         >
           <span class="menu"> {{ subCategory.name }}</span>
-          <span class="cnt"> [{{ subCategory.entries }}] </span>
+          <span class="cnt"> [{{ subCategory.entryCount }}] </span>
           <span class="newFlag"> {{ showFlag(subCategory.id) }} </span>
         </li>
       </ul>
@@ -75,27 +75,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, toRefs, computed, onMounted } from 'vue';
+import { ref, reactive, toRefs, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-
-import { fetchPostList } from '@/api/index';
-import { Category } from '@/types';
+import { storeToRefs } from 'pinia';
 
 import $ from 'jquery';
 import _ from 'lodash';
 
+// import { fetchPostList } from '@/api/index';
+import { Category } from '@/types';
+// import { getRecentCategories } from '@/utils/utils';
+import { useCategoryStore } from '@/store/category';
+
 const emit = defineEmits<{
   (e: 'showSearchInput'): void;
-  (e: 'moveCategory', categoryId: string): void;
+  (e: 'moveCategory', categoryId: string, categoryPath: string): void;
 }>();
 
 const props = defineProps<{
   categoryList: Category[];
 }>();
 const { categoryList } = toRefs(props);
-const getTopCategory = computed(() =>
-  _.filter(categoryList.value, (c) => c.parent == ''),
-);
+// const getTopCategory = computed(() =>
+//   _.filter(categoryList.value, (c) => c.parent == ''),
+// );
 
 const router = useRouter();
 const moveHome = () => {
@@ -105,34 +108,40 @@ const moveGuestbook = () => {
   router.push('/guestbook');
 };
 
-const activeCategory = ref('');
-const recentCategoryIds: string[] = reactive([]);
-const subCategoryList: Category[] = reactive([]);
-const fetchPost = async (pageNum: number) => {
-  const { data } = await fetchPostList(pageNum);
-  if (data.tistory.status == '200') {
-    // 최근에 올린 글 목록 (10개. 발행된 건만)
-    const recentPosts = _.filter(
-      data.tistory.item.posts,
-      (p) => p.visibility == '20',
-    );
-    recentCategoryIds.push(..._.keys(_.countBy(recentPosts, 'categoryId')));
-  }
-};
+const categoryStore = useCategoryStore();
+const { getAllCategories } = storeToRefs(categoryStore);
+const { getRecentCategories } = categoryStore;
+
+// const recentCategoryIds: string[] = reactive([]);
+// const fetchPost = async (pageNum: number) => {
+//   const { data } = await fetchPostList(pageNum);
+//   if (data.tistory.status == '200') {
+//     // 최근에 올린 글 목록 (10개. 발행된 건만)
+//     const recentPosts = _.filter(
+//       data.tistory.item.posts,
+//       (p) => p.visibility == '20',
+//     );
+//     recentCategoryIds.push(..._.keys(_.countBy(recentPosts, 'categoryId')));
+//   }
+// };
+
 const showFlag = (categoryId: string) => {
-  const fIdx = _.findIndex(recentCategoryIds, (id) => id == categoryId);
+  let result = '';
+  // const fIdx = _.findIndex(recentCategoryIds, (id) => id == categoryId);
+  const fIdx = _.findIndex(getRecentCategories(), (c) => c.id == categoryId);
   if (fIdx > -1) {
-    return 'N';
-  } else {
-    const parentIds = _.chain(categoryList.value)
-      .filter((c) => recentCategoryIds.includes(c.id))
-      .map((c) => c.parent)
-      .compact()
-      .value();
-    return parentIds.includes(categoryId) ? 'N' : '';
+    result = 'N';
   }
+  return result;
 };
-const clickCategory = (categoryId: string, subFlag?: string) => {
+
+const activeCategory = ref('');
+const subCategoryList: Category[] = reactive([]);
+const clickCategory = (
+  categoryId: string,
+  categoryPath: string,
+  subFlag?: string,
+) => {
   // Sub Category display CSS 초기화
   $('div.subCategory').css('display', '');
 
@@ -140,16 +149,13 @@ const clickCategory = (categoryId: string, subFlag?: string) => {
     activeCategory.value = categoryId;
   }
 
-  const subCategory = _.filter(
-    categoryList.value,
-    (c) => c.parent == categoryId,
-  );
+  const curCategory = _.find(getAllCategories.value, (c) => c.id == categoryId);
 
   subCategoryList.length = 0;
-  if (subCategory.length == 0) {
-    emit('moveCategory', categoryId);
+  if (curCategory!.children!.length == 0) {
+    emit('moveCategory', categoryId, categoryPath);
   } else {
-    subCategoryList.push(...subCategory);
+    subCategoryList.push(...curCategory!.children!);
   }
 };
 
@@ -161,7 +167,7 @@ const hideSubCategory = () => {
 };
 
 onMounted(() => {
-  fetchPost(1);
+  // fetchPost(1);
 });
 </script>
 

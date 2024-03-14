@@ -1,29 +1,26 @@
 import { AxiosResponse } from 'axios';
 import {
-  BlogInfo,
+  // BlogInfo,
   Category,
-  PostInfo,
+  // PostInfo,
   SearchInfo,
   Guestbook,
   Comment,
+  EntryPost,
 } from '@/types';
 
-interface BlogInfoFetch {
-  tistory: {
-    status: string;
-    item: BlogInfo;
-  };
-}
-type BlogInfoRes = Promise<AxiosResponse<BlogInfoFetch>>;
+// interface BlogInfoFetch {
+//   tistory: {
+//     status: string;
+//     item: BlogInfo;
+//   };
+// }
+// type BlogInfoRes = Promise<AxiosResponse<BlogInfoFetch>>;
 
 interface CategoryFetch {
-  tistory: {
-    status: string;
-    item: {
-      url: string;
-      secondaryUrl: string;
-      categories: Category[];
-    };
+  data: {
+    items: Category[];
+    totalEntryCount: number;
   };
 }
 type CategoryRes = Promise<AxiosResponse<CategoryFetch>>;
@@ -54,20 +51,20 @@ interface PostFetch {
 }
 type PostRes = Promise<AxiosResponse<PostFetch>>;
 
-interface PostListFetch {
-  tistory: {
-    status: string;
-    item: {
-      url: string;
-      secondaryUrl: string;
-      page: string;
-      count: string;
-      totalCount: string;
-      posts: PostInfo[];
-    };
-  };
-}
-type PostLstRes = Promise<AxiosResponse<PostListFetch>>;
+// interface PostListFetch {
+//   tistory: {
+//     status: string;
+//     item: {
+//       url: string;
+//       secondaryUrl: string;
+//       page: string;
+//       count: string;
+//       totalCount: string;
+//       posts: PostInfo[];
+//     };
+//   };
+// }
+// type PostLstRes = Promise<AxiosResponse<PostListFetch>>;
 
 interface GuestbookInit {
   data: {
@@ -158,11 +155,23 @@ interface ReactionToggle {
 }
 type ReactionToggleRes = Promise<AxiosResponse<ReactionToggle>>;
 
+interface EntryPostsFetch {
+  data: {
+    items: EntryPost[];
+    isLast: boolean;
+    totalItems: number;
+    nextPage: number;
+  };
+}
+type EntryPostsRes = Promise<AxiosResponse<EntryPostsFetch>>;
+
+type PostInfoRes = Promise<AxiosResponse<string>>;
+
 export type {
-  BlogInfoRes,
+  // BlogInfoRes,
   CategoryRes,
   PostRes,
-  PostLstRes,
+  // PostLstRes,
   GuestbookInitRes,
   SearchRes,
   GuestbookCountRes,
@@ -171,4 +180,6 @@ export type {
   ProcessCommentRes,
   ReactionRes,
   ReactionToggleRes,
+  EntryPostsRes,
+  PostInfoRes,
 };

@@ -27,36 +27,55 @@ import SearchInputModal from '@/components/common/SearchInputModal.vue';
 import { ref, reactive, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import { fetchBlogInfo, fetchCategoryList } from '@/api/index';
-import { BlogInfo, Category } from '@/types';
+// import { fetchBlogInfo } from '@/api/index';
+import { useCategoryStore } from '@/store/category';
+import { searchEntryPosts, getCategories, getPostInfo } from '@/api/posts';
+import { /*BlogInfo,*/ Category } from '@/types';
 import _ from 'lodash';
+
+const categoryStore = useCategoryStore();
+const { setAllCategories, setCategoryInfo } = categoryStore;
 
 const route = useRoute();
 const router = useRouter();
-const moveCategory = (id: string) => {
+const moveCategory = (categoryId: string, categoryPath: string) => {
   showLoadingSpinner();
-  router.push(`/category/${id}`);
+
+  setCategoryInfo({ id: categoryId, page: 1 });
+
+  router.push(`/category/${categoryPath}`);
 };
 
 const postCnt = ref(0);
-const loginId = ref('');
-const loginUserId = ref('');
-const fetchBlog = async () => {
-  const { data } = await fetchBlogInfo();
-  const blogInfo: BlogInfo = data.tistory.item;
-  postCnt.value =
-    Number(_.find(blogInfo.blogs, ['name', 'haguri-peng'])?.statistics.post) ||
-    0;
-  loginId.value = blogInfo.id || '';
-  loginUserId.value = blogInfo.userId || '';
+const fetchEntryPosts = async () => {
+  const { data } = await searchEntryPosts();
+  postCnt.value = data.data.totalItems;
 };
+
+const mblMainHtml = ref('');
+const fetchBlog = async () => {
+  const { data } = await getPostInfo();
+  mblMainHtml.value = data;
+};
+
+// const loginId = ref('');
+// const loginUserId = ref('');
+// const fetchBlog = async () => {
+//   const { data } = await fetchBlogInfo();
+//   const blogInfo: BlogInfo = data.tistory.item;
+//   postCnt.value =
+//     Number(_.find(blogInfo.blogs, ['name', 'haguri-peng'])?.statistics.post) ||
+//     0;
+//   loginId.value = blogInfo.id || '';
+//   loginUserId.value = blogInfo.userId || '';
+// };
 
 const category: Category[] = reactive([]);
 const fetchCategory = async () => {
-  const { data } = await fetchCategoryList();
-  if (data.tistory.status == '200') {
-    const categories: Category[] = data.tistory.item.categories;
-    category.push(..._.filter(categories, (c) => Number(c.entries) > 0));
+  const { data } = await getCategories();
+  if (data.data.items.length > 0) {
+    const categories: Category[] = data.data.items;
+    category.push(..._.filter(categories, (c) => c.entryCount > 0));
   }
 };
 
@@ -83,7 +102,9 @@ const closeSearchModal = (type: string, keyword?: string) => {
 onMounted(() => {
   showLoadingSpinner();
   fetchBlog();
+  fetchEntryPosts();
   fetchCategory();
+  setAllCategories();
 });
 </script>
 

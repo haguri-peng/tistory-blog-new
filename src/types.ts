@@ -1,41 +1,41 @@
-interface BlogStat {
-  post: string;
-  comment: string;
-  trackback: string;
-  guestbook: string;
-}
-
-interface Blogs {
-  name: string;
-  url: string;
-  secondaryUrl: string;
-  nickname: string;
-  title: string;
-  description: string;
-  default: string;
-  blogIconUrl: string;
-  faviconUrl: string;
-  profileThumbnailImageUrl: string;
-  profileImageUrl: string;
-  role: string;
-  blogId: string;
-  isEmpty: string;
-  statistics: BlogStat;
-}
-
-interface BlogInfo {
-  id: string;
-  userId: string;
-  blogs: Blogs[];
-}
+// interface BlogStat {
+//   post: string;
+//   comment: string;
+//   trackback: string;
+//   guestbook: string;
+// }
+//
+// interface Blogs {
+//   name: string;
+//   url: string;
+//   secondaryUrl: string;
+//   nickname: string;
+//   title: string;
+//   description: string;
+//   default: string;
+//   blogIconUrl: string;
+//   faviconUrl: string;
+//   profileThumbnailImageUrl: string;
+//   profileImageUrl: string;
+//   role: string;
+//   blogId: string;
+//   isEmpty: string;
+//   statistics: BlogStat;
+// }
+//
+// interface BlogInfo {
+//   id: string;
+//   userId: string;
+//   blogs: Blogs[];
+// }
 
 interface Category {
   id: string;
   name: string;
-  parent: string;
-  label: string;
-  entries: string;
-  entriesInLogin: string;
+  entryCount: number;
+  path: string;
+  lastUpdate: string;
+  children?: Category[];
 }
 
 interface CategoryInfo {
@@ -136,8 +136,31 @@ interface CommentInfo {
   modComment?: string;
 }
 
+interface EntryPost {
+  id: number;
+  title: string;
+  summary: string;
+  commentCount: number;
+  reactionCount: number;
+  published: string;
+  thumbnail: string;
+  blogId: number;
+  blogName: string;
+  authorId: number;
+  categoryId: number;
+  categoryName: string;
+  tags: string[];
+  url: string;
+  path: string;
+  visibility: string;
+  profile: string;
+  authorProfileNickname: string;
+  authorProfileImage: string;
+  restrictType: null;
+}
+
 export type {
-  BlogInfo,
+  // BlogInfo,
   Category,
   CategoryInfo,
   Comment,
@@ -148,4 +171,5 @@ export type {
   PostInfo,
   CommentInput,
   CommentInfo,
+  EntryPost,
 };
