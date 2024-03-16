@@ -118,15 +118,21 @@ interface GuestbookFetch {
 type GuestbookRes = Promise<AxiosResponse<GuestbookFetch>>;
 
 interface CommentsFetch {
-  tistory: {
-    status: string;
-    item: {
-      url: string;
-      secondaryUrl: string;
-      postId: string;
-      totalCount: string;
-      comments: Comment[];
-    };
+  // tistory: {
+  //   status: string;
+  //   item: {
+  //     url: string;
+  //     secondaryUrl: string;
+  //     postId: string;
+  //     totalCount: string;
+  //     comments: Comment[];
+  //   };
+  // };
+  data: {
+    items: Comment[];
+    isLast: boolean;
+    totalItems: number;
+    nextId: number;
   };
 }
 type CommentsRes = Promise<AxiosResponse<CommentsFetch>>;

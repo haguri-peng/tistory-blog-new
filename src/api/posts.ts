@@ -10,6 +10,7 @@ import {
   EntryPostsRes,
   CategoryRes,
   PostInfoRes,
+  CommentsRes,
 } from '@/api/axiosResTypes';
 
 // axios 초기화
@@ -22,38 +23,32 @@ function createInstance() {
 const instance = createInstance();
 
 // 글 검색
-function searchPosts(keyword: string, page: number, size: number): SearchRes {
-  return instance.get(
+const searchPosts = (keyword: string, page: number, size: number): SearchRes =>
+  instance.get(
     `/api/search/post?keyword=${keyword}&page=${page - 1}&size=${size || 20}`,
   );
-}
 
 // Tag 검색
-function searchTags(keyword: string, page: number, size: number): SearchRes {
-  return instance.get(
+const searchTags = (keyword: string, page: number, size: number): SearchRes =>
+  instance.get(
     `/api/search/tag?keyword=${keyword}&page=${page - 1}&size=${size || 20}`,
   );
-}
 
 // Reaction 검색
-function searchReaction(postId: string): ReactionRes {
-  return instance.get(`/api/${postId}/reaction`);
-}
+const searchReaction = (postId: string): ReactionRes =>
+  instance.get(`/api/${postId}/reaction`);
 
 // post Reaction
-function postReaction(postId: string): ReactionToggleRes {
-  return instance.post(`/api/${postId}/reaction`);
-}
+const postReaction = (postId: string): ReactionToggleRes =>
+  instance.post(`/api/${postId}/reaction`);
 
 // delete Reaction
-function deleteReaction(postId: string): ReactionToggleRes {
-  return instance.delete(`/api/${postId}/reaction`);
-}
+const deleteReaction = (postId: string): ReactionToggleRes =>
+  instance.delete(`/api/${postId}/reaction`);
 
 // Guest Book count
-function getGuestbookCount(): GuestbookCountRes {
-  return instance.get('/api/guestbook/count');
-}
+const getGuestbookCount = (): GuestbookCountRes =>
+  instance.get('/api/guestbook/count');
 
 // Guest Book init (get requestUser's info)
 function getGuestbookInit(): GuestbookInitRes {
@@ -61,14 +56,12 @@ function getGuestbookInit(): GuestbookInitRes {
 }
 
 // get Guest Book
-function getGuestbook(size?: number): GuestbookRes {
-  return instance.get(`/api/guestbook?size=${size || 30}`);
-}
+const getGuestbook = (size?: number): GuestbookRes =>
+  instance.get(`/api/guestbook?size=${size || 30}`);
 
 // post Guest Book
-function postGuestbook(postData: GuestbookPost) {
-  return instance.post('/api/guestbook', postData);
-}
+const postGuestbook = (postData: GuestbookPost) =>
+  instance.post('/api/guestbook', postData);
 
 // Entry Posts (default page is 0)
 const searchEntryPosts = (page = 0): EntryPostsRes => {
@@ -82,9 +75,8 @@ const searchEntryPosts = (page = 0): EntryPostsRes => {
 // Categories
 const getCategories = (): CategoryRes => instance.get('/api/categories');
 
-const getFirstPostListByCategory = (categoryPath: string): PostInfoRes => {
-  return instance.get(`/category/${categoryPath}`, { responseType: 'text' });
-};
+const getFirstPostListByCategory = (categoryPath: string): PostInfoRes =>
+  instance.get(`/category/${categoryPath}`, { responseType: 'text' });
 
 const getPostListByCategory = (
   categoryId: string,
@@ -95,9 +87,20 @@ const getPostListByCategory = (
   );
 };
 
-const getPostInfo = (postId?: string | number | undefined): PostInfoRes => {
-  return instance.get(`/${postId || ''}`, { responseType: 'text' });
-};
+const getPostInfo = (postId?: string | number | undefined): PostInfoRes =>
+  instance.get(`/${postId || ''}`, { responseType: 'text' });
+
+const getPostComments = (postId: string): CommentsRes =>
+  instance.get(`/api/${postId}/comment`);
+
+// configViewerInPost
+// https://haguri-peng.tistory.com/m/api/blog/init/${postId}
+
+// relatedPosts
+// https://haguri-peng.tistory.com/m/api/entry/${postId}/related
+
+// popular
+// https://haguri-peng.tistory.com/m/api/entry/${postId}/popular
 
 export {
   searchPosts,
@@ -114,4 +117,5 @@ export {
   getFirstPostListByCategory,
   getPostListByCategory,
   getPostInfo,
+  getPostComments,
 };

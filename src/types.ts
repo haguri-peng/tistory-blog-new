@@ -35,7 +35,7 @@ interface Category {
   entryCount: number;
   path: string;
   lastUpdate: string;
-  children?: Category[];
+  children: Category[];
 }
 
 interface CategoryInfo {
@@ -44,7 +44,7 @@ interface CategoryInfo {
   page: string | number;
 }
 
-interface GuestbookWriter {
+interface Writer {
   canManage: boolean;
   homepage: string;
   id: number;
@@ -58,7 +58,7 @@ interface Guestbook {
   id: number;
   isSecret: boolean;
   content: string;
-  writer: GuestbookWriter;
+  writer: Writer;
   written: string;
 }
 
@@ -109,15 +109,32 @@ interface PostInfo {
 }
 
 interface Comment {
-  id: string;
-  date: string;
-  name: string;
-  parentId: string;
-  homepage: string;
-  visibility: string;
-  comment: string;
-  open: string;
+  // id: string;
+  // date: string;
+  // name: string;
+  // parentId: string;
+  // homepage: string;
+  // visibility: string;
+  // comment: string;
+  // open: string;
   level?: number;
+  id: number;
+  content: string;
+  written: string;
+  permalink: string;
+  // restrictType: null;
+  isSecret: boolean;
+  isPinned: boolean;
+  parent: number;
+  children: Comment[];
+  writer: Writer;
+  // mentionUserName: null;
+  // mentionId: null;
+  // supportId: null;
+  type: string;
+  // orderAmount: null;
+  // supportStatus: null;
+  // profileLayer: [];
 }
 
 interface CommentInput {

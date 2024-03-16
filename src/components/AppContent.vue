@@ -89,11 +89,11 @@
       data-ad-slot="2087795028"
     ></ins>
 
-    <AppRelatedPost
+    <!-- <AppRelatedPost
       :tagList="tags"
       :categoryId="categoryId"
       @moveContent="moveContent"
-    />
+    /> -->
 
     <div class="tags">
       Tags
@@ -108,6 +108,40 @@
       </span>
     </div>
 
+    <!-- <div class="comments">
+      <p>
+        {{ comments.length }} Comments
+        <font-awesome-icon icon="fa-solid fa-comments" />
+        <button type="button" class="float-right" @click="addComment">
+          <font-awesome-icon icon="fa-solid fa-pen" title="댓글 등록" />
+          등록
+        </button>
+      </p>
+      <div
+        v-for="comment in comments"
+        :key="comment.id"
+        :class="{ hide: comment.isSecret }"
+      >
+        <div class="name">
+          <div
+            class="left"
+            :class="{
+              noAuth: comment.writer.id != $parent.$parent.loginId,
+            }"
+          >
+            <span
+              v-for="n in (comment.level == 1
+                ? comment.level + 1
+                : comment.level!) - 2"
+              :key="n"
+            >
+              &nbsp;&nbsp;&nbsp;&nbsp;
+            </span>
+          </div>
+        </div>
+      </div>
+    </div> -->
+
     <div class="comments">
       <p>
         {{ comments.length }} Comments
@@ -120,14 +154,14 @@
       <div
         v-for="comment in comments"
         :key="comment.id"
-        :class="{ hide: comment.open == 'N' }"
+        :class="{ hide: comment.isSecret }"
       >
         <div class="name">
-          <!-- @vue-ignore -->
+          <!-- @vue-expect-error -->
           <div
             class="left"
             :class="{
-              noAuth: comment.homepage != $parent.$parent.loginId,
+              noAuth: comment.writer.id != $parent.$parent.loginId,
             }"
           >
             <span
@@ -141,19 +175,20 @@
             <span v-if="comment.level! > 1">└─</span>
             <font-awesome-icon
               icon="fa-solid fa-house-user"
-              :title="comment.name"
+              :title="comment.writer.name"
               style="cursor: pointer; margin-right: 5px"
-              @click="openCommenterPage(comment.homepage)"
+              @click="openCommenterPage(comment.writer.homepage)"
             />
-            <span>{{ comment.name }}</span>
-            <span class="ml-8 text-xs"> {{ comment.date }} </span>
+            <span>{{ comment.writer.name }}</span>
+            <span class="ml-8 text-xs"> {{ comment.written }} </span>
           </div>
-          <!-- @vue-ignore -->
+
+          <!-- @vue-expect-error -->
           <div
             class="comment-mod-del"
             style="float: right; width: 5%"
             :class="{
-              noAuth: comment.homepage != $parent.$parent.loginId,
+              noAuth: comment.writer.id != $parent.$parent.loginId,
             }"
             @mouseleave="commentModDelOut($event)"
           >
@@ -165,23 +200,29 @@
             <ul style="list-style: none; display: none">
               <li
                 @click="
-                  modComment(comment.id!, comment.parentId!, comment.comment!)
+                  modComment(
+                    comment.id.toString(),
+                    comment.parent.toString(),
+                    comment.content,
+                  )
                 "
               >
                 수정
               </li>
-              <li @click="delComment(comment.id!, comment.homepage!)">삭제</li>
+              <li
+                @click="
+                  delComment(comment.id.toString(), comment.writer.homepage)
+                "
+              >
+                삭제
+              </li>
             </ul>
           </div>
         </div>
-        <div class="comment" v-if="comment.visibility == '0'">
+        <!-- <div class="comment" v-if="comment.visibility == '0'">
           승인 대기중인 댓글입니다.
-        </div>
-        <div
-          class="comment"
-          v-else
-          v-html="handleNewLine(comment.comment)"
-        ></div>
+        </div> -->
+        <div class="comment" v-html="handleNewLine(comment.content)"></div>
       </div>
     </div>
 
@@ -253,9 +294,12 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
 
 import $ from 'jquery';
 import _ from 'lodash';
+import * as htmlparser2 from 'htmlparser2';
+import * as cheerio from 'cheerio';
 import axios, { AxiosResponse } from 'axios';
 
 import AppContentMain from '@/components/AppContentMain.vue';
@@ -264,36 +308,51 @@ import AppRelatedPost from '@/components/AppRelatedPost.vue';
 
 import {
   // fetchPostList,
-  fetchPost,
+  // fetchPost,
   fetchComments,
   insertComment,
   modifyComment,
   deleteComment,
 } from '@/api/index';
-import { searchReaction, postReaction, deleteReaction } from '@/api/posts';
+import {
+  getPostInfo,
+  searchReaction,
+  postReaction,
+  deleteReaction,
+  getPostComments,
+} from '@/api/posts';
 import { PostInfo, Comment, CommentInput } from '@/types';
+import { useCategoryStore } from '@/store/category';
 import { useCommentStore } from '@/store/comment';
 import {
-  moveContent,
+  // moveContent,
   isNullStr,
   // getCategoryPath,
+  commentReduce,
   handleNewLine,
 } from '@/utils/utils';
 
 const route = useRoute();
 const router = useRouter();
-// const moveContent = (id: number) => {
-//   router.push(`/${id}`);
-// };
+const moveContent = (id: number | string) => {
+  router.push(`/${id}`);
+};
 const moveCategory = () => {
-  router.push(`/category/${categoryId.value}`);
+  setCategoryInfo({ id: categoryId.value, page: 1 });
+  router.push(`/category/${getCategoryPath(categoryId.value)}`);
 };
 const searchTag = async (tag: string) => {
   router.push(`/search/tags/${tag}`);
 };
 
+// commentStore
 const commentStore = useCommentStore();
 const { setCommentInfo } = commentStore;
+
+// categoryStore
+const categoryStore = useCategoryStore();
+const { getAllCategories } = storeToRefs(categoryStore);
+const { getCategoryPath, getRecentCategories, setCategoryInfo } = categoryStore;
 
 const content = ref('');
 const isContent = computed(() => (isNullStr(content) ? false : true));
@@ -301,27 +360,72 @@ const isContent = computed(() => (isNullStr(content) ? false : true));
 const title = ref('');
 const getUnescapedTitle = computed(() => _.unescape(title.value));
 
-const postId = ref('');
 const categoryId = ref('');
 const categoryName = ref('');
+const setCategoryId = (id: string) => {
+  categoryId.value = id;
+};
+const setCategoryName = () => {
+  categoryName.value = decodeURIComponent(
+    getCategoryPath(categoryId.value, ' > '),
+  );
+};
+
+const postId = ref('');
 // let tags: string[] = reactive([]);
 let tags: string[] = [];
 const date = ref('');
 const acceptComment = ref(false);
-const getContent = async () => {
-  const { data } = await fetchPost(route.params.id.toString());
-  if (data.tistory.status == '200') {
-    postId.value = route.params.id.toString();
-    categoryId.value = data.tistory.item.categoryId;
-    title.value = data.tistory.item.title;
-    content.value = data.tistory.item.content;
-    tags = [...data.tistory.item.tags.tag];
-    date.value = data.tistory.item.date;
-    acceptComment.value = data.tistory.item.acceptComment == '1' ? true : false; // 댓글 허용 여부(허용: 1, 비허용: 0)
 
-    // // 카테고리 경로(path) 조회
-    // const categoryPath = await getCategoryPath(categoryId.value);
-    // categoryName.value = categoryPath || '';
+const getContent = async () => {
+  postId.value = route.params.id.toString();
+  const { data: sHtml } = await getPostInfo(postId.value);
+  // console.log(sHtml);
+
+  // htmlparser
+  const dom = htmlparser2.parseDocument(sHtml);
+  if (dom != null) {
+    const elHtml = _.find(
+      dom.children,
+      (c: cheerio.Element) => c.type == 'tag',
+    );
+    // console.log(elHtml);
+
+    // @ts-ignore
+    const $$ = cheerio.load(elHtml);
+    const $$main = $$('main.doc-main');
+    const $$mainContent = $$('#mainContent');
+    // console.log($$mainContent);
+
+    // Title
+    const titleEl = $$mainContent.find('.tit_blogview');
+    title.value = titleEl.text();
+
+    // Date
+    const dateEl = $$mainContent.find('span.txt_date');
+    date.value = dateEl.text();
+
+    // Category
+    const categoryEl = $$mainContent.find('a.txt_category');
+    const categoryPath = categoryEl.text();
+    const curCategory = _.find(
+      getAllCategories.value,
+      (c) => c.path == categoryPath,
+    );
+    if (curCategory != undefined) {
+      setCategoryId(curCategory.id);
+      setCategoryName();
+    }
+
+    // Content
+    const contentEl = $$mainContent.find('div.blogview_content');
+    content.value = contentEl.html() as string;
+
+    // Tags
+    const tagEl = $$main.find('div.list_tag');
+    tagEl.find('a').each(function () {
+      tags.push($$(this).text());
+    });
 
     // 최근글 5개에서 태그 정보를 가져온다.
     // getTagList();
@@ -363,35 +467,50 @@ const comments: Comment[] = reactive([]);
 const getComments = async () => {
   comments.length = 0;
 
-  const { data } = await fetchComments(route.params.id.toString());
-  if (data.tistory.status == '200') {
-    if (
-      data.tistory.item.comments != null &&
-      data.tistory.item.comments.length > 0
-    ) {
-      const treeSortComments: Comment[] = _.sortBy(data.tistory.item.comments, [
-        function (comment) {
-          function getParentDate(comment: Comment) {
-            if (comment.parentId == '') {
-              comment.level = 1;
-              return comment.date;
-            } else {
-              const parent = _.find(data.tistory.item.comments, [
-                'id',
-                comment.parentId,
-              ]);
-              comment.level = parent!.level! + 1;
-              return getParentDate(parent!);
-            }
-          }
-          return getParentDate(comment);
-        },
-        'date',
-      ]);
-
-      comments.push(...treeSortComments);
-    }
+  const { data } = await getPostComments(postId.value);
+  if (data.data.totalItems > 0) {
+    // comments.push(...data.data.items);
+    // console.log(data.data.items);
+    // for (const item of data.data.items) {
+    //   console.log(item);
+    //   comments.push(item);
+    // }
+    // const allComments: Comment[] = [];
+    // allComments.push(..._.reduce(data.data.items, commentReduce, []));
+    // console.log(allComments);
+    comments.push(..._.reduce(data.data.items, commentReduce, []));
   }
+  // console.log(comments);
+
+  // const { data } = await fetchComments(route.params.id.toString());
+  // if (data.tistory.status == '200') {
+  //   if (
+  //     data.tistory.item.comments != null &&
+  //     data.tistory.item.comments.length > 0
+  //   ) {
+  //     const treeSortComments: Comment[] = _.sortBy(data.tistory.item.comments, [
+  //       function (comment) {
+  //         function getParentDate(comment: Comment) {
+  //           if (comment.parentId == '') {
+  //             comment.level = 1;
+  //             return comment.date;
+  //           } else {
+  //             const parent = _.find(data.tistory.item.comments, [
+  //               'id',
+  //               comment.parentId,
+  //             ]);
+  //             comment.level = parent!.level! + 1;
+  //             return getParentDate(parent!);
+  //           }
+  //         }
+  //         return getParentDate(comment);
+  //       },
+  //       'date',
+  //     ]);
+
+  //     comments.push(...treeSortComments);
+  //   }
+  // }
 };
 const showModal = ref(false);
 const addComment = () => {
@@ -486,28 +605,26 @@ const delComment = async (commentId: string, homepage: string) => {
   }
 };
 
-// const recentTagData: string[] = reactive([]);
-// const getTagList = async () => {
-//   const { data } = await fetchPostList();
-//   if (data.tistory.status == '200') {
-//     // 최근글 5개만
-//     const postList: PostInfo[] = _.take(data.tistory.item.posts, 5);
-
-//     let tagList: string[] = [];
-//     for (const post of postList) {
-//       const { data } = await fetchPost(post.id);
-//       if (data.tistory.status == '200') {
-//         tagList = _.flatten([
-//           ...tagList,
-//           ...(data.tistory.item.tags.tag || []),
-//         ]);
-//       }
-//     }
-
-//     tagList = _.uniq(tagList);
-//     recentTagData.push(...tagList);
-//   }
-// };
+const recentTagData: string[] = reactive([]);
+const getTagList = async () => {
+  // const { data } = await fetchPostList();
+  // if (data.tistory.status == '200') {
+  //   // 최근글 5개만
+  //   const postList: PostInfo[] = _.take(data.tistory.item.posts, 5);
+  //   let tagList: string[] = [];
+  //   for (const post of postList) {
+  //     const { data } = await fetchPost(post.id);
+  //     if (data.tistory.status == '200') {
+  //       tagList = _.flatten([
+  //         ...tagList,
+  //         ...(data.tistory.item.tags.tag || []),
+  //       ]);
+  //     }
+  //   }
+  //   tagList = _.uniq(tagList);
+  //   recentTagData.push(...tagList);
+  // }
+};
 
 const contents = ref<HTMLDivElement>();
 const setHeight = (delay = 1000) => {
@@ -605,7 +722,7 @@ const setAsideSection = () => {
 const reactionCount = ref(0);
 const isReactionCheck = ref(false);
 const getReaction = () => {
-  if (postId.value != '') {
+  if (!isNullStr(postId.value)) {
     searchReaction(postId.value).then(({ data }) => {
       reactionCount.value = data.data.count;
       isReactionCheck.value = data.data.isCheck;

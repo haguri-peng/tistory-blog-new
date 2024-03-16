@@ -1,20 +1,20 @@
 import { type Ref, toRef } from 'vue';
-import { useRouter } from 'vue-router';
+// import { useRouter } from 'vue-router';
 // import { storeToRefs } from 'pinia';
 
 import _ from 'lodash';
 // import moment from 'moment';
 
 // import { useCategoryStore } from '@/store/category';
-import { Category } from '@/types';
+import { Category, Comment } from '@/types';
 
 // const categoryStore = useCategoryStore();
 // const { getAllCategories } = storeToRefs(categoryStore);
 
-const router = useRouter();
-const moveContent = (id: number | string) => {
-  router.push(`/${id}`);
-};
+// const router = useRouter();
+// const moveContent = (id: number | string) => {
+//   router.push(`/${id}`);
+// };
 
 const isNullStr = (str: string | number | Ref<string> | undefined) => {
   const orgnMsg = toRef((str || '').toString().trim());
@@ -38,12 +38,41 @@ const categoryReduce = (result: Category[], value: Category): Category[] => {
     // if (key == 'children') continue;
     setValue<Category>(tmpCategory, key, value[key]);
   }
-
   result.push(tmpCategory);
-  if (value.children?.length == 0) {
+
+  if (value.children.length == 0) {
     return result;
   } else {
     return _.reduce(value.children, categoryReduce, result);
+  }
+};
+
+const commentReduce = (result: Comment[], value: Comment): Comment[] => {
+  const tmpComment = <Comment>{};
+  for (const k of Object.keys(value)) {
+    const key = k as keyof Comment;
+    setValue<Comment>(tmpComment, key, value[key]);
+  }
+  setValue<Comment>(tmpComment, 'level', findCommentLevel(result, value));
+  result.push(tmpComment);
+
+  if (value.children.length == 0) {
+    return result;
+  } else {
+    return _.reduce(value.children, commentReduce, result);
+  }
+};
+
+const findCommentLevel = (result: Comment[], value: Comment): number => {
+  if (value.parent == null) {
+    return 1;
+  } else {
+    const parentComment = _.find(result, ['id', value.parent]);
+    if (parentComment == undefined) {
+      return 1;
+    } else {
+      return parentComment.level! + 1;
+    }
   }
 };
 
@@ -81,9 +110,10 @@ const setValue = <T>(obj: T, key: keyof T, value: T[keyof T]) => {
 };
 
 export {
-  moveContent,
+  // moveContent,
   isNullStr,
   categoryReduce,
+  commentReduce,
   // getCategoryPath,
   // getRecentCategories,
   handleNewLine,

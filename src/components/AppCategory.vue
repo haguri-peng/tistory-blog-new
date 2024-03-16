@@ -2,6 +2,7 @@
   <LoadingSpinner v-if="isLoading"></LoadingSpinner>
   <div class="w-full" v-else>
     <div class="category-title">
+      <font-awesome-icon icon="fa-regular fa-folder-open" size="lg" />
       {{ categoryName }}
     </div>
     <div class="posts">
@@ -42,16 +43,18 @@ import { isNullStr } from '@/utils/utils';
 
 const route = useRoute();
 const getRouteCategoryPath = computed(() =>
-  route.params.categoryPath.toString(),
+  encodeURIComponent(route.params.categoryPath.toString()).replace(/%2C/g, '/'),
 );
 const router = useRouter();
 const moveContent = (id: string) => {
   isLoading.value = true;
+  // console.log(pageInfo.currentPage);
+  setCategoryInfo({ id: getCategoryId.value, page: pageInfo.currentPage });
   router.push(`/${id}`);
 };
 
 const categoryStore = useCategoryStore();
-const { getCategoryInfo } = storeToRefs(categoryStore);
+const { getCategoryInfo, getAllCategories } = storeToRefs(categoryStore);
 const getCategoryId = computed(() => getCategoryInfo.value.id);
 const getPageNum = computed(() => getCategoryInfo.value.page);
 const { setCategoryInfo, getCategoryPath } = categoryStore;
@@ -72,6 +75,20 @@ const fetchPostListByCategory = async (pageNum?: number) => {
 
   postList.length = 0;
   let pageParam = 0;
+
+  // console.log(getAllCategories);
+  // console.log(getCategoryId.value);
+
+  if (!getCategoryId.value) {
+    const curCategory = _.find(
+      getAllCategories.value,
+      (c) => c.path == getRouteCategoryPath.value,
+    );
+    // console.log(getAllCategories.value);
+    // console.log(getRouteCategoryPath.value);
+    // 카테고리 정보 세팅
+    setCategoryInfo({ id: curCategory!.id, page: 1 });
+  }
 
   if (isNullStr(pageNum)) {
     if (getRouteCategoryPath.value == getCategoryPath(getCategoryId.value)) {
@@ -202,8 +219,8 @@ const fetchPostListByCategory = async (pageNum?: number) => {
 
 onMounted(() => {
   // fetchPostByCategory();
-  setCategoryName();
   fetchPostListByCategory();
+  setCategoryName();
 });
 </script>
 
