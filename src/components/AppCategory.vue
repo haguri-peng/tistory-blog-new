@@ -23,6 +23,10 @@
 </template>
 
 <script setup lang="ts">
+import AppPost from '@/components/AppPost.vue';
+import AppPaging from '@/components/AppPaging.vue';
+import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
+
 import { ref, reactive, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
@@ -31,11 +35,6 @@ import _ from 'lodash';
 import * as htmlparser2 from 'htmlparser2';
 import * as cheerio from 'cheerio';
 
-import AppPost from '@/components/AppPost.vue';
-import AppPaging from '@/components/AppPaging.vue';
-import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
-
-// import { fetchPostListByCategory } from '@//api/index';
 import { getFirstPostListByCategory, getPostListByCategory } from '@/api/posts';
 import { PageInfo, PostInfo } from '@/types';
 import { useCategoryStore } from '@/store/category';
@@ -48,8 +47,8 @@ const getRouteCategoryPath = computed(() =>
 const router = useRouter();
 const moveContent = (id: string) => {
   isLoading.value = true;
-  // console.log(pageInfo.currentPage);
   setCategoryInfo({ id: getCategoryId.value, page: pageInfo.currentPage });
+
   router.push(`/${id}`);
 };
 
@@ -76,16 +75,12 @@ const fetchPostListByCategory = async (pageNum?: number) => {
   postList.length = 0;
   let pageParam = 0;
 
-  // console.log(getAllCategories);
-  // console.log(getCategoryId.value);
-
   if (!getCategoryId.value) {
     const curCategory = _.find(
       getAllCategories.value,
       (c) => c.path == getRouteCategoryPath.value,
     );
-    // console.log(getAllCategories.value);
-    // console.log(getRouteCategoryPath.value);
+
     // 카테고리 정보 세팅
     setCategoryInfo({ id: curCategory!.id, page: 1 });
   }
@@ -177,48 +172,7 @@ const fetchPostListByCategory = async (pageNum?: number) => {
   isLoading.value = false;
 };
 
-// const fetchPostByCategory = async (pageNum?: number) => {
-//   isLoading.value = true;
-//   postList.length = 0;
-
-//   const { data } = await fetchPostListByCategory(
-//     route.params.categoryId.toString(),
-//     pageNum ||
-//       (route.params.categoryId.toString() == getCategoryId.value
-//         ? Number(getPageNum.value)
-//         : 1),
-//   );
-
-//   if (data.tistory.status == '200') {
-//     // 페이징 정보 세팅
-//     pageInfo.currentPage = Number(data.tistory.item.page);
-//     pageInfo.totalPage = Math.ceil(
-//       Number(data.tistory.item.totalCount) / Number(data.tistory.item.count),
-//     );
-
-//     const posts: PostInfo[] = data.tistory.item.posts;
-//     // 발행된 건만
-//     postList.push(..._.filter(posts, ['visibility', '20']));
-
-//     // 카테고리 정보 세팅
-//     setCategoryInfo({
-//       id: route.params.categoryId.toString(),
-//       page: pageInfo.currentPage,
-//     });
-
-//     // 카테고리 경로(path) 조회
-//     const categoryPath = await getCategoryPath(getCategoryId.value);
-//     categoryName.value = categoryPath || '';
-//   }
-//   isLoading.value = false;
-// };
-// const setCategoryInfo = (categoryInfo: { id: string; page: number }) => {
-//   // 카테고리 및 페이지 번호를 store에 세팅
-//   setCategory(categoryInfo);
-// };
-
 onMounted(() => {
-  // fetchPostByCategory();
   fetchPostListByCategory();
   setCategoryName();
 });

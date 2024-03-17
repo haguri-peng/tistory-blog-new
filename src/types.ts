@@ -1,34 +1,3 @@
-// interface BlogStat {
-//   post: string;
-//   comment: string;
-//   trackback: string;
-//   guestbook: string;
-// }
-//
-// interface Blogs {
-//   name: string;
-//   url: string;
-//   secondaryUrl: string;
-//   nickname: string;
-//   title: string;
-//   description: string;
-//   default: string;
-//   blogIconUrl: string;
-//   faviconUrl: string;
-//   profileThumbnailImageUrl: string;
-//   profileImageUrl: string;
-//   role: string;
-//   blogId: string;
-//   isEmpty: string;
-//   statistics: BlogStat;
-// }
-//
-// interface BlogInfo {
-//   id: string;
-//   userId: string;
-//   blogs: Blogs[];
-// }
-
 interface Category {
   id: string;
   name: string;
@@ -109,32 +78,17 @@ interface PostInfo {
 }
 
 interface Comment {
-  // id: string;
-  // date: string;
-  // name: string;
-  // parentId: string;
-  // homepage: string;
-  // visibility: string;
-  // comment: string;
-  // open: string;
   level?: number;
   id: number;
   content: string;
   written: string;
   permalink: string;
-  // restrictType: null;
   isSecret: boolean;
   isPinned: boolean;
   parent: number;
   children: Comment[];
   writer: Writer;
-  // mentionUserName: null;
-  // mentionId: null;
-  // supportId: null;
   type: string;
-  // orderAmount: null;
-  // supportStatus: null;
-  // profileLayer: [];
 }
 
 interface CommentInput {
@@ -176,8 +130,26 @@ interface EntryPost {
   restrictType: null;
 }
 
+interface PostConfig {
+  allowComment: boolean;
+  allowCommentToGuest: boolean;
+  allowGuestbook: boolean;
+  allowGuestbookToGuest: boolean;
+  isSupport: boolean;
+  useCommentRecognition: boolean;
+  useGuestbookRecognition: boolean;
+}
+
+interface PostViewer {
+  canManage: boolean;
+  homepage: string;
+  id: number;
+  isRequestUser: boolean;
+  name: string;
+  role: string;
+}
+
 export type {
-  // BlogInfo,
   Category,
   CategoryInfo,
   Comment,
@@ -189,4 +161,6 @@ export type {
   CommentInput,
   CommentInfo,
   EntryPost,
+  PostConfig,
+  PostViewer,
 };

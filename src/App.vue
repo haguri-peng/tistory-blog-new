@@ -27,11 +27,11 @@ import SearchInputModal from '@/components/common/SearchInputModal.vue';
 import { ref, reactive, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-// import { fetchBlogInfo } from '@/api/index';
+import _ from 'lodash';
+
 import { useCategoryStore } from '@/store/category';
 import { searchEntryPosts, getCategories, getPostInfo } from '@/api/posts';
-import { /*BlogInfo,*/ Category } from '@/types';
-import _ from 'lodash';
+import { Category } from '@/types';
 
 const categoryStore = useCategoryStore();
 const { setAllCategories, setCategoryInfo } = categoryStore;
@@ -40,7 +40,6 @@ const route = useRoute();
 const router = useRouter();
 const moveCategory = (categoryId: string, categoryPath: string) => {
   showLoadingSpinner();
-
   setCategoryInfo({ id: categoryId, page: 1 });
 
   router.push(`/category/${categoryPath}`);
@@ -57,18 +56,6 @@ const fetchBlog = async () => {
   const { data } = await getPostInfo();
   mblMainHtml.value = data;
 };
-
-// const loginId = ref('');
-// const loginUserId = ref('');
-// const fetchBlog = async () => {
-//   const { data } = await fetchBlogInfo();
-//   const blogInfo: BlogInfo = data.tistory.item;
-//   postCnt.value =
-//     Number(_.find(blogInfo.blogs, ['name', 'haguri-peng'])?.statistics.post) ||
-//     0;
-//   loginId.value = blogInfo.id || '';
-//   loginUserId.value = blogInfo.userId || '';
-// };
 
 const category: Category[] = reactive([]);
 const fetchCategory = async () => {

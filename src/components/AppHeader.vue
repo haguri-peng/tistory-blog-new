@@ -75,16 +75,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, toRefs, onMounted } from 'vue';
+import { ref, reactive, toRefs } from 'vue';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
 import $ from 'jquery';
 import _ from 'lodash';
 
-// import { fetchPostList } from '@/api/index';
 import { Category } from '@/types';
-// import { getRecentCategories } from '@/utils/utils';
 import { useCategoryStore } from '@/store/category';
 
 const emit = defineEmits<{
@@ -96,9 +94,6 @@ const props = defineProps<{
   categoryList: Category[];
 }>();
 const { categoryList } = toRefs(props);
-// const getTopCategory = computed(() =>
-//   _.filter(categoryList.value, (c) => c.parent == ''),
-// );
 
 const router = useRouter();
 const moveHome = () => {
@@ -112,22 +107,8 @@ const categoryStore = useCategoryStore();
 const { getAllCategories } = storeToRefs(categoryStore);
 const { getRecentCategories } = categoryStore;
 
-// const recentCategoryIds: string[] = reactive([]);
-// const fetchPost = async (pageNum: number) => {
-//   const { data } = await fetchPostList(pageNum);
-//   if (data.tistory.status == '200') {
-//     // 최근에 올린 글 목록 (10개. 발행된 건만)
-//     const recentPosts = _.filter(
-//       data.tistory.item.posts,
-//       (p) => p.visibility == '20',
-//     );
-//     recentCategoryIds.push(..._.keys(_.countBy(recentPosts, 'categoryId')));
-//   }
-// };
-
 const showFlag = (categoryId: string) => {
   let result = '';
-  // const fIdx = _.findIndex(recentCategoryIds, (id) => id == categoryId);
   const fIdx = _.findIndex(getRecentCategories(), (c) => c.id == categoryId);
   if (fIdx > -1) {
     result = 'N';
@@ -165,10 +146,6 @@ const subCategoryOut = () => {
 const hideSubCategory = () => {
   $('div.subCategory').slideUp(400);
 };
-
-onMounted(() => {
-  // fetchPost(1);
-});
 </script>
 
 <style scoped>

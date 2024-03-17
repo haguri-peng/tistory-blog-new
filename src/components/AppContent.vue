@@ -43,12 +43,12 @@
         style="margin-top: 50px; float: left"
       ></ins>
     </div>
-    <div class="recentTagData">
+    <!-- <div class="recentTagData">
       <div class="recentTagsTitle">
         Recent Tags <font-awesome-icon icon="fa-solid fa-tags" />
       </div>
       <div class="mt-1">
-        <!-- <span v-for="(tag, idx) in recentTagData" :key="idx">
+        <span v-for="(tag, idx) in recentTagData" :key="idx">
           <button
             type="button"
             class="font-bold border-none mr-1"
@@ -56,9 +56,9 @@
           >
             #{{ tag }}
           </button>
-        </span> -->
+        </span>
       </div>
-    </div>
+    </div> -->
   </div>
 
   <div class="content" ref="contents">
@@ -89,11 +89,19 @@
       data-ad-slot="2087795028"
     ></ins>
 
-    <!-- <AppRelatedPost
+    <AppRelatedPost
       :tagList="tags"
       :categoryId="categoryId"
+      :postType="'related'"
       @moveContent="moveContent"
-    /> -->
+    />
+
+    <AppRelatedPost
+      :tagList="tags"
+      :categoryId="categoryId"
+      :postType="'popular'"
+      @moveContent="moveContent"
+    />
 
     <div class="tags">
       Tags
@@ -107,40 +115,6 @@
         #{{ tag }}
       </span>
     </div>
-
-    <!-- <div class="comments">
-      <p>
-        {{ comments.length }} Comments
-        <font-awesome-icon icon="fa-solid fa-comments" />
-        <button type="button" class="float-right" @click="addComment">
-          <font-awesome-icon icon="fa-solid fa-pen" title="댓글 등록" />
-          등록
-        </button>
-      </p>
-      <div
-        v-for="comment in comments"
-        :key="comment.id"
-        :class="{ hide: comment.isSecret }"
-      >
-        <div class="name">
-          <div
-            class="left"
-            :class="{
-              noAuth: comment.writer.id != $parent.$parent.loginId,
-            }"
-          >
-            <span
-              v-for="n in (comment.level == 1
-                ? comment.level + 1
-                : comment.level!) - 2"
-              :key="n"
-            >
-              &nbsp;&nbsp;&nbsp;&nbsp;
-            </span>
-          </div>
-        </div>
-      </div>
-    </div> -->
 
     <div class="comments">
       <p>
@@ -909,7 +883,7 @@ div.nav div.category div.category-name:hover {
 div.aside {
   position: fixed;
   right: 0;
-  top: 100px;
+  top: 150px;
   width: 20%;
   z-index: 100;
   display: inline-grid;

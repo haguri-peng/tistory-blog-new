@@ -1,20 +1,8 @@
 import { type Ref, toRef } from 'vue';
-// import { useRouter } from 'vue-router';
-// import { storeToRefs } from 'pinia';
 
 import _ from 'lodash';
-// import moment from 'moment';
 
-// import { useCategoryStore } from '@/store/category';
 import { Category, Comment } from '@/types';
-
-// const categoryStore = useCategoryStore();
-// const { getAllCategories } = storeToRefs(categoryStore);
-
-// const router = useRouter();
-// const moveContent = (id: number | string) => {
-//   router.push(`/${id}`);
-// };
 
 const isNullStr = (str: string | number | Ref<string> | undefined) => {
   const orgnMsg = toRef((str || '').toString().trim());
@@ -76,46 +64,10 @@ const findCommentLevel = (result: Comment[], value: Comment): number => {
   }
 };
 
-// // id와 path로 검색
-// const getCategoryPath = (categoriId: string, separator?: string) => {
-//   let result = '';
-//   let currentCategory = _.find(getAllCategories.value, ['id', categoriId]);
-//   if (currentCategory == undefined) {
-//     currentCategory = _.find(getAllCategories.value, ['path', categoriId]);
-//   }
-//   if (currentCategory != undefined) {
-//     if (isNullStr(separator)) {
-//       result = currentCategory.path;
-//     } else {
-//       result = currentCategory.path.replace(/\//g, separator || '/');
-//     }
-//   }
-//   return result;
-// };
-
-// const getRecentCategories = () => {
-//   const recentCategories = _.filter(getAllCategories.value, (c) => {
-//     const now = moment();
-//     const updated = moment(c.lastUpdate);
-//     // 90일 이전에 업데이트된 카테고리만 가져온다.
-//     return now.diff(updated, 'days') <= 90;
-//   }) as Category[];
-//   return recentCategories;
-// };
-
 const handleNewLine = (str: string) => str.replace(/(?:\r\n|\r|\n)/g, '</br>');
 
 const setValue = <T>(obj: T, key: keyof T, value: T[keyof T]) => {
   obj[key] = value;
 };
 
-export {
-  // moveContent,
-  isNullStr,
-  categoryReduce,
-  commentReduce,
-  // getCategoryPath,
-  // getRecentCategories,
-  handleNewLine,
-  setValue,
-};
+export { isNullStr, categoryReduce, commentReduce, handleNewLine, setValue };

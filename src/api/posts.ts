@@ -11,6 +11,8 @@ import {
   CategoryRes,
   PostInfoRes,
   CommentsRes,
+  ConfigViewerRes,
+  RealtedPopularRes,
 } from '@/api/axiosResTypes';
 
 // axios 초기화
@@ -93,14 +95,14 @@ const getPostInfo = (postId?: string | number | undefined): PostInfoRes =>
 const getPostComments = (postId: string): CommentsRes =>
   instance.get(`/api/${postId}/comment`);
 
-// configViewerInPost
-// https://haguri-peng.tistory.com/m/api/blog/init/${postId}
+const getConfigViewerInPost = (postId: string): ConfigViewerRes =>
+  instance.get(`/api/blog/init/${postId}`);
 
-// relatedPosts
-// https://haguri-peng.tistory.com/m/api/entry/${postId}/related
+const getRelatedPosts = (postId: string): RealtedPopularRes =>
+  instance.get(`/api/entry/${postId}/related`);
 
-// popular
-// https://haguri-peng.tistory.com/m/api/entry/${postId}/popular
+const getPopularPosts = (postId: string): RealtedPopularRes =>
+  instance.get(`/api/entry/${postId}/popular`);
 
 export {
   searchPosts,
@@ -118,4 +120,7 @@ export {
   getPostListByCategory,
   getPostInfo,
   getPostComments,
+  getConfigViewerInPost,
+  getRelatedPosts,
+  getPopularPosts,
 };
