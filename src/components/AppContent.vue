@@ -280,14 +280,7 @@ import AppContentMain from '@/components/AppContentMain.vue';
 import AppComment from '@/components/AppComment.vue';
 import AppRelatedPost from '@/components/AppRelatedPost.vue';
 
-import {
-  // fetchPostList,
-  // fetchPost,
-  fetchComments,
-  insertComment,
-  modifyComment,
-  deleteComment,
-} from '@/api/index';
+import { insertComment, modifyComment, deleteComment } from '@/api/index';
 import {
   getPostInfo,
   searchReaction,
@@ -295,16 +288,10 @@ import {
   deleteReaction,
   getPostComments,
 } from '@/api/posts';
-import { PostInfo, Comment, CommentInput } from '@/types';
+import { Comment, CommentInput } from '@/types';
 import { useCategoryStore } from '@/store/category';
 import { useCommentStore } from '@/store/comment';
-import {
-  // moveContent,
-  isNullStr,
-  // getCategoryPath,
-  commentReduce,
-  handleNewLine,
-} from '@/utils/utils';
+import { isNullStr, commentReduce, handleNewLine } from '@/utils/utils';
 
 const route = useRoute();
 const router = useRouter();
@@ -326,7 +313,7 @@ const { setCommentInfo } = commentStore;
 // categoryStore
 const categoryStore = useCategoryStore();
 const { getAllCategories } = storeToRefs(categoryStore);
-const { getCategoryPath, getRecentCategories, setCategoryInfo } = categoryStore;
+const { getCategoryPath, setCategoryInfo } = categoryStore;
 
 const content = ref('');
 const isContent = computed(() => (isNullStr(content) ? false : true));
@@ -579,26 +566,26 @@ const delComment = async (commentId: string, homepage: string) => {
   }
 };
 
-const recentTagData: string[] = reactive([]);
-const getTagList = async () => {
-  // const { data } = await fetchPostList();
-  // if (data.tistory.status == '200') {
-  //   // 최근글 5개만
-  //   const postList: PostInfo[] = _.take(data.tistory.item.posts, 5);
-  //   let tagList: string[] = [];
-  //   for (const post of postList) {
-  //     const { data } = await fetchPost(post.id);
-  //     if (data.tistory.status == '200') {
-  //       tagList = _.flatten([
-  //         ...tagList,
-  //         ...(data.tistory.item.tags.tag || []),
-  //       ]);
-  //     }
-  //   }
-  //   tagList = _.uniq(tagList);
-  //   recentTagData.push(...tagList);
-  // }
-};
+// const recentTagData: string[] = reactive([]);
+// const getTagList = async () => {
+// const { data } = await fetchPostList();
+// if (data.tistory.status == '200') {
+//   // 최근글 5개만
+//   const postList: PostInfo[] = _.take(data.tistory.item.posts, 5);
+//   let tagList: string[] = [];
+//   for (const post of postList) {
+//     const { data } = await fetchPost(post.id);
+//     if (data.tistory.status == '200') {
+//       tagList = _.flatten([
+//         ...tagList,
+//         ...(data.tistory.item.tags.tag || []),
+//       ]);
+//     }
+//   }
+//   tagList = _.uniq(tagList);
+//   recentTagData.push(...tagList);
+// }
+// };
 
 const contents = ref<HTMLDivElement>();
 const setHeight = (delay = 1000) => {
