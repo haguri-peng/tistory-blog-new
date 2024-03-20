@@ -21,10 +21,10 @@
 
   <!-- Right -->
   <div class="aside">
-    <div class="text-left" style="border-left: 2px solid #df7861">
-      <ul class="list-none pl-2"></ul>
+    <div class="text-left">
+      <ul class="list-none pl-2" style="border-left: 2px solid #df7861"></ul>
     </div>
-    <div class="image">
+    <div class="image absolute bottom-0 left-0">
       <!-- Coupang Dynamic Banner -->
       <!-- <iframe
         src="https://ads-partners.coupang.com/widgets.html?id=639317&template=carousel&trackingCode=AF6597674&subId=&width=250&height=250"
@@ -40,7 +40,6 @@
         data-ad-unit="DAN-rNHsJ1xGbg4tjBAa"
         data-ad-width="250"
         data-ad-height="250"
-        style="margin-top: 50px; float: left"
       ></ins>
     </div>
     <!-- <div class="recentTagData">
@@ -201,7 +200,7 @@
     </div>
 
     <div class="top-down" v-show="isContent">
-      <div @click="gotoTop">
+      <div @click="gotoTop" class="mb-5">
         <font-awesome-icon
           icon="fa-solid fa-circle-up"
           size="xl"
@@ -287,6 +286,7 @@ import {
   postReaction,
   deleteReaction,
   getPostComments,
+  getConfigViewerInPost,
 } from '@/api/posts';
 import { Comment, CommentInput } from '@/types';
 import { useCategoryStore } from '@/store/category';
@@ -397,6 +397,12 @@ const getContent = async () => {
 
     // reaction 가져오기
     getReaction();
+
+    // config, viewer 정보 확인
+    const { data: configViewer } = await getConfigViewerInPost(postId.value);
+    if (configViewer.data != null) {
+      acceptComment.value = configViewer.data.config.allowComment;
+    }
 
     // 스크롤 Event 설정
     // 스크롤 위치에 따라 어느 영역에 있는지 확인하여 색상을 변경
@@ -871,6 +877,7 @@ div.aside {
   position: fixed;
   right: 0;
   top: 150px;
+  bottom: 0;
   width: 20%;
   z-index: 100;
   display: inline-grid;

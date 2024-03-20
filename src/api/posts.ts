@@ -11,7 +11,7 @@ import {
   CategoryRes,
   PostInfoRes,
   CommentsRes,
-  ConfigViewerRes,
+  // ConfigViewerRes,
   RealtedPopularRes,
 } from '@/api/axiosResTypes';
 
@@ -95,7 +95,7 @@ const getPostInfo = (postId?: string | number | undefined): PostInfoRes =>
 const getPostComments = (postId: string): CommentsRes =>
   instance.get(`/api/${postId}/comment`);
 
-const getConfigViewerInPost = (postId: string): ConfigViewerRes =>
+const getConfigViewerInPost = (postId: string): GuestbookInitRes =>
   instance.get(`/api/blog/init/${postId}`);
 
 const getRelatedPosts = (postId: string): RealtedPopularRes =>
