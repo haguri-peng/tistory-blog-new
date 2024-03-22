@@ -107,6 +107,17 @@ interface CommentInfo {
   modComment?: string;
 }
 
+interface CommentPost {
+  captcha: string;
+  comment: string;
+  homepage: string;
+  isSecret: boolean;
+  name: string;
+  parent: number | null;
+  password: string;
+  mentionId?: string;
+}
+
 interface EntryPost {
   id: number;
   title: string;
@@ -160,7 +171,9 @@ export type {
   PostInfo,
   CommentInput,
   CommentInfo,
+  CommentPost,
   EntryPost,
   PostConfig,
   PostViewer,
+  Writer,
 };

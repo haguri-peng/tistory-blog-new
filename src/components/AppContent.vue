@@ -90,14 +90,12 @@
 
     <AppRelatedPost
       :tagList="tags"
-      :categoryId="categoryId"
       :postType="'related'"
       @moveContent="moveContent"
     />
 
     <AppRelatedPost
       :tagList="tags"
-      :categoryId="categoryId"
       :postType="'popular'"
       @moveContent="moveContent"
     />
@@ -279,16 +277,17 @@ import AppContentMain from '@/components/AppContentMain.vue';
 import AppComment from '@/components/AppComment.vue';
 import AppRelatedPost from '@/components/AppRelatedPost.vue';
 
-import { insertComment, modifyComment, deleteComment } from '@/api/index';
+import { /*insertComment, modifyComment,*/ deleteComment } from '@/api/index';
 import {
   getPostInfo,
   searchReaction,
   postReaction,
   deleteReaction,
-  getPostComments,
+  getCommentsInPost,
+  postComment,
   getConfigViewerInPost,
 } from '@/api/posts';
-import { Comment, CommentInput } from '@/types';
+import { Comment, CommentInput, CommentPost } from '@/types';
 import { useCategoryStore } from '@/store/category';
 import { useCommentStore } from '@/store/comment';
 import { isNullStr, commentReduce, handleNewLine } from '@/utils/utils';
@@ -434,7 +433,7 @@ const comments: Comment[] = reactive([]);
 const getComments = async () => {
   comments.length = 0;
 
-  const { data } = await getPostComments(postId.value);
+  const { data } = await getCommentsInPost(postId.value);
   if (data.data.totalItems > 0) {
     // comments.push(...data.data.items);
     // console.log(data.data.items);
@@ -495,35 +494,44 @@ const addComment = () => {
 
   showModal.value = true;
 };
-const hideModal = async (action: string, objData?: CommentInput) => {
+const hideModal = async (action: string, objData?: CommentPost) => {
   showModal.value = false;
 
   // 댓글 등록 및 수정
   if (action == 'submit') {
-    objData!.postId = postId.value;
+    // objData!.postId = postId.value;
 
     try {
-      if (!isNullStr(objData!.commentId)) {
-        // 수정
-        const { data } = await modifyComment(objData!);
-        if (data.tistory.status == '200') {
-          alert('댓글이 수정되었습니다.');
-          getComments();
-        } else {
-          alert(data.tistory.result);
-        }
+      // 등록
+      const { data } = await postComment(postId.value, objData!);
+      if (data.data.id != null) {
+        alert('댓글이 등록되었습니다.');
+        getComments();
+        setHeight();
       } else {
-        // 등록
-        const { data } = await insertComment(objData!);
-        if (data.tistory.status == '200') {
-          alert('댓글이 등록되었습니다.');
-
-          getComments();
-          setHeight();
-        } else {
-          alert(data.tistory.result);
-        }
+        alert('댓글 등록이 실패하였습니다.');
       }
+
+      // if (!isNullStr(objData!.commentId)) {
+      //   // 수정
+      //   const { data } = await modifyComment(objData!);
+      //   if (data.tistory.status == '200') {
+      //     alert('댓글이 수정되었습니다.');
+      //     getComments();
+      //   } else {
+      //     alert(data.tistory.result);
+      //   }
+      // } else {
+      //   // 등록
+      //   const { data } = await insertComment(objData!);
+      //   if (data.tistory.status == '200') {
+      //     alert('댓글이 등록되었습니다.');
+      //     getComments();
+      //     setHeight();
+      //   } else {
+      //     alert(data.tistory.result);
+      //   }
+      // }
     } catch (err) {
       if (axios.isAxiosError<AxiosResponse>(err)) {
         alert(err.message);

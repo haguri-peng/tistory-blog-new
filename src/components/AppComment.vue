@@ -46,11 +46,11 @@ import { storeToRefs } from 'pinia';
 
 import { getGuestbookInit } from '@/api/posts';
 import { GuestbookInitRes } from '@/api/axiosResTypes';
-import { CommentInput } from '@/types';
+import { /*CommentInput,*/ CommentPost } from '@/types';
 import { useCommentStore } from '@/store/comment';
 
 const emit = defineEmits<{
-  (e: 'closeModal', action: string, objData?: CommentInput): void;
+  (e: 'closeModal', action: string, objData?: CommentPost): void;
 }>();
 
 const props = defineProps<{
@@ -60,7 +60,7 @@ const { showModal } = toRefs(props);
 
 const commentStore = useCommentStore();
 const { getCommentInfo } = storeToRefs(commentStore);
-const getParentCommentId = computed(() => getCommentInfo.value.parentCommentId);
+// const getParentCommentId = computed(() => getCommentInfo.value.parentCommentId);
 const getCommentId = computed(() => getCommentInfo.value.commentId);
 const getModComment = computed(() => getCommentInfo.value.modComment);
 const { clearCommentInfo } = commentStore;
@@ -80,16 +80,25 @@ const submit = () => {
     return;
   }
 
-  const objData: CommentInput = {
-    blogName: blogName.value,
-    content: comment.value,
-    secret: arrChk.length > 0 ? 1 : 0, // 1: 비밀댓글, 0: 공개댓글
-    parentId: getParentCommentId.value,
+  // const objData: CommentInput = {
+  //   blogName: blogName.value,
+  //   content: comment.value,
+  //   secret: arrChk.length > 0 ? 1 : 0, // 1: 비밀댓글, 0: 공개댓글
+  //   parentId: getParentCommentId.value,
+  // };
+  const objData: CommentPost = {
+    captcha: '',
+    comment: comment.value,
+    homepage: loginHomepage.value,
+    isSecret: arrChk.length > 0, // true: 비밀댓글, false: 공개댓글
+    name: loginName.value,
+    parent: null,
+    password: '',
   };
 
   // 댓글 수정인 경우
   if (mode.value == 'M') {
-    objData.commentId = getCommentId.value;
+    objData.parent = Number(getCommentId.value);
   }
 
   resetData();
@@ -109,6 +118,9 @@ const resetData = () => {
   clearCommentInfo();
 };
 
+const loginId = ref(0);
+const loginName = ref('');
+const loginHomepage = ref('');
 watch(showModal, (val) => {
   dialogState.value = val;
 
@@ -121,6 +133,9 @@ watch(showModal, (val) => {
           blogName.value = reqUser.homepage
             .replace('https://', '')
             .replace('.tistory.com', '');
+          loginId.value = reqUser.id;
+          loginName.value = reqUser.name;
+          loginHomepage.value = reqUser.homepage;
         }
       })
       .catch((err) => console.error(err));

@@ -1,5 +1,12 @@
 import { AxiosResponse } from 'axios';
-import { Category, SearchInfo, Guestbook, Comment, EntryPost } from '@/types';
+import {
+  Category,
+  SearchInfo,
+  Guestbook,
+  Comment,
+  EntryPost,
+  Writer,
+} from '@/types';
 
 interface CategoryFetch {
   data: {
@@ -105,6 +112,29 @@ interface ProcessComment {
 }
 type ProcessCommentRes = Promise<AxiosResponse<ProcessComment>>;
 
+interface PostCommentResult {
+  data: {
+    children: [];
+    content: string;
+    id: number;
+    isPinned: boolean;
+    isSecret: boolean;
+    mentionId?: string;
+    mentionUserName?: string;
+    orderAmount?: number;
+    parent?: number;
+    permalink: string;
+    profileLayer: [];
+    restrictType?: string;
+    supportId?: number;
+    supportStatus?: string;
+    type: string;
+    writer: Writer;
+    written: string;
+  };
+}
+type PostCommentResultRes = Promise<AxiosResponse<PostCommentResult>>;
+
 interface ReactionFetch {
   data: {
     count: number;
@@ -161,6 +191,7 @@ export type {
   GuestbookRes,
   CommentsRes,
   ProcessCommentRes,
+  PostCommentResultRes,
   ReactionRes,
   ReactionToggleRes,
   EntryPostsRes,

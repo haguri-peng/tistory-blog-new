@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GuestbookPost } from '@/types';
+import { GuestbookPost, CommentPost } from '@/types';
 import {
   GuestbookInitRes,
   SearchRes,
@@ -13,6 +13,7 @@ import {
   CommentsRes,
   // ConfigViewerRes,
   RealtedPopularRes,
+  PostCommentResultRes,
 } from '@/api/axiosResTypes';
 
 // axios 초기화
@@ -92,8 +93,13 @@ const getPostListByCategory = (
 const getPostInfo = (postId?: string | number | undefined): PostInfoRes =>
   instance.get(`/${postId || ''}`, { responseType: 'text' });
 
-const getPostComments = (postId: string): CommentsRes =>
+const getCommentsInPost = (postId: string): CommentsRes =>
   instance.get(`/api/${postId}/comment`);
+
+const postComment = (
+  postId: string | number,
+  postData: CommentPost,
+): PostCommentResultRes => instance.post(`/api/${postId}/comment`, postData);
 
 const getConfigViewerInPost = (postId: string): GuestbookInitRes =>
   instance.get(`/api/blog/init/${postId}`);
@@ -119,7 +125,8 @@ export {
   getFirstPostListByCategory,
   getPostListByCategory,
   getPostInfo,
-  getPostComments,
+  getCommentsInPost,
+  postComment,
   getConfigViewerInPost,
   getRelatedPosts,
   getPopularPosts,

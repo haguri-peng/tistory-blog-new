@@ -42,7 +42,6 @@ import { SearchInfo } from '@/types';
 
 const props = defineProps<{
   tagList: string[];
-  categoryId: string;
   postType: string;
 }>();
 const { postType } = toRefs(props);
