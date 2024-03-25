@@ -367,7 +367,15 @@ const getContent = async () => {
 
     // Category
     const categoryEl = $$mainContent.find('a.txt_category');
-    const categoryPath = categoryEl.text();
+    const arrCategoryPath = categoryEl.text().split('/');
+    let categoryPath = '';
+    for (const categoryNm of arrCategoryPath) {
+      if (!isNullStr(categoryPath)) {
+        categoryPath += '/';
+      }
+      categoryPath += encodeURIComponent(categoryNm);
+    }
+
     const curCategory = _.find(
       getAllCategories.value,
       (c) => c.path == categoryPath,
