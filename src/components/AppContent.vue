@@ -122,11 +122,7 @@
           등록
         </button>
       </p>
-      <div
-        v-for="comment in comments"
-        :key="comment.id"
-        :class="{ hide: comment.isSecret }"
-      >
+      <div v-for="comment in comments" :key="comment.id">
         <div class="name">
           <!-- @vue-expect-error -->
           <div
@@ -190,10 +186,15 @@
             </ul>
           </div>
         </div>
-        <!-- <div class="comment" v-if="comment.visibility == '0'">
-          승인 대기중인 댓글입니다.
-        </div> -->
-        <div class="comment" v-html="handleNewLine(comment.content)"></div>
+        <div class="comment" v-if="comment.isSecret">
+          <font-awesome-icon icon="fa-solid fa-lock" />
+          비밀댓글입니다.
+        </div>
+        <div
+          class="comment"
+          v-else
+          v-html="handleNewLine(comment.content)"
+        ></div>
       </div>
     </div>
 
@@ -830,9 +831,6 @@ div.comments p {
 div.comments > div {
   padding: 15px;
   border-bottom: 1px solid #76549a;
-}
-div.comments > div.hide {
-  display: none;
 }
 div.comments > div > div.name {
   /* display: flex; */
