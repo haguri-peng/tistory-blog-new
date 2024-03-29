@@ -3,7 +3,10 @@
     <span class="post-id">ID: {{ postItem.id }}</span>
     <span class="post-title">
       <span>{{ postItem.title }}</span>
-      <span class="text-base ml-1">
+      <span
+        class="text-base ml-1"
+        :class="{ hide: Number(postItem.comments) == 0 }"
+      >
         <font-awesome-layers full-width class="fa-lg">
           <font-awesome-icon icon="fa-regular fa-comment" />
           <font-awesome-layers-text
