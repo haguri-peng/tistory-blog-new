@@ -22,8 +22,14 @@ function createInstance() {
     baseURL: 'https://haguri-peng.tistory.com/m',
   });
 }
-
 const instance = createInstance();
+
+function createInstance2() {
+  return axios.create({
+    baseURL: 'https://haguri-peng.tistory.com',
+  });
+}
+const instance2 = createInstance2();
 
 // 글 검색
 const searchPosts = (keyword: string, page: number, size: number): SearchRes =>
@@ -66,15 +72,6 @@ const getGuestbook = (size?: number): GuestbookRes =>
 const postGuestbook = (postData: GuestbookPost) =>
   instance.post('/api/guestbook', postData);
 
-// Entry Posts (default page is 0)
-const searchEntryPosts = (page = 0): EntryPostsRes => {
-  let size = 30;
-  if (page > 0) {
-    size = 10;
-  }
-  return instance.get(`/api/entry/0/POST?page=${page}&size=${size}`);
-};
-
 // Categories
 const getCategories = (): CategoryRes => instance.get('/api/categories');
 
@@ -110,6 +107,9 @@ const getRelatedPosts = (postId: string): RealtedPopularRes =>
 const getPopularPosts = (postId: string): RealtedPopularRes =>
   instance.get(`/api/entry/${postId}/popular`);
 
+const getBlogRss = (): PostInfoRes =>
+  instance2.get('/rss', { responseType: 'text' });
+
 export {
   searchPosts,
   searchTags,
@@ -120,7 +120,6 @@ export {
   getGuestbookInit,
   getGuestbook,
   postGuestbook,
-  searchEntryPosts,
   getCategories,
   getFirstPostListByCategory,
   getPostListByCategory,
@@ -130,4 +129,5 @@ export {
   getConfigViewerInPost,
   getRelatedPosts,
   getPopularPosts,
+  getBlogRss,
 };
