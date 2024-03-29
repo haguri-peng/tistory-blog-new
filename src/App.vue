@@ -28,13 +28,19 @@ import { ref, reactive, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import _ from 'lodash';
+import * as htmlparser2 from 'htmlparser2';
+import * as cheerio from 'cheerio';
 
 import { useCategoryStore } from '@/store/category';
-import { searchEntryPosts, getCategories, getPostInfo } from '@/api/posts';
+import { useTagStore } from '@/store/tag';
+import { getCategories, getPostInfo, getBlogRss } from '@/api/posts';
 import { Category } from '@/types';
 
 const categoryStore = useCategoryStore();
 const { setAllCategories, setCategoryInfo } = categoryStore;
+
+const tagStore = useTagStore();
+const { setRecentTag } = tagStore;
 
 const route = useRoute();
 const router = useRouter();
@@ -45,10 +51,32 @@ const moveCategory = (categoryId: string, categoryPath: string) => {
   router.push(`/category/${categoryPath}`);
 };
 
-const postCnt = ref(0);
-const fetchEntryPosts = async () => {
-  const { data } = await searchEntryPosts();
-  postCnt.value = data.data.totalItems;
+const fetchBlogRss = async () => {
+  const { data: sXml } = await getBlogRss();
+  // console.log(sXml);
+
+  // htmlparser
+  const dom = htmlparser2.parseDocument(sXml);
+  if (dom != null) {
+    const elHtml = _.find(
+      dom.children,
+      (c: cheerio.Element) => c.type == 'tag' && c.tagName == 'rss',
+    );
+    // console.log(elHtml);
+
+    // @ts-ignore
+    const $ = cheerio.load(elHtml);
+    const $item = $('item:lt(10)');
+    const arrTmpTags: string[] = [];
+    // @ts-ignore
+    $item.each(function (i, el) {
+      const $category = $(el).find('category');
+      $category.each(function () {
+        arrTmpTags.push($(this).text());
+      });
+    });
+    setRecentTag(_.uniq(arrTmpTags));
+  }
 };
 
 const mblMainHtml = ref('');
@@ -89,7 +117,7 @@ const closeSearchModal = (type: string, keyword?: string) => {
 onMounted(() => {
   showLoadingSpinner();
   fetchBlog();
-  fetchEntryPosts();
+  fetchBlogRss();
   fetchCategory();
   setAllCategories();
 });

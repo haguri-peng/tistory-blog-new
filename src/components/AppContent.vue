@@ -42,22 +42,11 @@
         data-ad-height="250"
       ></ins>
     </div>
-    <!-- <div class="recentTagData">
+    <div class="recentTagData" @click="openRecentTagModal">
       <div class="recentTagsTitle">
         Recent Tags <font-awesome-icon icon="fa-solid fa-tags" />
       </div>
-      <div class="mt-1">
-        <span v-for="(tag, idx) in recentTagData" :key="idx">
-          <button
-            type="button"
-            class="font-bold border-none mr-1"
-            @click="searchTag(tag)"
-          >
-            #{{ tag }}
-          </button>
-        </span>
-      </div>
-    </div> -->
+    </div>
   </div>
 
   <div class="content" ref="contents">
@@ -258,8 +247,14 @@
       </div>
     </div>
 
-    <!-- Modal -->
+    <!-- Comment Modal -->
     <AppComment :showModal="showModal" @closeModal="hideModal" />
+
+    <!-- RecentTagModal -->
+    <RecentTagModal
+      :showRecentTag="showRecentTag"
+      @closeTagModal="closeTagModal"
+    />
   </div>
 </template>
 
@@ -277,6 +272,7 @@ import axios, { AxiosResponse } from 'axios';
 import AppContentMain from '@/components/AppContentMain.vue';
 import AppComment from '@/components/AppComment.vue';
 import AppRelatedPost from '@/components/AppRelatedPost.vue';
+import RecentTagModal from '@/components/modal/RecentTagModal.vue';
 
 import { /*insertComment, modifyComment,*/ deleteComment } from '@/api/index';
 import {
@@ -374,7 +370,11 @@ const getContent = async () => {
       if (!isNullStr(categoryPath)) {
         categoryPath += '/';
       }
-      categoryPath += encodeURIComponent(categoryNm);
+      // 카테고리에서 사용하는 특수문자 (,),! 별도 치환
+      categoryPath += encodeURIComponent(categoryNm)
+        .replace(/!/g, '%21')
+        .replace(/\(/g, '%28')
+        .replace(/\)/g, '%29');
     }
 
     const curCategory = _.find(
@@ -444,48 +444,8 @@ const getComments = async () => {
 
   const { data } = await getCommentsInPost(postId.value);
   if (data.data.totalItems > 0) {
-    // comments.push(...data.data.items);
-    // console.log(data.data.items);
-    // for (const item of data.data.items) {
-    //   console.log(item);
-    //   comments.push(item);
-    // }
-    // const allComments: Comment[] = [];
-    // allComments.push(..._.reduce(data.data.items, commentReduce, []));
-    // console.log(allComments);
     comments.push(..._.reduce(data.data.items, commentReduce, []));
   }
-  // console.log(comments);
-
-  // const { data } = await fetchComments(route.params.id.toString());
-  // if (data.tistory.status == '200') {
-  //   if (
-  //     data.tistory.item.comments != null &&
-  //     data.tistory.item.comments.length > 0
-  //   ) {
-  //     const treeSortComments: Comment[] = _.sortBy(data.tistory.item.comments, [
-  //       function (comment) {
-  //         function getParentDate(comment: Comment) {
-  //           if (comment.parentId == '') {
-  //             comment.level = 1;
-  //             return comment.date;
-  //           } else {
-  //             const parent = _.find(data.tistory.item.comments, [
-  //               'id',
-  //               comment.parentId,
-  //             ]);
-  //             comment.level = parent!.level! + 1;
-  //             return getParentDate(parent!);
-  //           }
-  //         }
-  //         return getParentDate(comment);
-  //       },
-  //       'date',
-  //     ]);
-
-  //     comments.push(...treeSortComments);
-  //   }
-  // }
 };
 const showModal = ref(false);
 const addComment = () => {
@@ -589,26 +549,13 @@ const delComment = async (commentId: string, homepage: string) => {
   }
 };
 
-// const recentTagData: string[] = reactive([]);
-// const getTagList = async () => {
-// const { data } = await fetchPostList();
-// if (data.tistory.status == '200') {
-//   // 최근글 5개만
-//   const postList: PostInfo[] = _.take(data.tistory.item.posts, 5);
-//   let tagList: string[] = [];
-//   for (const post of postList) {
-//     const { data } = await fetchPost(post.id);
-//     if (data.tistory.status == '200') {
-//       tagList = _.flatten([
-//         ...tagList,
-//         ...(data.tistory.item.tags.tag || []),
-//       ]);
-//     }
-//   }
-//   tagList = _.uniq(tagList);
-//   recentTagData.push(...tagList);
-// }
-// };
+const showRecentTag = ref(false);
+const openRecentTagModal = () => {
+  showRecentTag.value = true;
+};
+const closeTagModal = () => {
+  showRecentTag.value = false;
+};
 
 const contents = ref<HTMLDivElement>();
 const setHeight = (delay = 1000) => {
@@ -897,10 +844,16 @@ div.aside {
   display: inline-grid;
 }
 div.aside div.recentTagData {
-  margin-top: 50px;
-  width: 90%;
+  /* margin-top: 50px;
+  width: 90%; */
   text-align: left;
   font-size: 0.8rem;
+  bottom: 270px;
+  position: absolute;
+}
+div.aside div.recentTagData:hover {
+  cursor: pointer;
+  background-color: burlywood;
 }
 div.aside div.recentTagData span:hover {
   text-decoration: underline;
