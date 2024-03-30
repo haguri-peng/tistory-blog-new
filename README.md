@@ -64,15 +64,17 @@ export const useCategoryStore = defineStore('category', () => {
 ### Modal
 
 - [Gitart Vue Dialog](https://github.com/gitart-group/vue-dialog)  
-  (댓글 및 방명록 등록 시 Modal 사용)
+  (댓글/방명록 등록, RecentTag)
 
 ## Libraries
 
 - [Axios](https://axios-http.com)
 - [htmlparser2](https://github.com/fb55/htmlparser2#readme)
+- [cheerio](https://cheerio.js.org/)
 - [jQuery](https://jquery.com)
 - [Lodash](https://lodash.com)
 - [tailwindcss](https://tailwindcss.com)
+- [Moment.js](https://momentjs.com/)
 
 ## Color
 
@@ -90,17 +92,23 @@ Tistory 에서 제공하는 `Open API` 를 활용 ([Tistory Open API](https://ti
 참, Open API는 2024년 2월까지 순차적으로 서비스가 종료됩니다.  
 [서비스 종료 안내 링크](https://notice.tistory.com/2664)
 
-### 댓글
+### 댓글/방명록
 
-댓글의 수정/삭제 기능을 구현하였으나 Open API 에서 로그인한 사용자의 정보를 알 수 없어(사용자 검증 문제) 실질적으로 사용할 수 없습니다.  
-(적용 가능한지 재확인중 😅)  
-로그인한 사용자를 알 수 없기에 댓글 등록 시, 블로그 주소 정보를 입력하고 댓글을 입력해야 등록할 수 있습니다.
+- [x] 댓글 등록
+- [ ] 댓글의 수정/삭제
+- [x] 방명록 등록
 
-### 공지사항 및 방명록
+### 공지사항
 
-Open API 에서 제공하지 않음.  
-방명록 작업 완료  
-공지사항은 확인중..
+🧰 공지사항은 작업중
+
+## 광고
+
+- Google Adsense: 블로그 전반에 적용
+- Kakao Adfit: Side 영역 및 포스팅에 한 개씩 적용
+- Tenping: 포스팅에 한 개씩 적용
+
+포스팅에 적용되는 부분은 글 작성 시에 수동으로 추가하는 부분입니다.
 
 ## ⚙️ Configuration
 
