@@ -86,4 +86,7 @@ div.tags-wrapper div.close:hover {
   color: #df7861;
   cursor: pointer;
 }
+div.tags-wrapper div.tag-content {
+  border: 1px dashed lightgray;
+}
 </style>
