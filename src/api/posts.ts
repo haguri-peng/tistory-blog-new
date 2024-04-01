@@ -14,7 +14,9 @@ import {
   // ConfigViewerRes,
   RealtedPopularRes,
   PostCommentResultRes,
+  NoticeBaseInfoRes,
 } from '@/api/axiosResTypes';
+import { isNullStr } from '@/utils/utils';
 
 // axios 초기화
 function createInstance() {
@@ -110,6 +112,17 @@ const getPopularPosts = (postId: string): RealtedPopularRes =>
 const getBlogRss = (): PostInfoRes =>
   instance2.get('/rss', { responseType: 'text' });
 
+const getNotice = (noticeId?: string): PostInfoRes => {
+  if (isNullStr(noticeId)) {
+    return instance.get('/notice', { responseType: 'text' });
+  } else {
+    return instance.get(`/notice/${noticeId}`, { responseType: 'text' });
+  }
+};
+
+const getNoticeBaseInfo = (): NoticeBaseInfoRes =>
+  instance.get(`/api/entry/0/NOTICE?page=0&size=10`);
+
 export {
   searchPosts,
   searchTags,
@@ -130,4 +143,6 @@ export {
   getRelatedPosts,
   getPopularPosts,
   getBlogRss,
+  getNotice,
+  getNoticeBaseInfo,
 };

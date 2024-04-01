@@ -160,6 +160,14 @@ interface PostViewer {
   role: string;
 }
 
+interface NoticeInfo {
+  id: string;
+  title: string;
+  content: string;
+  date: string;
+  visibility: string;
+}
+
 export type {
   Category,
   CategoryInfo,
@@ -176,4 +184,5 @@ export type {
   PostConfig,
   PostViewer,
   Writer,
+  NoticeInfo,
 };

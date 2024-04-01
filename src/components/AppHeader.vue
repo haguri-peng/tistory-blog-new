@@ -8,7 +8,6 @@
             icon="fa-solid fa-house"
             size="xl"
             title="Home"
-            style="cursor: pointer"
             @click="moveHome"
           />
         </li>
@@ -17,11 +16,30 @@
             <font-awesome-icon
               icon="fa-solid fa-book"
               title="GuestBook"
-              style="color: royalblue; cursor: pointer"
+              style="color: royalblue"
             />
             <font-awesome-layers-text
+              class="calc-deco-guestbook"
               transform="down-12 shrink-8"
               value="GuestBook"
+            />
+          </font-awesome-layers>
+        </li>
+        <li @click="moveNotice">
+          <font-awesome-layers
+            full-width
+            class="fa-xl"
+            style="color: indianred"
+          >
+            <font-awesome-icon icon="fa-regular fa-message" title="Notice" />
+            <font-awesome-layers-text
+              transform="left-0.5 up-0.7 shrink-6"
+              :value="notiCnt"
+            />
+            <font-awesome-layers-text
+              class="calc-deco-notice"
+              transform="down-12 shrink-8"
+              value="Notice"
             />
           </font-awesome-layers>
         </li>
@@ -75,14 +93,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, toRefs } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, reactive, toRefs, computed, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
 import $ from 'jquery';
 import _ from 'lodash';
 
 import { Category } from '@/types';
+import { getNoticeBaseInfo } from '@/api/posts';
 import { useCategoryStore } from '@/store/category';
 
 const emit = defineEmits<{
@@ -95,12 +114,32 @@ const props = defineProps<{
 }>();
 const { categoryList } = toRefs(props);
 
+const route = useRoute();
+const curRoutePath = computed(() => route.path);
+const decoGuestbook = computed(() => {
+  if (curRoutePath.value.indexOf('guestbook') > -1) {
+    return 'underline';
+  } else {
+    return 'inherit';
+  }
+});
+const decoNotice = computed(() => {
+  if (curRoutePath.value.indexOf('notice') > -1) {
+    return 'underline';
+  } else {
+    return 'inherit';
+  }
+});
+
 const router = useRouter();
 const moveHome = () => {
   router.push('/');
 };
 const moveGuestbook = () => {
   router.push('/guestbook');
+};
+const moveNotice = () => {
+  router.push('/notice');
 };
 
 const categoryStore = useCategoryStore();
@@ -146,6 +185,16 @@ const subCategoryOut = () => {
 const hideSubCategory = () => {
   $('div.subCategory').slideUp(400);
 };
+
+const notiCnt = ref(0);
+const fetchNoticeBaseInfo = async () => {
+  const { data } = await getNoticeBaseInfo();
+  notiCnt.value = data.data.totalItems;
+};
+
+onMounted(() => {
+  fetchNoticeBaseInfo();
+});
 </script>
 
 <style scoped>
@@ -166,12 +215,8 @@ header {
   z-index: 990;
 }
 div.category {
-  /* position: absolute;
-  top: 0;
-  left: 0; */
   width: 100%;
   height: 60px;
-  /* background-color: rgba(152, 251, 152, 0.8); */
   background-color: #d9f8c4;
   border-bottom: 1px solid lightgray;
 }
@@ -225,5 +270,11 @@ div.subCategory div:hover {
 }
 div.subCategory span.newFlag {
   color: #df7861;
+}
+span.calc-deco-guestbook {
+  text-decoration: v-bind('decoGuestbook');
+}
+span.calc-deco-notice {
+  text-decoration: v-bind('decoNotice');
 }
 </style>

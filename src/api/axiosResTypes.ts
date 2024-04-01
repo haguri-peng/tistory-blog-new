@@ -182,6 +182,16 @@ interface RealtedPopularFetch {
 }
 type RealtedPopularRes = Promise<AxiosResponse<RealtedPopularFetch>>;
 
+interface NoticeBaseInfoFetch {
+  data: {
+    isLast: boolean;
+    items: [];
+    nextPage: number;
+    totalItems: number;
+  };
+}
+type NoticeBaseInfoRes = Promise<AxiosResponse<NoticeBaseInfoFetch>>;
+
 export type {
   CategoryRes,
   PostRes,
@@ -198,4 +208,5 @@ export type {
   PostInfoRes,
   ConfigViewerRes,
   RealtedPopularRes,
+  NoticeBaseInfoRes,
 };
