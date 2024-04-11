@@ -4,6 +4,13 @@ import _ from 'lodash';
 
 import { Category, Comment } from '@/types';
 
+const isMobile = () => {
+  const userAgent = navigator.userAgent;
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+    userAgent,
+  );
+};
+
 const isNullStr = (str: string | number | Ref<string> | undefined) => {
   const orgnMsg = toRef((str || '').toString().trim());
   if (
@@ -70,4 +77,11 @@ const setValue = <T>(obj: T, key: keyof T, value: T[keyof T]) => {
   obj[key] = value;
 };
 
-export { isNullStr, categoryReduce, commentReduce, handleNewLine, setValue };
+export {
+  isMobile,
+  isNullStr,
+  categoryReduce,
+  commentReduce,
+  handleNewLine,
+  setValue,
+};

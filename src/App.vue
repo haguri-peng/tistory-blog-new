@@ -24,7 +24,7 @@ import AppHeader from '@/components/AppHeader.vue';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import SearchInputModal from '@/components/common/SearchInputModal.vue';
 
-import { ref, reactive, onMounted } from 'vue';
+import { ref, reactive, onBeforeMount, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import _ from 'lodash';
@@ -35,6 +35,7 @@ import { useCategoryStore } from '@/store/category';
 import { useTagStore } from '@/store/tag';
 import { getCategories, getPostInfo, getBlogRss } from '@/api/posts';
 import { Category } from '@/types';
+import { isMobile } from '@/utils/utils';
 
 const categoryStore = useCategoryStore();
 const { setAllCategories, setCategoryInfo } = categoryStore;
@@ -113,6 +114,15 @@ const closeSearchModal = (type: string, keyword?: string) => {
     router.push(`/search/posts/${keyword}`);
   }
 };
+
+const domain = 'https://haguri-peng.tistory.com';
+const testDomain = 'http://localhost:5173';
+onBeforeMount(async () => {
+  if (isMobile()) {
+    const path = location.href.replace(domain, '').replace(testDomain, '');
+    location.href = domain + '/m' + path;
+  }
+});
 
 onMounted(() => {
   showLoadingSpinner();
