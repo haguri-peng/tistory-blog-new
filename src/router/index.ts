@@ -23,6 +23,10 @@ const routes = [
     component: AppCategory,
   },
   {
+    path: '/search/:keyword',
+    component: AppSearch,
+  },
+  {
     path: '/search/:type/:keyword',
     component: AppSearch,
   },

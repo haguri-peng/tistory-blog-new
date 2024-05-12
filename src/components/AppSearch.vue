@@ -62,12 +62,13 @@ import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import { searchTags, searchPosts } from '@/api/posts';
 import { SearchInfo } from '@/types';
+import { isNullStr } from '@/utils/utils';
 
 import $ from 'jquery';
 import { debounce } from 'lodash';
 
 const route = useRoute();
-const paramType = computed(() => route.params.type.toString());
+const paramType = computed(() => (route.params.type || '').toString());
 const paramKeyword = computed(() => route.params.keyword.toString());
 
 const router = useRouter();
@@ -98,7 +99,7 @@ const search = async (type: string, keyword: string) => {
   if (type == 'tags') {
     const res = await searchTags(keyword, page.value, 10);
     data = res.data;
-  } else if (type == 'posts') {
+  } else if (isNullStr(type) || type == 'posts') {
     const res = await searchPosts(keyword, page.value, 10);
     data = res.data;
   }
