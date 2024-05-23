@@ -23,14 +23,14 @@
 import { ref, toRefs, watch, nextTick, onUpdated } from 'vue';
 import $ from 'jquery';
 
-const emit = defineEmits<{
-  (e: 'closeSearchModal', type: string, keyword?: string): void;
-}>();
-
 const props = defineProps<{
   showSearch: boolean;
 }>();
 const { showSearch } = toRefs(props);
+
+const emit = defineEmits<{
+  closeSearchModal: [type: string, keyword?: string];
+}>();
 
 const inputKeyword = ref('');
 const searchKeyword = async () => {

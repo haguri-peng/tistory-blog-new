@@ -49,14 +49,14 @@ import { GuestbookInitRes } from '@/api/axiosResTypes';
 import { /*CommentInput,*/ CommentPost } from '@/types';
 import { useCommentStore } from '@/store/comment';
 
-const emit = defineEmits<{
-  (e: 'closeModal', action: string, objData?: CommentPost): void;
-}>();
-
 const props = defineProps<{
   showModal: boolean;
 }>();
 const { showModal } = toRefs(props);
+
+const emit = defineEmits<{
+  closeModal: [action: string, objData?: CommentPost];
+}>();
 
 const commentStore = useCommentStore();
 const { getCommentInfo } = storeToRefs(commentStore);

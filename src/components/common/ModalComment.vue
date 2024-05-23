@@ -42,23 +42,22 @@
 <script setup lang="ts">
 import { ref, reactive, toRefs, watch } from 'vue';
 
+const props = defineProps({
+  showModal: Boolean,
+  type: String,
+});
+const { showModal, type } = toRefs(props);
+
 const emit = defineEmits<{
-  (
-    e: 'closeModal',
+  closeModal: [
     action: string,
     objData?: {
       blogName: string;
       comment: string;
       secret: boolean;
     },
-  ): void;
+  ];
 }>();
-
-const props = defineProps({
-  showModal: Boolean,
-  type: String,
-});
-const { showModal, type } = toRefs(props);
 
 const title = ref('');
 const modalType = ref(type);

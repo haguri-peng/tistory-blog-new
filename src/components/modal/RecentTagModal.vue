@@ -33,14 +33,14 @@ import $ from 'jquery';
 
 import { useTagStore } from '@/store/tag';
 
-const emit = defineEmits<{
-  (e: 'closeTagModal'): void;
-}>();
-
 const props = defineProps<{
   showRecentTag: boolean;
 }>();
 const { showRecentTag } = toRefs(props);
+
+const emit = defineEmits<{
+  closeTagModal: [];
+}>();
 
 const tagStore = useTagStore();
 const { getRecentTag } = storeToRefs(tagStore);

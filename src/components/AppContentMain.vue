@@ -12,15 +12,15 @@ import _ from 'lodash';
 
 import loadScript from '@/utils/load-script';
 
-const emit = defineEmits<{
-  (e: 'refreshAside'): void;
-  (e: 'refreshAppHeight'): void;
-}>();
-
 const props = defineProps<{
   content: string;
 }>();
 const { content } = toRefs(props);
+
+const emit = defineEmits<{
+  refreshAside: [];
+  refreshAppHeight: [];
+}>();
 
 const isUpdated = ref(false);
 const modContent = ref('');

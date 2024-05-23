@@ -83,14 +83,14 @@ import { toRefs, computed } from 'vue';
 import { PageInfo } from '@/types';
 import _ from 'lodash';
 
-const emit = defineEmits<{
-  (e: 'movePage', pageNum?: number): void;
-}>();
-
 const props = defineProps<{
   page: PageInfo;
 }>();
 const { page } = toRefs(props);
+
+const emit = defineEmits<{
+  movePage: [pageNum?: number];
+}>();
 
 const showPageCnt = 5;
 const showPreviousIcon = computed(() => page.value.currentPage > showPageCnt);

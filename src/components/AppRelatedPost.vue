@@ -47,7 +47,7 @@ const props = defineProps<{
 const { postType } = toRefs(props);
 
 const emit = defineEmits<{
-  (e: 'moveContent', id: number): void;
+  moveContent: [id: number];
 }>();
 
 const route = useRoute();

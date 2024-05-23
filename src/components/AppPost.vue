@@ -27,11 +27,11 @@
 <script setup lang="ts">
 import { PostInfo } from '@/types';
 
-const emit = defineEmits<{
-  (e: 'openContent', id: string): void;
-}>();
 defineProps<{
   postItem: PostInfo;
+}>();
+const emit = defineEmits<{
+  openContent: [id: string];
 }>();
 
 // methods

@@ -50,7 +50,7 @@
           :data-category-id="category.id"
           @click="clickCategory(category.id, category.path)"
         >
-          <span class="menu"> {{ category.name }}</span>
+          <span class="menu"> {{ category.name }} </span>
           <span class="font-light"> [{{ category.entryCount }}] </span>
           <span class="newFlag"> {{ showFlag(category.id) }} </span>
         </li>
@@ -104,15 +104,15 @@ import { Category } from '@/types';
 import { getNoticeBaseInfo } from '@/api/posts';
 import { useCategoryStore } from '@/store/category';
 
-const emit = defineEmits<{
-  (e: 'showSearchInput'): void;
-  (e: 'moveCategory', categoryId: string, categoryPath: string): void;
-}>();
-
 const props = defineProps<{
   categoryList: Category[];
 }>();
 const { categoryList } = toRefs(props);
+
+const emit = defineEmits<{
+  showSearchInput: [];
+  moveCategory: [categoryId: string, categoryPath: string];
+}>();
 
 const route = useRoute();
 const curRoutePath = computed(() => route.path);
