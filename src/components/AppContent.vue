@@ -573,7 +573,7 @@ const setAsideSection = () => {
   setTimeout(() => {
     let sAsideHtml = '';
 
-    $('div.content')
+    $('div.contentMain')
       .find('h2,h3,h4')
       .each(function (_idx, item) {
         const tagName = item.tagName.toLowerCase();
