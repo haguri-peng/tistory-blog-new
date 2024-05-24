@@ -46,17 +46,14 @@
     </div>
 
     <!-- Modal -->
-    <ModalComment
-      :showModal="showModal"
-      :type="modalType"
-      @closeModal="closeModal"
-    />
+    <ModalComment :showModal :type @closeModal="closeModal" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted } from 'vue';
 import _ from 'lodash';
+import $ from 'jquery';
 
 import ModalComment from '@/components/common/ModalComment.vue';
 
@@ -115,7 +112,7 @@ const setAppHeight = () => {
 };
 
 const showModal = ref(false);
-const modalType = ref('guestbook');
+const type = ref('guestbook');
 const addGuestbook = () => {
   // @ts-ignore
   const { user } = window.initData;

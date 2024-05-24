@@ -64,7 +64,7 @@
     ></ins>
 
     <AppContentMain
-      :content="content"
+      :content
       @refreshAside="setAsideSection"
       @refreshAppHeight="setHeight"
     />
@@ -77,17 +77,11 @@
       data-ad-slot="2087795028"
     ></ins>
 
-    <AppRelatedPost
-      :tagList="tags"
-      :postType="'related'"
-      @moveContent="moveContent"
-    />
+    <!-- 관련 Post -->
+    <AppRelatedPost :postType="'related'" @moveContent="moveContent" />
 
-    <AppRelatedPost
-      :tagList="tags"
-      :postType="'popular'"
-      @moveContent="moveContent"
-    />
+    <!-- 인기 Post -->
+    <AppRelatedPost :postType="'popular'" @moveContent="moveContent" />
 
     <div class="tags">
       Tags
@@ -248,13 +242,10 @@
     </div>
 
     <!-- Comment Modal -->
-    <AppComment :showModal="showModal" @closeModal="hideModal" />
+    <AppComment :showModal @closeModal="hideModal" />
 
     <!-- RecentTagModal -->
-    <RecentTagModal
-      :showRecentTag="showRecentTag"
-      @closeTagModal="closeTagModal"
-    />
+    <RecentTagModal :showRecentTag @closeTagModal="closeTagModal" />
   </div>
 </template>
 

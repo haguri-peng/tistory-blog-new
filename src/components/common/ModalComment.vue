@@ -9,7 +9,7 @@
       <div class="p-5">
         <div class="text-3xl font-bold mb-5">【{{ title }}】</div>
         <input
-          v-if="modalType === 'comment'"
+          v-if="type === 'comment'"
           type="text"
           v-model="blogName"
           placeholder="Enter your blog's name"
@@ -40,13 +40,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, toRefs, watch } from 'vue';
+import { ref, reactive, watch } from 'vue';
 
-const props = defineProps({
-  showModal: Boolean,
-  type: String,
-});
-const { showModal, type } = toRefs(props);
+const showModal = defineModel<boolean>('showModal', { required: true });
+const type = defineModel<string>('type', { required: true });
 
 const emit = defineEmits<{
   closeModal: [
@@ -60,10 +57,9 @@ const emit = defineEmits<{
 }>();
 
 const title = ref('');
-const modalType = ref(type);
-if (modalType.value == 'comment') {
+if (type.value == 'comment') {
   title.value = '댓글';
-} else if (modalType.value == 'guestbook') {
+} else if (type.value == 'guestbook') {
   title.value = '방명록';
 }
 
@@ -72,7 +68,7 @@ const comment = ref('');
 let arrChk = reactive([]);
 const submit = () => {
   // input validation
-  if (modalType.value == 'comment' && blogName.value == '') {
+  if (type.value == 'comment' && blogName.value == '') {
     alert('블로그 주소는 필수입니다.');
     return;
   }

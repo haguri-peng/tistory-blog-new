@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, watch, onUpdated } from 'vue';
+import { ref, watch, onUpdated } from 'vue';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
@@ -33,10 +33,7 @@ import $ from 'jquery';
 
 import { useTagStore } from '@/store/tag';
 
-const props = defineProps<{
-  showRecentTag: boolean;
-}>();
-const { showRecentTag } = toRefs(props);
+const showRecentTag = defineModel<boolean>('showRecentTag', { required: true });
 
 const emit = defineEmits<{
   closeTagModal: [];

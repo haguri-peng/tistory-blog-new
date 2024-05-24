@@ -4,7 +4,7 @@
 
 <script setup lang="ts">
 // @ts-nocheck
-import { ref, toRefs, watch, onMounted, onUnmounted, onUpdated } from 'vue';
+import { ref, watch, onMounted, onUnmounted, onUpdated } from 'vue';
 
 import * as htmlparser2 from 'htmlparser2';
 import $ from 'jquery';
@@ -12,10 +12,7 @@ import _ from 'lodash';
 
 import loadScript from '@/utils/load-script';
 
-const props = defineProps<{
-  content: string;
-}>();
-const { content } = toRefs(props);
+const content = defineModel<string>('content', { required: true });
 
 const emit = defineEmits<{
   refreshAside: [];

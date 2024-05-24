@@ -20,13 +20,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref, toRefs, watch, nextTick, onUpdated } from 'vue';
+import { ref, defineModel, watch, nextTick, onUpdated } from 'vue';
 import $ from 'jquery';
 
-const props = defineProps<{
-  showSearch: boolean;
-}>();
-const { showSearch } = toRefs(props);
+const showSearch = defineModel<boolean>('showSearch', { required: true });
 
 const emit = defineEmits<{
   closeSearchModal: [type: string, keyword?: string];

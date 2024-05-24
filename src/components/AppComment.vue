@@ -41,18 +41,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, toRefs, computed, watch } from 'vue';
+import { ref, reactive, computed, watch } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import { getGuestbookInit } from '@/api/posts';
 import { GuestbookInitRes } from '@/api/axiosResTypes';
-import { /*CommentInput,*/ CommentPost } from '@/types';
+import { CommentPost } from '@/types';
 import { useCommentStore } from '@/store/comment';
 
-const props = defineProps<{
-  showModal: boolean;
-}>();
-const { showModal } = toRefs(props);
+const showModal = defineModel<boolean>('showModal', { required: true });
 
 const emit = defineEmits<{
   closeModal: [action: string, objData?: CommentPost];
@@ -80,12 +77,6 @@ const submit = () => {
     return;
   }
 
-  // const objData: CommentInput = {
-  //   blogName: blogName.value,
-  //   content: comment.value,
-  //   secret: arrChk.length > 0 ? 1 : 0, // 1: 비밀댓글, 0: 공개댓글
-  //   parentId: getParentCommentId.value,
-  // };
   const objData: CommentPost = {
     captcha: '',
     comment: comment.value,

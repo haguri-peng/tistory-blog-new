@@ -41,7 +41,6 @@ import { getRelatedPosts, getPopularPosts } from '@/api/posts';
 import { SearchInfo } from '@/types';
 
 const props = defineProps<{
-  tagList: string[];
   postType: string;
 }>();
 const { postType } = toRefs(props);

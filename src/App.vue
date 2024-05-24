@@ -12,10 +12,7 @@
     </div>
 
     <!-- Search Modal -->
-    <SearchInputModal
-      :showSearch="showSearch"
-      @closeSearchModal="closeSearchModal"
-    />
+    <SearchInputModal :showSearch @closeSearchModal="closeSearchModal" />
   </div>
 </template>
 
