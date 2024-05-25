@@ -2,11 +2,14 @@
 
 🐸 [Haguri & Peng's Blog](https://haguri-peng.tistory.com) 🐧
 
-✅ 2024/3/18 오후부로 이전 theme로 원복하였습니다. 제가 좀 게을러진 탓도 있겠지만 생각보다 공사가 꽤 컸습니다. 기존 기능들은 모두 있으나 최근 게시글의 태그 정보를 가져오는 부분은 현재 작업중입니다.  
-❗️ 2024/3/5 새벽부터 티스토리 Open API 서비스가 종료됨에 따라 현재 구현해놓은 부분이 원활히 동작하지 않아 수정 작업중입니다. 생각보다 고칠 부분이 많습니다. 😱 기존 페이지들이 정상적으로 동작하게 되면 다시 공지할 예정이며, 그 전까지 계속 소스를 commit 하여 반영할 예정입니다. 현재 블로그는 `기본 스킨`을 적용한 상태.
+`Vue3` + `Typescript` + `Vite`을 통해 환경을 구성하였으며, [Ex-Repository](https://github.com/haguri-peng/tistory-blog/) 의 소스를 리팩토링 하였습니다.
 
-`Vue3` + `Typescript` + `Vite`을 통해 환경을 구성하였으며,  
-[Ex-Repository](https://github.com/haguri-peng/tistory-blog/) 의 소스를 리팩토링 하였습니다.
+## Changelog
+
+- 2024/5/25 Vue 3.4에서 안정화된 defineModel 적용. defineEmits 문법 최신화. Aside 영역 세팅하는 부분 개선.
+- 2024/5/12 404 Page 수정.
+- 2024/3/18 오후부로 이전 theme로 원복하였습니다. 제가 좀 게을러진 탓도 있겠지만 생각보다 공사가 꽤 컸습니다. 기존 기능들은 모두 있으나 최근 게시글의 태그 정보를 가져오는 부분은 현재 작업중입니다.
+- 2024/3/5 새벽부터 티스토리 Open API 서비스가 종료됨에 따라 현재 구현해놓은 부분이 원활히 동작하지 않아 수정 작업중입니다. 생각보다 고칠 부분이 많습니다. 😱 기존 페이지들이 정상적으로 동작하게 되면 다시 공지할 예정이며, 그 전까지 계속 소스를 commit 하여 반영할 예정입니다. 현재 블로그는 `기본 스킨`을 적용한 상태.
 
 ## Vue
 
@@ -83,24 +86,37 @@ export const useCategoryStore = defineStore('category', () => {
 
 ## Tistory
 
-`2024/3/5 이후로 Tistory Open API는 서비스 종료!!`  
-Tistory 에서 제공하는 `Open API` 를 활용 ([Tistory Open API](https://tistory.github.io/document-tistory-apis/))  
+`2024/3/5 이후로 Tistory Open API는 서비스 종료!!`
+
+Tistory 에서 제공하는 `Open API` 를 활용 ([Tistory Open API](https://tistory.github.io/document-tistory-apis/)).  
 제공해주는 Open API 에 한계가 있어 이를 감안하고 개발하였으니 참고 바랍니다.
 
-모바일 페이지의 URI(/m)에서 REST API 로 제공해주는 게 있어서 그걸 활용하여 최대한 구현하고 있습니다.
+모바일 페이지는 Tistory에서 자동으로 제공하며,  
+모바일로 접속하는 경우에 모바일 페이지(/m)로 redirect 처리하고 있습니다.
 
-참, Open API는 2024년 2월까지 순차적으로 서비스가 종료됩니다.  
+Open API는 2024년 2월까지 순차적으로 서비스가 종료됩니다.  
 [서비스 종료 안내 링크](https://notice.tistory.com/2664)
-
-### 댓글/방명록
-
-- [x] 댓글 등록
-- [ ] 댓글의 수정/삭제
-- [x] 방명록 등록
 
 ### 공지사항
 
-🧰 공지사항은 작업중
+- Header에 공지사항(Notice) 메뉴 적용
+
+### 카테고리
+
+- 카테고리 Level(1, 2)별 이동 처리
+- 카테고리 클릭 시, 하위 카테고리가 있는 경우 하위 카테고리를 보여줌
+- 해당 카테고리가 비어(작성글 0개) 있는 경우 노출하지 않음
+
+### 기능구현 목록
+
+- [x] 글 목록 페이징 처리
+- [x] 검색 및 검색 페이지 이동
+- [x] 댓글 등록
+- [ ] 댓글 수정/삭제
+- [x] 방명록 등록
+- [ ] 방명록 수정/삭제
+- [x] 좋아요 설정/해제
+- [x] 광고
 
 ## 광고
 
@@ -108,7 +124,7 @@ Tistory 에서 제공하는 `Open API` 를 활용 ([Tistory Open API](https://ti
 - Kakao Adfit: Side 영역 및 포스팅에 한 개씩 적용
 - Tenping: 포스팅에 한 개씩 적용
 
-포스팅에 적용되는 부분은 글 작성 시에 수동으로 추가하는 부분입니다.
+각 게시글에 적용되는 부분은 작성 시에 에디터에서 수동으로 추가하는 부분입니다.
 
 ## ⚙️ Configuration
 
