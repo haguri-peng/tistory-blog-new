@@ -1,6 +1,5 @@
 <template>
-  <LoadingSpinner v-if="isFirstLoading" />
-  <div class="search-area" v-else>
+  <div class="search-area">
     <div
       class="text-2xl font-bold text-left pl-2 pr-2"
       style="border-bottom: 1px solid purple"
@@ -59,7 +58,6 @@
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue';
 import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 
-import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import { searchTags, searchPosts } from '@/api/posts';
 import { SearchInfo } from '@/types';
 import { isNullStr } from '@/utils/utils';
@@ -84,17 +82,12 @@ onBeforeRouteUpdate((to, from) => {
   }
 });
 
-const isFirstLoading = ref(false);
 const isLast = ref(true);
 const page = ref(1);
 const total = ref(0);
 const items: SearchInfo[] = reactive([]);
 const showNextIcon = ref(false);
 const search = async (type: string, keyword: string) => {
-  if (page.value == 1) {
-    isFirstLoading.value = true;
-  }
-
   let data;
   if (type == 'tags') {
     const res = await searchTags(keyword, page.value, 10);
@@ -111,7 +104,6 @@ const search = async (type: string, keyword: string) => {
       items.push(item);
     }
   }
-  isFirstLoading.value = false;
 };
 const initData = () => {
   isLast.value = true;

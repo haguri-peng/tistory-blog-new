@@ -9,6 +9,8 @@ import AppNotice from '@/components/AppNotice.vue';
 import AppNoticeContent from '@/components/AppNoticeContent.vue';
 import NotFoundPage from '@/components/404.vue';
 
+import { spinnerControl } from '@/utils/spinner-control';
+
 const routes = [
   {
     path: '/',
@@ -52,6 +54,11 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+router.beforeEach(() => {
+  const { setLoading } = spinnerControl();
+  setLoading(true);
 });
 
 export default router;

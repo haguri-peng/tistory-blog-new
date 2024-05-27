@@ -1,6 +1,5 @@
 <template>
-  <LoadingSpinner v-if="isLoading"></LoadingSpinner>
-  <div class="w-full" v-else>
+  <div class="w-full">
     <div class="noti-title">［ 공지사항({{ noticeCnt }}) ］</div>
     <div class="list">
       <ul>
@@ -21,8 +20,6 @@
 </template>
 
 <script setup lang="ts">
-import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
-
 import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -38,7 +35,6 @@ const moveNoticeContent = (noticeId: number | string) => {
   router.push(`/${noticeId}`);
 };
 
-const isLoading = ref(false);
 const noticeList: NoticeInfo[] = reactive([]);
 const noticeCnt = ref(0);
 
@@ -86,9 +82,7 @@ const fetchNotice = async () => {
 };
 
 onMounted(() => {
-  isLoading.value = true;
   fetchNotice();
-  isLoading.value = false;
 });
 </script>
 

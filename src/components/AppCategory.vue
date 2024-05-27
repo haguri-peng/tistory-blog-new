@@ -1,6 +1,5 @@
 <template>
-  <LoadingSpinner v-if="isLoading"></LoadingSpinner>
-  <div class="w-full" v-else>
+  <div class="w-full">
     <div class="category-title">
       <font-awesome-icon icon="fa-regular fa-folder-open" size="lg" />
       {{ categoryName }}
@@ -25,7 +24,6 @@
 <script setup lang="ts">
 import AppPost from '@/components/AppPost.vue';
 import AppPaging from '@/components/AppPaging.vue';
-import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 
 import { ref, reactive, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -46,7 +44,6 @@ const getRouteCategoryPath = computed(() =>
 );
 const router = useRouter();
 const moveContent = (id: string) => {
-  isLoading.value = true;
   setCategoryInfo({ id: getCategoryId.value, page: pageInfo.currentPage });
 
   router.push(`/${id}`);
@@ -58,7 +55,6 @@ const getCategoryId = computed(() => getCategoryInfo.value.id);
 const getPageNum = computed(() => getCategoryInfo.value.page);
 const { setCategoryInfo, getCategoryPath } = categoryStore;
 
-const isLoading = ref(false);
 const postList: PostInfo[] = reactive([]);
 const pageInfo = reactive({}) as PageInfo;
 
@@ -70,8 +66,6 @@ const setCategoryName = () => {
 };
 
 const fetchPostListByCategory = async (pageNum?: number) => {
-  isLoading.value = true;
-
   postList.length = 0;
   let pageParam = 0;
 
@@ -168,8 +162,6 @@ const fetchPostListByCategory = async (pageNum?: number) => {
       postList.push(objPostInfo);
     }
   }
-
-  isLoading.value = false;
 };
 
 onMounted(() => {

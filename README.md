@@ -6,6 +6,7 @@
 
 ## Changelog
 
+- 2024/5/27 Add spinner store. Router의 Navigation Guard와 메인(App.vue)에서 LoadingSpinner를 컨트롤.
 - 2024/5/25 Vue 3.4에서 안정화된 defineModel 적용. defineEmits 문법 최신화. Aside 영역 세팅하는 부분 개선.
 - 2024/5/12 404 Page 수정.
 - 2024/3/18 오후부로 이전 theme로 원복하였습니다. 제가 좀 게을러진 탓도 있겠지만 생각보다 공사가 꽤 컸습니다. 기존 기능들은 모두 있으나 최근 게시글의 태그 정보를 가져오는 부분은 현재 작업중입니다.

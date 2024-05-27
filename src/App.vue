@@ -6,7 +6,8 @@
       @showSearchInput="showSearchInput"
     />
 
-    <LoadingSpinner v-if="isLoading" />
+    <!-- Spinner & Content -->
+    <LoadingSpinner v-if="getLoading" />
     <div class="app-contents" v-else>
       <router-view :key="route.fullPath"></router-view>
     </div>
@@ -21,7 +22,7 @@ import AppHeader from '@/components/AppHeader.vue';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
 import SearchInputModal from '@/components/common/SearchInputModal.vue';
 
-import { ref, reactive, onBeforeMount, onMounted } from 'vue';
+import { ref, reactive, onBeforeMount, onMounted, onUpdated } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import _ from 'lodash';
@@ -33,6 +34,7 @@ import { useTagStore } from '@/store/tag';
 import { getCategories, getPostInfo, getBlogRss } from '@/api/posts';
 import { Category } from '@/types';
 import { isMobile } from '@/utils/utils';
+import { spinnerControl } from '@/utils/spinner-control';
 
 const categoryStore = useCategoryStore();
 const { setAllCategories, setCategoryInfo } = categoryStore;
@@ -40,10 +42,11 @@ const { setAllCategories, setCategoryInfo } = categoryStore;
 const tagStore = useTagStore();
 const { setRecentTag } = tagStore;
 
+const { getLoading, setLoading } = spinnerControl();
+
 const route = useRoute();
 const router = useRouter();
 const moveCategory = (categoryId: string, categoryPath: string) => {
-  showLoadingSpinner();
   setCategoryInfo({ id: categoryId, page: 1 });
 
   router.push(`/category/${categoryPath}`);
@@ -92,14 +95,6 @@ const fetchCategory = async () => {
   }
 };
 
-const isLoading = ref(true);
-const showLoadingSpinner = () => {
-  isLoading.value = true;
-  setTimeout(() => {
-    isLoading.value = false;
-  }, 300);
-};
-
 const showSearch = ref(false);
 const showSearchInput = () => {
   showSearch.value = true;
@@ -122,11 +117,17 @@ onBeforeMount(async () => {
 });
 
 onMounted(() => {
-  showLoadingSpinner();
   fetchBlog();
   fetchBlogRss();
   fetchCategory();
   setAllCategories();
+});
+
+onUpdated(() => {
+  // hide Spinner
+  setTimeout(() => {
+    setLoading(false);
+  }, 300);
 });
 </script>
 
