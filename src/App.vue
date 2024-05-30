@@ -20,7 +20,7 @@
 <script setup lang="ts">
 import AppHeader from '@/components/AppHeader.vue';
 import LoadingSpinner from '@/components/common/LoadingSpinner.vue';
-import SearchInputModal from '@/components/common/SearchInputModal.vue';
+import SearchInputModal from '@/components/SearchInputModal.vue';
 
 import { ref, reactive, onBeforeMount, onMounted, onUpdated } from 'vue';
 import { useRoute, useRouter } from 'vue-router';

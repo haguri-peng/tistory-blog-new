@@ -3,7 +3,7 @@
     <div>Haguri & Peng's Blog</div>
     <div>
       <img
-        src="../assets/images/why_haguri.gif"
+        src="../../assets/images/why_haguri.gif"
         alt=""
         style="width: 300px; height: 300px"
       />

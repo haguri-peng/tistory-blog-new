@@ -11,7 +11,6 @@ import {
   CategoryRes,
   PostInfoRes,
   CommentsRes,
-  // ConfigViewerRes,
   RealtedPopularRes,
   PostCommentResultRes,
   NoticeBaseInfoRes,

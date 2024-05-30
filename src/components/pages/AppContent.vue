@@ -260,10 +260,10 @@ import * as htmlparser2 from 'htmlparser2';
 import * as cheerio from 'cheerio';
 import axios, { AxiosResponse } from 'axios';
 
-import AppContentMain from '@/components/AppContentMain.vue';
-import AppComment from '@/components/AppComment.vue';
-import AppRelatedPost from '@/components/AppRelatedPost.vue';
-import RecentTagModal from '@/components/modal/RecentTagModal.vue';
+import AppContentMain from '@/components/content/AppContentMain.vue';
+import AppComment from '@/components/content/AppComment.vue';
+import AppRelatedPost from '@/components/content/AppRelatedPost.vue';
+import RecentTagModal from '@/components/content/RecentTagModal.vue';
 
 import { /*insertComment, modifyComment,*/ deleteComment } from '@/api/index';
 import {

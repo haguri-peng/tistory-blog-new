@@ -1,13 +1,13 @@
 import { createWebHistory, createRouter } from 'vue-router';
 
-import AppMain from '@/components/AppMain.vue';
-import AppContent from '@/components/AppContent.vue';
-import AppCategory from '@/components/AppCategory.vue';
-import AppSearch from '@/components/AppSearch.vue';
-import AppGuestbook from '@/components/AppGuestbook.vue';
-import AppNotice from '@/components/AppNotice.vue';
-import AppNoticeContent from '@/components/AppNoticeContent.vue';
-import NotFoundPage from '@/components/404.vue';
+import AppMain from '@/components/pages/AppMain.vue';
+import AppContent from '@/components/pages/AppContent.vue';
+import AppCategory from '@/components/pages/AppCategory.vue';
+import AppSearch from '@/components/pages/AppSearch.vue';
+import AppGuestbook from '@/components/pages/AppGuestbook.vue';
+import AppNotice from '@/components/pages/AppNotice.vue';
+import AppNoticeContent from '@/components/pages/AppNoticeContent.vue';
+import NotFoundPage from '@/components/pages/404.vue';
 
 import { spinnerControl } from '@/utils/spinner-control';
 

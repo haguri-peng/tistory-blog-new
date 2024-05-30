@@ -2,7 +2,7 @@
   <div>
     <div>
       <img
-        src="../assets/images/snowing_dochi.gif"
+        src="../../assets/images/snowing_dochi.gif"
         alt="눈 맞는 도치"
         style="width: 500px; height: 500px"
       />

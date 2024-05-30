@@ -22,8 +22,8 @@
 </template>
 
 <script setup lang="ts">
-import AppPost from '@/components/AppPost.vue';
-import AppPaging from '@/components/AppPaging.vue';
+import AppPost from '@/components/category/AppPost.vue';
+import AppPaging from '@/components/category/AppPaging.vue';
 
 import { ref, reactive, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';

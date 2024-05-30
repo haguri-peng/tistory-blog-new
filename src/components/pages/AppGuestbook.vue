@@ -55,7 +55,7 @@ import { ref, reactive, onMounted, onUnmounted } from 'vue';
 import _ from 'lodash';
 import $ from 'jquery';
 
-import ModalComment from '@/components/common/ModalComment.vue';
+import ModalComment from '@/components/shared/ModalComment.vue';
 
 import {
   getGuestbookCount,
