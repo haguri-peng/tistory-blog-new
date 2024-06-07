@@ -22,6 +22,7 @@ import * as htmlparser2 from 'htmlparser2';
 import _ from 'lodash';
 
 import PhotoSwipeLightbox from 'photoswipe/lightbox';
+import PhotoSwipe from 'photoswipe';
 import 'photoswipe/style.css';
 
 import { ImageInfo } from '@/types';
@@ -72,7 +73,8 @@ onMounted(() => {
           lightbox = new PhotoSwipeLightbox({
             gallery: '#content-gallery',
             children: 'a',
-            pswpModule: () => import('photoswipe'),
+            // pswpModule: () => import('photoswipe'),
+            pswpModule: PhotoSwipe,
           });
           lightbox.init();
         }
