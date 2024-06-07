@@ -1,10 +1,14 @@
 <template>
-  <div v-html="modContent" class="contentMain"></div>
+  <div v-html="modContent" class="contentMain" @click="clickContent"></div>
+
+  <ContentGallery :modContent :imgSrc @clearImgSrc="clearImgSrc" />
 </template>
 
 <script setup lang="ts">
 // @ts-nocheck
 import { ref, watch, onMounted, onUnmounted, onUpdated } from 'vue';
+
+import ContentGallery from '@/components/content/ContentGallery.vue';
 
 import * as htmlparser2 from 'htmlparser2';
 import $ from 'jquery';
@@ -152,6 +156,20 @@ function getTenpingHtml() {
       tenping-ad-display-type="UD8Mia8gyIoT5Z2MT6VB3Q%3d%3d">
     </tenping>`;
 }
+
+const imgSrc = ref('');
+const clickContent = (evt: MouseEvent) => {
+  const el = evt.target as HTMLElement;
+  // console.log(el);
+
+  // image 클릭
+  if (el.tagName == 'IMG') {
+    imgSrc.value = el.getAttribute('src');
+  }
+};
+const clearImgSrc = () => {
+  imgSrc.value = '';
+};
 </script>
 
 <style scoped>

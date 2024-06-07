@@ -168,6 +168,14 @@ interface NoticeInfo {
   visibility: string;
 }
 
+interface ImageInfo {
+  alt?: string;
+  imageUrl: string;
+  thumbnailUrl?: string;
+  width: number;
+  height: number;
+}
+
 export type {
   Category,
   CategoryInfo,
@@ -185,4 +193,5 @@ export type {
   PostViewer,
   Writer,
   NoticeInfo,
+  ImageInfo,
 };
