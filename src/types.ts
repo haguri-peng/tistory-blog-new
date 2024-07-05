@@ -57,4 +57,16 @@ interface ImageInfo {
   height: number;
 }
 
-export type { SearchInfo, PageInfo, Writer, NoticeInfo, ImageInfo };
+interface HeadingTagInfo {
+  id: string;
+  text: string;
+}
+
+export type {
+  SearchInfo,
+  PageInfo,
+  Writer,
+  NoticeInfo,
+  ImageInfo,
+  HeadingTagInfo,
+};

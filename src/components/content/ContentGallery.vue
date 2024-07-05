@@ -29,10 +29,10 @@ import { ImageInfo } from '@/types';
 import { isNullStr } from '@/utils/utils';
 
 const props = defineProps<{
-  modContent: string;
+  content: string;
   imgSrc: string;
 }>();
-const { modContent, imgSrc } = toRefs(props);
+const { content, imgSrc } = toRefs(props);
 
 const emit = defineEmits<{
   clearImgSrc: [];
@@ -42,7 +42,7 @@ let lightbox;
 const imageDatas: ImageInfo[] = reactive([]);
 onMounted(() => {
   setTimeout(() => {
-    const dom = htmlparser2.parseDocument(modContent.value);
+    const dom = htmlparser2.parseDocument(content.value);
     // console.log(dom);
 
     if (dom != null) {

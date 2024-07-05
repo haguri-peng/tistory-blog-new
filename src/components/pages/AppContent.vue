@@ -22,7 +22,19 @@
   <!-- Right -->
   <div class="aside">
     <div class="text-left">
-      <ul class="list-none pl-2" style="border-left: 2px solid #df7861"></ul>
+      <ul class="list-none pl-2" style="border-left: 2px solid #df7861">
+        <li v-for="heading in headings" :key="heading.id">
+          <a
+            :href="`#${heading.id}`"
+            :class="{
+              active: activeHeading !== '' && activeHeading === heading.id,
+            }"
+            @click.prevent="scrollToSection"
+          >
+            {{ heading.text }}
+          </a>
+        </li>
+      </ul>
     </div>
     <div class="image absolute bottom-0 left-0">
       <!-- Coupang Dynamic Banner -->
@@ -49,7 +61,7 @@
     </div>
   </div>
 
-  <div class="content" ref="contents">
+  <div class="content">
     <div class="title">
       <h1>{{ getUnescapedTitle }}</h1>
       <p class="date">작성일시: {{ date }}</p>
@@ -63,11 +75,7 @@
       data-ad-slot="2842718663"
     ></ins>
 
-    <AppContentMain
-      :content
-      @refreshAside="setAsideSection"
-      @refreshAppHeight="setHeight"
-    />
+    <AppContentMain v-model:content="content" />
 
     <!-- adsense_multiflex -->
     <ins
@@ -250,7 +258,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted, onUnmounted } from 'vue';
+import {
+  ref,
+  reactive,
+  computed,
+  onMounted,
+  onUnmounted,
+  watch,
+  nextTick,
+} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
@@ -275,7 +291,7 @@ import {
   postComment,
   getConfigViewerInPost,
 } from '@/api/posts';
-import { Comment, CommentInput, CommentPost } from '@/types';
+import { Comment, CommentInput, CommentPost, HeadingTagInfo } from '@/types';
 import { useCategoryStore } from '@/store/category';
 import { useCommentStore } from '@/store/comment';
 import { isNullStr, commentReduce, handleNewLine } from '@/utils/utils';
@@ -387,13 +403,6 @@ const getContent = async () => {
       tags.push($$(this).text());
     });
 
-    // 최근글 5개에서 태그 정보를 가져온다.
-    // getTagList();
-
-    // aside 영역 세팅
-    // content 부분을 세팅하는 딜레이가 있어서 적정한 timeout을 줘서 처리(0.5초)
-    setAsideSection();
-
     // reaction 가져오기
     getReaction();
 
@@ -403,29 +412,29 @@ const getContent = async () => {
       acceptComment.value = configViewer.data.config.allowComment;
     }
 
-    // 스크롤 Event 설정
-    // 스크롤 위치에 따라 어느 영역에 있는지 확인하여 색상을 변경
-    $(window).scroll(function () {
-      const top = $(window).scrollTop();
-      // console.log('top >> ' + top);
+    // // 스크롤 Event 설정
+    // // 스크롤 위치에 따라 어느 영역에 있는지 확인하여 색상을 변경
+    // $(window).scroll(function () {
+    //   const top = $(window).scrollTop();
+    //   // console.log('top >> ' + top);
 
-      let bFind = false;
-      $('div.aside ul li').each(function () {
-        if (
-          !bFind &&
-          parseInt($(this).data('offsetTop')) <= top! + 92 &&
-          ($(this).next().length > 0
-            ? parseInt($(this).next().data('offsetTop'))
-            : top! + 92) >=
-            top! + 92!
-        ) {
-          $(this).css('color', '#df7861');
-          bFind = true;
-        } else {
-          $(this).css('color', '');
-        }
-      });
-    });
+    //   let bFind = false;
+    //   $('div.aside ul li').each(function () {
+    //     if (
+    //       !bFind &&
+    //       parseInt($(this).data('offsetTop')) <= top! + 92 &&
+    //       ($(this).next().length > 0
+    //         ? parseInt($(this).next().data('offsetTop'))
+    //         : top! + 92) >=
+    //         top! + 92!
+    //     ) {
+    //       $(this).css('color', '#df7861');
+    //       bFind = true;
+    //     } else {
+    //       $(this).css('color', '');
+    //     }
+    //   });
+    // });
   }
 };
 
@@ -467,7 +476,6 @@ const hideModal = async (action: string, objData?: CommentPost) => {
       if (data.data.id != null) {
         alert('댓글이 등록되었습니다.');
         getComments();
-        setHeight();
       } else {
         alert('댓글 등록이 실패하였습니다.');
       }
@@ -528,7 +536,6 @@ const delComment = async (commentId: string, homepage: string) => {
         alert('댓글이 삭제되었습니다.');
 
         getComments();
-        setHeight();
       } else {
         console.error(data.tistory.result);
       }
@@ -548,98 +555,52 @@ const closeTagModal = () => {
   showRecentTag.value = false;
 };
 
-const contents = ref<HTMLDivElement>();
-const setHeight = (delay = 1000) => {
-  setTimeout(setAppHeight, delay);
-};
-const setAppHeight = () => {
-  const headerHeight = 60;
-  const contentTopMargin = 30;
-  const contentInnerPadding = 20;
+const activeHeading = ref('');
+const headings: HeadingTagInfo[] = reactive([]);
+let currentObserver: IntersectionObserver;
+// aside 영역 세팅
+const setAsideSection = async () => {
+  await nextTick();
 
-  $('#app').css(
-    'height',
-    contents!.value!.clientHeight +
-      headerHeight +
-      contentTopMargin +
-      contentInnerPadding +
-      'px',
+  currentObserver = setupObserver();
+
+  Array.from(document.querySelectorAll('h2, h3, h4')).map(
+    (heading: Element) => {
+      headings.push({
+        id: heading.id,
+        text: heading.textContent || '',
+      });
+      currentObserver.observe(heading);
+    },
   );
 };
-const setAsideSection = () => {
-  $('div.aside ul li').remove();
-  $('div.aside').hide();
+function setupObserver() {
+  const headerHeight = 80;
+  const viewportHeight =
+    window.innerHeight || document.documentElement.clientHeight;
 
-  setTimeout(() => {
-    let sAsideHtml = '';
+  const options = {
+    root: null, // viewport 기준
+    rootMargin: `-${headerHeight + 10}px 0px -${viewportHeight - headerHeight}px 0px`,
+    threshold: 0, // 조금이라도 보이면 콜백 실행
+  };
 
-    $('div.contentMain')
-      .find('h2,h3,h4')
-      .each(function (_idx, item) {
-        const tagName = item.tagName.toLowerCase();
-        sAsideHtml +=
-          '<li class="' +
-          tagName +
-          '" style="font-size: 1rem' +
-          ' margin: 2px 0">' +
-          $(this).text() +
-          '</li>';
-      });
-    // $('div.aside ul').append(sAsideHtml);
-    $('div.aside ul').html(sAsideHtml);
-    $('div.aside ul li')
-      .hover(
-        // hover
-        function () {
-          $(this).css('text-decoration', 'underline').css('cursor', 'pointer');
-        },
-        function () {
-          $(this).css('text-decoration', '').css('cursor', '');
-        },
-      )
-      .click(function () {
-        // 클릭 시 해당 영역으로 스크롤 이동
-        const asideTag = $(this).attr('class') as string;
-        const asideText = $(this).text();
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        activeHeading.value = entry.target.id;
+      }
+    });
+  }, options);
 
-        const clickEl = $('div.content')
-          .find(asideTag)
-          .filter(function () {
-            return $(this).text() == asideText;
-          });
-
-        if (clickEl.length > 0) {
-          const eleTop = clickEl[0].offsetTop;
-          // clickEl[0].scrollIntoView({ behavior: 'smooth' });
-          window.scrollTo({
-            top: eleTop,
-            behavior: 'smooth',
-          });
-        }
-      })
-      .each(function () {
-        const asideTag = $(this).attr('class') as string;
-        const asideText = $(this).text();
-
-        const el = $('div.content')
-          .find(asideTag)
-          .filter(function () {
-            return $(this).text() == asideText;
-          });
-
-        if (el.length > 0) {
-          const headerHeight = 60;
-          const contentTopMargin = 30;
-
-          $(this).attr(
-            'data-offset-top',
-            el[0].offsetTop + headerHeight + contentTopMargin,
-          );
-        }
-      });
-    $('div.aside').fadeIn();
-  }, 500);
-};
+  return observer;
+}
+function scrollToSection(evt: MouseEvent) {
+  const el = evt.target as HTMLElement;
+  const targetId = el.getAttribute('href') || '';
+  // router.push({ hash: targetId.slice(1) });
+  router.push({ hash: targetId });
+}
 
 const reactionCount = ref(0);
 const isReactionCheck = ref(false);
@@ -679,7 +640,6 @@ const commentModDelOut = (evt: MouseEvent) => {
   $(el).parent().find('ul').hide();
 };
 
-const intervalId = ref<number | NodeJS.Timeout>(0);
 const setAdsense = () => {
   // @ts-ignore
   (adsbygoogle = window.adsbygoogle || []).push({});
@@ -691,16 +651,12 @@ onMounted(() => {
 
   getContent();
   getComments();
-
-  intervalId.value = setInterval(setAppHeight, 100);
-
-  setTimeout(() => {
-    clearInterval(intervalId.value);
-  }, 10000);
 });
 onUnmounted(() => {
-  $('#app').css('height', 'auto');
-  clearInterval(intervalId.value);
+  currentObserver.disconnect();
+});
+watch(content, () => {
+  setAsideSection();
 });
 </script>
 
@@ -833,6 +789,9 @@ div.aside {
   width: 20%;
   z-index: 100;
   display: inline-grid;
+}
+div.aside a.active {
+  color: #76549a;
 }
 div.aside div.recentTagData {
   /* margin-top: 50px;
