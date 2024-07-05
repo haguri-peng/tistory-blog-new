@@ -54,11 +54,46 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+  // @ts-ignore
+  scrollBehavior(to, from, savedPosition) {
+    return new Promise((resolve) => {
+      let scrollTimeout = 10;
+      if (from.path != to.path) {
+        scrollTimeout = 1000;
+      }
+      setTimeout(() => {
+        if (savedPosition && savedPosition.top > 0) {
+          // refresh 하는 경우도 savedPosition이 존재함
+          resolve(savedPosition);
+        } else {
+          if (to.hash) {
+            // console.log('to.hash: ' + to.hash);
+            resolve({ el: to.hash, behavior: 'smooth', top: 80 });
+          }
+          resolve({ left: 0, top: 0 });
+        }
+      }, scrollTimeout);
+    });
+  },
 });
 
-router.beforeEach(() => {
+// @ts-ignore
+router.beforeEach((to, from, next) => {
   const { setLoading } = spinnerControl();
-  setLoading(true);
+
+  if (from.path == to.path) {
+    if (to.hash) {
+      const targetElement = document.querySelector(to.hash);
+      if (targetElement) {
+        next();
+      }
+    } else {
+      next();
+    }
+  } else {
+    setLoading(true);
+    next();
+  }
 });
 
 export default router;

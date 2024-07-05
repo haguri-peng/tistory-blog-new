@@ -9,7 +9,7 @@
     <!-- Spinner & Content -->
     <LoadingSpinner v-if="getLoading" />
     <div class="app-contents" v-else>
-      <router-view :key="route.fullPath"></router-view>
+      <router-view :key="route.path"></router-view>
     </div>
 
     <!-- Search Modal -->
