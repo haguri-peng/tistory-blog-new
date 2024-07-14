@@ -564,15 +564,25 @@ const setAsideSection = async () => {
 
   currentObserver = setupObserver();
 
-  Array.from(document.querySelectorAll('h2, h3, h4')).map(
-    (heading: Element) => {
+  // Array.from(document.querySelectorAll('h2, h3, h4')).map(
+  //   (heading: Element) => {
+  //     headings.push({
+  //       id: heading.id,
+  //       text: heading.textContent || '',
+  //     });
+  //     currentObserver.observe(heading);
+  //   },
+  // );
+  Array.from(document.querySelectorAll('div')).map((div: Element) => {
+    if (div.className == 'haguri') {
       headings.push({
-        id: heading.id,
-        text: heading.textContent || '',
+        id: div.id,
+        // text: div.textContent || '',
+        text: div.querySelector('h2, h3, h4')?.textContent || '',
       });
-      currentObserver.observe(heading);
-    },
-  );
+      currentObserver.observe(div);
+    }
+  });
 };
 function setupObserver() {
   const headerHeight = 80;
@@ -582,10 +592,12 @@ function setupObserver() {
   const options = {
     root: null, // viewport 기준
     rootMargin: `-${headerHeight + 10}px 0px -${viewportHeight - headerHeight}px 0px`,
-    threshold: 0, // 조금이라도 보이면 콜백 실행
+    // rootMargin: `-${headerHeight + 10}px 0px 0px 0px`,
+    threshold: [0, 1], // 조금이라도 보이거나 다 안 보일 때 콜백 실행
   };
 
   const observer = new IntersectionObserver((entries) => {
+    activeHeading.value = '';
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         activeHeading.value = entry.target.id;
@@ -790,8 +802,13 @@ div.aside {
   z-index: 100;
   display: inline-grid;
 }
+div.aside a {
+  font-size: 1rem;
+  transition: font-size 0.3s ease;
+}
 div.aside a.active {
   color: #76549a;
+  font-size: 1.05rem;
 }
 div.aside div.recentTagData {
   /* margin-top: 50px;

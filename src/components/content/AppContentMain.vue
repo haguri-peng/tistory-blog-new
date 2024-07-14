@@ -56,13 +56,6 @@ const parseDom = (val: string) => {
     content.value = modifiedContent;
     isUpdated.value = true;
 
-    // Twitter Widget이 있으면 로딩
-    const twtrEl = _.filter(dom.children, ['name', 'blockquote']);
-    if (twtrEl.length > 0) {
-      // Tweet widget 보이게 설정
-      twttr.widgets.load();
-    }
-
     // load AdFit
     adfitLoader().then(() => _.delay(adfit, 100));
 
@@ -78,12 +71,9 @@ onMounted(() => {
   //   twttr.events.bind('loaded', (event) => {
   //     // At this point all tweets have been fully loaded
   //     // and rendered and you we can proceed with our Javascript
-
-  //     console.log('Created widget', event);
-  //     if (event.widgets.length > 0) {
-  //       // Tweet이 로딩되면서 content 영역이 변경됨에 따라 Aside 영역을 재설정한다.
-  //       emitEvent();
-  //     }
+  //     // console.log('Created widget', event);
+  //     // if (event.widgets.length > 0) {
+  //     // }
   //   });
   // });
 
@@ -101,6 +91,9 @@ onUpdated(() => {
   // Parsing
   if (!isNullStr(content.value) && !isUpdated.value) {
     parseDom(content.value);
+
+    // Twitter Widget 로딩
+    twttr.widgets.load();
   }
 
   $('pre').css('font-size', '0.9rem').css('line-height', '21px');
