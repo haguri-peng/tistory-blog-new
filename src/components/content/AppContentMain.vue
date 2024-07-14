@@ -61,6 +61,13 @@ const parseDom = (val: string) => {
 
     // Tenping
     loadScript('//tads.tenping.kr/scripts/adsbytenping.min.js', 'async');
+
+    // 코드 구문 강조
+    if (typeof hljs != 'undefined') {
+      hljs.highlightAll();
+      $('code[class^=hljs]').css('font-family', "'Monaco'");
+      $('code[class^=hljs] span').css('font-family', "'Monaco'");
+    }
   }
 };
 

@@ -47,7 +47,7 @@ onMounted(() => {
 
     if (dom != null) {
       // Image Elements
-      const imgEls = _.chain(dom.children)
+      let imgEls = _.chain(dom.children)
         .filter(
           (c) =>
             c.name == 'figure' &&
@@ -56,6 +56,22 @@ onMounted(() => {
         )
         .map((el) => el.children[0])
         .value();
+
+      // div 영역 내에 있는 경우도 있어서 재작업
+      imgEls.push(
+        ..._.chain(dom.children)
+          .filter((c) => c.name == 'div')
+          .map((c) => c.children)
+          .flatten()
+          .filter(
+            (c) =>
+              c.name == 'figure' &&
+              c.attribs.hasOwnProperty('class') &&
+              c.attribs.class.indexOf('imageblock') > -1,
+          )
+          .map((el) => el.children[0])
+          .value(),
+      );
       // console.log(imgEls);
 
       if (imgEls.length > 0) {
