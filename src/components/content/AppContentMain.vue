@@ -65,8 +65,27 @@ const parseDom = (val: string) => {
     // 코드 구문 강조
     if (typeof hljs != 'undefined') {
       hljs.highlightAll();
-      $('code[class^=hljs]').css('font-family', "'Monaco'");
-      $('code[class^=hljs] span').css('font-family', "'Monaco'");
+      hljs.initLineNumbersOnLoad();
+
+      setTimeout(() => {
+        $('code[class^=hljs]').css('font-family', "'Monaco'");
+        $('code[class^=hljs] span').css('font-family', "'Monaco'");
+
+        // highlightjs-line-numbers CSS
+        $('.hljs-ln-numbers')
+          .css('-webkit-touch-callout', 'none')
+          .css('-webkit-user-select', 'none')
+          .css('-khtml-user-select', 'none')
+          .css('-moz-user-select', 'none')
+          .css('-ms-user-select', 'none')
+          .css('user-select', 'none')
+          .css('text-align', 'center')
+          .css('color', '#ccc')
+          .css('border-right', '1px solid #ccc')
+          .css('vertical-align', 'top')
+          .css('padding-right', '5px');
+        $('.hljs-ln-line.hljs-ln-code').css('padding-left', '10px');
+      }, 100);
     }
   }
 };
@@ -91,7 +110,7 @@ onMounted(() => {
   let link = document.createElement('link');
   link.rel = 'stylesheet';
   link.href =
-    'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/night-owl.min.css';
+    'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/tomorrow-night-blue.min.css';
   document.head.appendChild(link);
 });
 onUpdated(() => {
