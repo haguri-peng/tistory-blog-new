@@ -24,8 +24,10 @@
     <div class="text-left">
       <ul class="list-none pl-2" style="border-left: 2px solid #df7861">
         <li v-for="heading in headings" :key="heading.id">
+          <!-- :href="`#${heading.id}`" -->
+          <!--@click.prevent="$router.push(`#${heading.id}`)" -->
           <a
-            :href="`#${heading.id}`"
+            :data-url="`#${heading.id}`"
             :class="{
               active: activeHeading !== '' && activeHeading === heading.id,
             }"
@@ -609,7 +611,8 @@ function setupObserver() {
 }
 function scrollToSection(evt: MouseEvent) {
   const el = evt.target as HTMLElement;
-  const targetId = el.getAttribute('href') || '';
+  // const targetId = el.getAttribute('href') || ''
+  const targetId = el.getAttribute('data-url') || '';
   // router.push({ hash: targetId.slice(1) });
   router.push({ hash: targetId });
 }
@@ -805,6 +808,7 @@ div.aside {
 div.aside a {
   font-size: 1rem;
   transition: font-size 0.3s ease;
+  cursor: pointer;
 }
 div.aside a.active {
   color: #76549a;
