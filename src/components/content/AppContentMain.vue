@@ -70,6 +70,7 @@ const parseDom = (val: string) => {
       setTimeout(() => {
         $('code[class^=hljs]').css('font-family', "'Monaco'");
         $('code[class^=hljs] span').css('font-family', "'Monaco'");
+        $('code[class^=hljs] td').css('font-family', "'Monaco'");
 
         // highlightjs-line-numbers CSS
         $('.hljs-ln-numbers')
