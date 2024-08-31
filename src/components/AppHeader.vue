@@ -172,10 +172,13 @@ const clickCategory = (
   const curCategory = _.find(getAllCategories.value, (c) => c.id == categoryId);
 
   subCategoryList.length = 0;
-  if (curCategory!.children!.length == 0) {
+  if (curCategory == undefined || curCategory.children.length == 0) {
     emit('moveCategory', categoryId, categoryPath);
   } else {
-    subCategoryList.push(...curCategory!.children!);
+    const filteredSubCategory = _.chain(curCategory.children)
+      .filter((c) => c.entryCount > 0)
+      .value();
+    subCategoryList.push(...filteredSubCategory);
   }
 };
 
