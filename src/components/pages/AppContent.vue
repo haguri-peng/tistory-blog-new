@@ -640,7 +640,9 @@ const gotoTop = () => {
 };
 const gotoComments = () => {
   const commentsEl = document.querySelector('div.comments') as HTMLElement;
-  commentsEl.scrollIntoView({ behavior: 'smooth' });
+  // commentsEl.scrollIntoView({ behavior: 'smooth' });
+  const calcTop = commentsEl.getBoundingClientRect().top + window.scrollY - 80;
+  window.scrollTo({ top: calcTop, behavior: 'smooth' });
 };
 const openCommenterPage = (url: string | undefined) => {
   if (!isNullStr(url)) {
