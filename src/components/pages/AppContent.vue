@@ -115,7 +115,11 @@
           등록
         </button>
       </p>
-      <div v-for="comment in comments" :key="comment.id">
+      <div
+        v-for="comment in comments"
+        :key="comment.id"
+        :id="`comment${comment.id}`"
+      >
         <div class="name">
           <!-- @vue-expect-error -->
           <div
