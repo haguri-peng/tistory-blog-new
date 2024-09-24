@@ -6,6 +6,12 @@
 
 ## Changelog
 
+- 2024/9/19 댓글로 바로 이동할 수 있도록 각 댓글에 id 부여
+- 2024/9/7 Dark Mode에서 문제가 있었던 부분 해결 (Light/Dark Mode를 지원 X)
+- 2024/7/15 highlightjs-line-numbers 적용
+- 2024/7/6 Vue-Router의 scrollBehavior 적용. 게시물의 위치 감지를 IntersectionObserver를 사용하여 구현.
+- 2024/6/24 Component, Type 등 Source Directory 재편성
+- 2024/6/7 이미지 뷰어(PhotoSwipe) 적용
 - 2024/5/27 Add spinner store. Router의 Navigation Guard와 메인(App.vue)에서 LoadingSpinner를 컨트롤.
 - 2024/5/25 Vue 3.4에서 안정화된 defineModel 적용. defineEmits 문법 최신화. Aside 영역 세팅하는 부분 개선.
 - 2024/5/12 404 Page 수정.
