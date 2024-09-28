@@ -71,7 +71,7 @@ const fetchBlogRss = async () => {
     const arrTmpTags: string[] = [];
     // @ts-ignore
     $item.each(function (i, el) {
-      const $category = $(el).find('category');
+      const $category = $(el).find('category').not(':first');
       $category.each(function () {
         arrTmpTags.push($(this).text());
       });
