@@ -56,10 +56,13 @@ const postList: SearchInfo[] = reactive([]);
 onMounted(async () => {
   if (postType.value == 'related') {
     const { data } = await getRelatedPosts(postId.value);
-    postList.push(...data.data.items);
+    // 공개된(PUBLIC) 것만 보이도록 설정
+    const filteredData = _.filter(data.data.items, ['visibility', 'PUBLIC']);
+    postList.push(...filteredData);
   } else if (postType.value == 'popular') {
     const { data } = await getPopularPosts(postId.value);
-    postList.push(...data.data.items);
+    const filteredData = _.filter(data.data.items, ['visibility', 'PUBLIC']);
+    postList.push(...filteredData);
   }
 });
 </script>
