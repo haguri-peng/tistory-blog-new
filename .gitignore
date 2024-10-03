@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 # User scripts
-scripts/tistory-archive.cjs
+scripts/tistory-skin.cjs
