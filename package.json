@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc && vite build",
-    "postbuild": "node scripts/replace-paths.cjs",
+    "postbuild": "node scripts/replace-paths.cjs && node scripts/tistory-skin.cjs",
     "preview": "vite preview"
   },
   "dependencies": {
