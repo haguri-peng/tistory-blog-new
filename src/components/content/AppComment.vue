@@ -6,6 +6,7 @@
         <input
           type="text"
           v-model="blogName"
+          ref="elBlogNm"
           placeholder="블로그 주소를 입력해주세요. Ex) haguri-peng"
           style="
             width: 97%;
@@ -16,6 +17,7 @@
         />
         <textarea
           v-model="comment"
+          ref="elComment"
           name="text"
           rows="5"
           placeholder="댓글을 작성해주세요."
@@ -41,13 +43,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, watch } from 'vue';
+import { ref, reactive, computed, watch, onMounted, onUnmounted } from 'vue';
 import { storeToRefs } from 'pinia';
 
 import { getGuestbookInit } from '@/api/posts';
 import { GuestbookInitRes } from '@/api/axiosResTypes';
 import { CommentPost } from '@/types';
 import { useCommentStore } from '@/store/comment';
+import { isNullStr } from '@/utils/utils';
 
 const showModal = defineModel<boolean>('showModal', { required: true });
 
@@ -112,6 +115,8 @@ const resetData = () => {
 const loginId = ref(0);
 const loginName = ref('');
 const loginHomepage = ref('');
+const elBlogNm = ref<HTMLInputElement>();
+const elComment = ref<HTMLTextAreaElement>();
 watch(showModal, (val) => {
   dialogState.value = val;
 
@@ -128,6 +133,16 @@ watch(showModal, (val) => {
           loginName.value = reqUser.name;
           loginHomepage.value = reqUser.homepage;
         }
+
+        // focus 설정
+        setTimeout(() => {
+          // blogName, comment 순으로 focus
+          if (isNullStr(blogName.value)) {
+            elBlogNm.value?.focus();
+          } else {
+            elComment.value?.focus();
+          }
+        }, 100);
       })
       .catch((err) => console.error(err));
   }
@@ -137,10 +152,25 @@ watch(getModComment, (val) => {
   comment.value = val || '';
 });
 
+onMounted(() => {
+  document.addEventListener('keyup', keyupEvent);
+});
+onUnmounted(() => {
+  document.removeEventListener('keyup', keyupEvent);
+});
+
 function getRequestUser(): GuestbookInitRes {
   return new Promise((resolve) => {
     resolve(getGuestbookInit());
   });
+}
+function keyupEvent(evt: KeyboardEvent) {
+  if (dialogState.value) {
+    // ESC key 를 누르면 모달을 닫는다.
+    if (evt.key == 'Escape') {
+      close();
+    }
+  }
 }
 </script>
 
