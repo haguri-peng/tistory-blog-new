@@ -2,7 +2,7 @@
   <GDialog v-model="dialogState" max-width="400" @update:modelValue="close">
     <div class="input-wrapper">
       <input
-        type="text"
+        type="search"
         class="search-input"
         v-model="inputKeyword"
         ref="searchInput"
