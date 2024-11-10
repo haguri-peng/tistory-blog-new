@@ -819,7 +819,7 @@ div.aside a {
 div.aside a.active {
   color: #76549a;
   font-size: 1.05rem;
-  text-decoration: underline double;
+  text-decoration: underline;
 }
 div.aside div.recentTagData {
   /* margin-top: 50px;
