@@ -2,7 +2,7 @@ import { reactive, computed } from 'vue';
 import { defineStore } from 'pinia';
 
 import _ from 'lodash';
-import moment from 'moment';
+import { parseISO, differenceInDays } from 'date-fns';
 
 import { Category, CategoryInfo } from '@/types';
 import { isNullStr, categoryReduce, setValue } from '@/utils/utils';
@@ -21,10 +21,13 @@ export const useCategoryStore = defineStore('category', () => {
 
   function getRecentCategories() {
     const recentCategories = _.filter(getAllCategories.value, (c) => {
-      const now = moment();
-      const updated = moment(c.lastUpdate);
+      const now = new Date();
+      const updated = parseISO(c.lastUpdate);
+      console.log('lastUpdate : ' + c.lastUpdate);
+      console.log('parseISO(lastUpdate) : ' + parseISO(c.lastUpdate));
+      console.log('diff : ', differenceInDays(now, updated));
       // 90일 이전에 업데이트된 카테고리만 가져온다.
-      return now.diff(updated, 'days') <= 90;
+      return differenceInDays(now, updated) <= 90;
     }) as Category[];
     return recentCategories;
   }

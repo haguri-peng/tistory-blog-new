@@ -4,16 +4,14 @@
 
 `Vue3` + `Typescript` + `Vite`을 통해 환경을 구성하였으며, [Ex-Repository](https://github.com/haguri-peng/tistory-blog/) 의 소스를 리팩토링 하였습니다.
 
-## Changelog
+## ✐ Changelog
 
-- 2024/10/13 Content에서 현재 활성화(active) 중인 aside 영역에 double underline 설정
+- 2024/11/20 날짜 관련 라이브러리 변경 (Moment.js -> date-fns)
+- 2024/11/10 Content에서 현재 활성화(active) 중인 aside 영역에 underline 설정
 - 2024/10/11 댓글 모달에서 ESC 키를 누르면 닫히도록 설정. 열릴 때 focus 설정
 - 2024/10/3 빌드된 파일을 블로그에 자동으로 업로드할 수 있도록 스크립트 반영
-- 2024/9/28 Recent Tags 개선 (카테고리명 제외)
-- 2024/9/19 댓글로 바로 이동할 수 있도록 각 댓글에 id 부여
-- 2024/9/7 Dark Mode에서 문제가 있었던 부분 해결 (Light/Dark Mode를 지원 X)
 
-## Vue
+## <img src="./public/vue.svg" width="20px" height="20px"></img> Vue
 
 - [Vue3](https://vuejs.org/)
 - [Vue Router](https://router.vuejs.org/)
@@ -79,14 +77,14 @@ export const useCategoryStore = defineStore('category', () => {
 - [jQuery](https://jquery.com)
 - [Lodash](https://lodash.com)
 - [tailwindcss](https://tailwindcss.com)
-- [Moment.js](https://momentjs.com/)
+- [date-fns](https://date-fns.org/)
 
 ## Color
 
 [Color Hunt](https://colorhunt.co/palette/fcf8e894b49fdf786176549a)  
 <img src="./public/color.png" width="300px" height="300px"></img>
 
-## Tistory
+## <img src="./public/tistory_icon.svg" width="20px" height="20px"></img> Tistory
 
 `2024/3/5 이후로 Tistory Open API는 서비스 종료!!`
 
@@ -149,14 +147,28 @@ If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has a
    2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
 2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
 
-### Build & Deploy
+## 🏗️ Build & Deploy
 
 `npm run build`
 
-정상적으로 빌드되면, `dist` 폴더의 `index.html`, `index-[name].js` 파일 내에서 `/images/` 로 시작하는 경로 값을 수동으로 변경해서 최종 스킨에 업로드해야 합니다.
+정상적으로 빌드되면, `dist` 폴더에 관련 파일들이 생성되는데, `index.html` 파일과 `/images` 폴더 내에 있는 파일을 모두 스킨에 업로드해야 합니다.
 
-`https://tistory4.daumcdn.net/tistory/2876097/skin/`  
-/tistory/ 경로 다음에 나오는 숫자 값이 Tistory 블로그마다 가지고 있는 고유 ID 값인 것 같은데, 이 값은 실제 배포한 다음에 console 창에 error 로 나타나는 값을 확인해야 확인할 수 있습니다.
+### postbuild
 
-실제 설정되는 값은 다음과 같습니다.  
-`https://tistory4.daumcdn.net/tistory/2876097/skin/images/index-OYSrlsaS.js`
+- 빌드 작업 이후에 아래 두 스크립트가 자동으로(package.json의 scripts에 postbuild로 정의) 수행됩니다.
+- replace-paths.cjs : 개발 시 내부적으로 사용했던 경로를 실제 블로그 경로로 변경하는 작업
+- tistory-skin.cjs : 빌드된 파일을 블로그의 스킨에 업로드
+
+[`replace-paths.cjs`](./scripts/replace-paths.cjs)
+
+*https://tistory4.daumcdn.net/tistory/2876097/skin/*  
+/tistory/ 경로 다음에 나오는 숫자 값이 Tistory 블로그마다 가지고 있는 고유 ID 값인 것 같은데요. 이 값은 실제 배포한 다음에 console 창에 error 로 나타나는 값을 확인해야 확인할 수 있습니다.
+
+실제 설정되는 값(예: js 파일)은 다음과 같습니다.  
+*https://tistory4.daumcdn.net/tistory/2876097/skin/images/index-[name].js*
+
+[`tistory-skin.cjs`](./scripts//tistory-skin.cjs)
+
+빌드된 파일을 블로그에 업로드 합니다.  
+(단, 로그인 할 때마다 TSSESSION 값이 바뀌기 때문에 이 부분은 작업하기 이전에 확인요망)
+간혹 '일시적인 문제가 발생하여 오류가 발생'이라면서 업로드가 안 되는데, 다시 빌드 명령어를 내리면 정상적으로 업로드됩니다.

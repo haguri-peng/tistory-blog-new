@@ -1,10 +1,16 @@
 # Changelog
 
+## 2024-11
+
+- 현재 활성화 중인 aside 영역 설정 재변경 (double -> single)
+- 날짜 관련 라이브러리 변경 (Moment.js -> date-fns)
+
 ## 2024-10
 
 - 빌드된 파일을 블로그에 자동으로 업로드할 수 있도록 스크립트 반영
 - 댓글 모달에서 ESC 키를 누르면 닫히도록 설정. 열릴 때 focus 설정
 - Content에서 현재 활성화(active) 중인 aside 영역에 double underline 설정
+- 검색 모달 Type 변경 (text -> search)
 
 ## 2024-09
 
