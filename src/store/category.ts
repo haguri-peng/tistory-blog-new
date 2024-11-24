@@ -23,9 +23,6 @@ export const useCategoryStore = defineStore('category', () => {
     const recentCategories = _.filter(getAllCategories.value, (c) => {
       const now = new Date();
       const updated = parseISO(c.lastUpdate);
-      console.log('lastUpdate : ' + c.lastUpdate);
-      console.log('parseISO(lastUpdate) : ' + parseISO(c.lastUpdate));
-      console.log('diff : ', differenceInDays(now, updated));
       // 90일 이전에 업데이트된 카테고리만 가져온다.
       return differenceInDays(now, updated) <= 90;
     }) as Category[];
