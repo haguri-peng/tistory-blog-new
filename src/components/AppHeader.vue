@@ -97,12 +97,12 @@ import { ref, reactive, toRefs, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
-import $ from 'jquery';
 import _ from 'lodash';
 
 import { Category } from '@/types';
 import { getNoticeBaseInfo } from '@/api/posts';
 import { useCategoryStore } from '@/store/category';
+import { css, slideUp } from '@/utils/utils';
 
 const props = defineProps<{
   categoryList: Category[];
@@ -163,7 +163,10 @@ const clickCategory = (
   subFlag?: string,
 ) => {
   // Sub Category display CSS 초기화
-  $('div.subCategory').css('display', '');
+  const elSubCategory = document.querySelector(
+    'div.subCategory',
+  ) as HTMLElement;
+  css(elSubCategory, { display: '' });
 
   if (subFlag != 'sub') {
     activeCategory.value = categoryId;
@@ -186,7 +189,10 @@ const subCategoryOut = () => {
   hideSubCategory();
 };
 const hideSubCategory = () => {
-  $('div.subCategory').slideUp(400);
+  const elSubCategory = document.querySelector(
+    'div.subCategory',
+  ) as HTMLElement;
+  slideUp(elSubCategory, 500);
 };
 
 const notiCnt = ref(0);

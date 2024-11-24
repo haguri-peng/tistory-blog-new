@@ -53,7 +53,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted } from 'vue';
 import _ from 'lodash';
-import $ from 'jquery';
 
 import ModalComment from '@/components/shared/ModalComment.vue';
 
@@ -64,7 +63,7 @@ import {
   postGuestbook,
 } from '@/api/posts';
 import { Guestbook, GuestbookPost } from '@/types';
-import { handleNewLine } from '@/utils/utils';
+import { handleNewLine, css } from '@/utils/utils';
 
 const reqUserId = ref(0);
 const reqUserRole = ref('');
@@ -107,8 +106,9 @@ const getCount = async () => {
 
 const guestbook = ref<HTMLInputElement>();
 const setAppHeight = () => {
+  const elApp = document.querySelector('#app') as HTMLElement;
   const top = 100;
-  $('#app').css('height', guestbook.value!.clientHeight + top + 'px');
+  css(elApp, { height: guestbook.value!.clientHeight + top + 'px' });
 };
 
 const showModal = ref(false);
@@ -169,7 +169,8 @@ onMounted(() => {
   getData();
 });
 onUnmounted(() => {
-  $('#app').css('height', 'auto');
+  const elApp = document.querySelector('#app') as HTMLElement;
+  css(elApp, { height: 'auto' });
 });
 </script>
 

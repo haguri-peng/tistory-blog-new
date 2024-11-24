@@ -276,7 +276,6 @@ import {
 import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
-import $ from 'jquery';
 import _ from 'lodash';
 import * as htmlparser2 from 'htmlparser2';
 import * as cheerio from 'cheerio';
@@ -300,7 +299,7 @@ import {
 import { Comment, CommentInput, CommentPost, HeadingTagInfo } from '@/types';
 import { useCategoryStore } from '@/store/category';
 import { useCommentStore } from '@/store/comment';
-import { isNullStr, commentReduce, handleNewLine } from '@/utils/utils';
+import { isNullStr, commentReduce, handleNewLine, toggle } from '@/utils/utils';
 
 const route = useRoute();
 const router = useRouter();
@@ -417,30 +416,6 @@ const getContent = async () => {
     if (configViewer.data != null) {
       acceptComment.value = configViewer.data.config.allowComment;
     }
-
-    // // 스크롤 Event 설정
-    // // 스크롤 위치에 따라 어느 영역에 있는지 확인하여 색상을 변경
-    // $(window).scroll(function () {
-    //   const top = $(window).scrollTop();
-    //   // console.log('top >> ' + top);
-
-    //   let bFind = false;
-    //   $('div.aside ul li').each(function () {
-    //     if (
-    //       !bFind &&
-    //       parseInt($(this).data('offsetTop')) <= top! + 92 &&
-    //       ($(this).next().length > 0
-    //         ? parseInt($(this).next().data('offsetTop'))
-    //         : top! + 92) >=
-    //         top! + 92!
-    //     ) {
-    //       $(this).css('color', '#df7861');
-    //       bFind = true;
-    //     } else {
-    //       $(this).css('color', '');
-    //     }
-    //   });
-    // });
   }
 };
 
@@ -654,11 +629,19 @@ const openCommenterPage = (url: string | undefined) => {
   }
 };
 const toggleCommentModDelBtn = (el: HTMLElement) => {
-  $(el).parent().find('ul').toggle();
+  const elUl = el.parentElement?.querySelector('ul');
+  if (elUl) {
+    toggle(elUl);
+  }
 };
 const commentModDelOut = (evt: MouseEvent) => {
   const el = evt.target as HTMLElement;
-  $(el).parent().find('ul').hide();
+  if (el) {
+    const elUl = el.parentElement?.querySelector('ul');
+    if (elUl) {
+      elUl.style.display = 'none';
+    }
+  }
 };
 
 const setAdsense = () => {

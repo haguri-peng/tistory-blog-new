@@ -74,7 +74,6 @@ export const useCategoryStore = defineStore('category', () => {
 - [Axios](https://axios-http.com)
 - [htmlparser2](https://github.com/fb55/htmlparser2#readme)
 - [cheerio](https://cheerio.js.org/)
-- [jQuery](https://jquery.com)
 - [Lodash](https://lodash.com)
 - [tailwindcss](https://tailwindcss.com)
 - [date-fns](https://date-fns.org/)

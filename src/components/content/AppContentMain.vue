@@ -11,11 +11,10 @@ import { ref, onMounted, onUpdated } from 'vue';
 import ContentGallery from '@/components/content/ContentGallery.vue';
 
 import * as htmlparser2 from 'htmlparser2';
-import $ from 'jquery';
 import _ from 'lodash';
 
 import loadScript from '@/utils/load-script';
-import { isNullStr } from '@/utils/utils';
+import { isNullStr, css } from '@/utils/utils';
 
 const content = defineModel<string>('content', { required: true });
 
@@ -68,24 +67,39 @@ const parseDom = (val: string) => {
       hljs.initLineNumbersOnLoad();
 
       setTimeout(() => {
-        $('code[class^=hljs]').css('font-family', "'Monaco'");
-        $('code[class^=hljs] span').css('font-family', "'Monaco'");
-        $('code[class^=hljs] td').css('font-family', "'Monaco'");
+        const elHljs =
+          document.querySelectorAll<HTMLElement>('code[class^=hljs]');
+        css(elHljs, { fontFamily: "'Monaco'" });
+        const elHljsSpan = document.querySelectorAll<HTMLElement>(
+          'code[class^=hljs] span',
+        );
+        css(elHljsSpan, { fontFamily: "'Monaco'" });
+        const elHljsTd = document.querySelectorAll<HTMLElement>(
+          'code[class^=hljs] td',
+        );
+        css(elHljsTd, { fontFamily: "'Monaco'" });
 
         // highlightjs-line-numbers CSS
-        $('.hljs-ln-numbers')
-          .css('-webkit-touch-callout', 'none')
-          .css('-webkit-user-select', 'none')
-          .css('-khtml-user-select', 'none')
-          .css('-moz-user-select', 'none')
-          .css('-ms-user-select', 'none')
-          .css('user-select', 'none')
-          .css('text-align', 'center')
-          .css('color', '#ccc')
-          .css('border-right', '1px solid #ccc')
-          .css('vertical-align', 'top')
-          .css('padding-right', '5px');
-        $('.hljs-ln-line.hljs-ln-code').css('padding-left', '10px');
+        const elHljsLnNumbers =
+          document.querySelectorAll<HTMLElement>('.hljs-ln-numbers');
+        css(elHljsLnNumbers, {
+          '-webkit-touch-callout': 'none',
+          '-webkit-user-select': 'none',
+          '-khtml-user-select': 'none',
+          '-moz-user-select': 'none',
+          '-ms-user-select': 'none',
+          userSelect: 'none',
+          textAlign: 'center',
+          color: '#ccc',
+          borderRight: '1px solid #ccc',
+          verticalAlign: 'top',
+          paddingLeft: '5px',
+        });
+
+        const elHljsLnCode = document.querySelectorAll<HTMLElement>(
+          '.hljs-ln-line.hljs-ln-code',
+        );
+        css(elHljsLnCode, { paddingLeft: '10px' });
       }, 100);
     }
   }
@@ -106,7 +120,12 @@ onMounted(() => {
 
   // highlight.js
   // 블로그 내에서 설정한 스타일을 해제하고 다른 스타일(night-owl)로 적용
-  $('link[href*=atom]').attr('disabled', 'disabled');
+  const links = document.querySelectorAll<HTMLElement>('link');
+  links.forEach((link) => {
+    if (link.href.startsWith('atom')) {
+      link.disabled = true;
+    }
+  });
 
   let link = document.createElement('link');
   link.rel = 'stylesheet';
@@ -123,11 +142,21 @@ onUpdated(() => {
     twttr.widgets.load();
   }
 
-  $('pre').css('font-size', '0.9rem').css('line-height', '21px');
+  const elPre = document.querySelectorAll<HTMLElement>('pre');
+  css(elPre, {
+    fontSize: '0.9rem',
+    lineHeight: '21px',
+  });
 
   // 별도로 CSS 설정
-  $('div.contentMain ul, div.contentMain ol').css('padding-left', '30px');
-  $('div.contentMain p').css('margin', '5px 0');
+  const elContentMainList = document.querySelectorAll<HTMLElement>(
+    'div.contentMain ul, div.contentMain ol',
+  );
+  css(elContentMainList, { paddingLeft: '30px' });
+
+  const elContentMainPara =
+    document.querySelectorAll<HTMLElement>('div.contentMain p');
+  css(elContentMainPara, { margin: '5px 0' });
 });
 
 function adfitLoader() {

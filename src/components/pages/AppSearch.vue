@@ -62,7 +62,6 @@ import { searchTags, searchPosts } from '@/api/posts';
 import { SearchInfo } from '@/types';
 import { isNullStr } from '@/utils/utils';
 
-import $ from 'jquery';
 import { debounce } from 'lodash';
 
 const route = useRoute();
@@ -113,31 +112,33 @@ const initData = () => {
   showNextIcon.value = false;
 };
 
+function searchDebounce() {
+  return debounce(() => {
+    if (isLast.value) {
+      showNextIcon.value = false;
+      return;
+    }
+
+    const scrollTop = window.scrollY;
+    const innerHeight = window.innerHeight;
+    const calcScroll = scrollTop! + innerHeight!;
+    const scrollHeight =
+      document.querySelector('div.search-area')!.scrollHeight || 0 + 80;
+
+    if (!isLast.value && calcScroll >= scrollHeight) {
+      showNextIcon.value = true;
+      page.value++;
+      search(paramType.value, paramKeyword.value);
+    }
+  }, 300);
+}
 onMounted(() => {
   search(paramType.value, paramKeyword.value);
 
-  $(window).scroll(
-    debounce(() => {
-      if (isLast.value) {
-        showNextIcon.value = false;
-        return;
-      }
-
-      const scrollTop = $(window).scrollTop();
-      const innerHeight = $(window).innerHeight();
-      const calcScroll = scrollTop! + innerHeight!;
-      const scrollHeight = $('div.search-area')[0].scrollHeight || 0 + 80;
-
-      if (!isLast.value && calcScroll >= scrollHeight) {
-        showNextIcon.value = true;
-        page.value++;
-        search(paramType.value, paramKeyword.value);
-      }
-    }, 300),
-  );
+  window.addEventListener('scroll', searchDebounce());
 });
 onUnmounted(() => {
-  $(window).off('scroll');
+  window.removeEventListener('scroll', searchDebounce());
 });
 </script>
 

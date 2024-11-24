@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import { ref, defineModel, watch, nextTick, onUpdated } from 'vue';
-import $ from 'jquery';
+import { css } from '@/utils/utils';
 
 const showSearch = defineModel<boolean>('showSearch', { required: true });
 
@@ -66,11 +66,15 @@ watch(showSearch, async (val) => {
   }, 100);
 });
 
-onUpdated(() => {
+onUpdated(async () => {
+  await nextTick();
+
   // set background & border
-  $('.g-dialog-content')
-    .css('--g-dialog-content-bg', 'rgba(118, 84, 154, 0.66)')
-    .css('border', '2px solid rgb(118, 84, 154)');
+  const elDialog = document.querySelectorAll<HTMLElement>('.g-dialog-content');
+  css(elDialog, {
+    backgroundColor: 'rgba(118, 84, 154, 0.66)',
+    border: '2px solid rgb(118, 84, 154)',
+  });
 });
 </script>
 

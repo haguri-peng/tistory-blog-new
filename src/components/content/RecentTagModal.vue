@@ -25,13 +25,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onUpdated } from 'vue';
+import { ref, watch, nextTick, onUpdated } from 'vue';
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
-import $ from 'jquery';
-
 import { useTagStore } from '@/store/tag';
+import { css } from '@/utils/utils';
 
 const showRecentTag = defineModel<boolean>('showRecentTag', { required: true });
 
@@ -57,11 +56,15 @@ watch(showRecentTag, async (val) => {
   dialogState.value = val;
 });
 
-onUpdated(() => {
+onUpdated(async () => {
+  await nextTick();
+
   // set background & border
-  $('.g-dialog-content')
-    .css('--g-dialog-content-bg', '#fcf8e8')
-    .css('border', '3px solid #76549a');
+  const elDialog = document.querySelectorAll<HTMLElement>('.g-dialog-content');
+  css(elDialog, {
+    backgroundColor: '#fcf8e8',
+    border: '3px solid #76549a',
+  });
 });
 </script>
 
