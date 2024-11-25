@@ -35,7 +35,7 @@
 import { reactive, toRefs, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 
-import _ from 'lodash';
+import { filter } from 'lodash-es';
 
 import { getRelatedPosts, getPopularPosts } from '@/api/posts';
 import { SearchInfo } from '@/types';
@@ -57,11 +57,11 @@ onMounted(async () => {
   if (postType.value == 'related') {
     const { data } = await getRelatedPosts(postId.value);
     // 공개된(PUBLIC) 것만 보이도록 설정
-    const filteredData = _.filter(data.data.items, ['visibility', 'PUBLIC']);
+    const filteredData = filter(data.data.items, ['visibility', 'PUBLIC']);
     postList.push(...filteredData);
   } else if (postType.value == 'popular') {
     const { data } = await getPopularPosts(postId.value);
-    const filteredData = _.filter(data.data.items, ['visibility', 'PUBLIC']);
+    const filteredData = filter(data.data.items, ['visibility', 'PUBLIC']);
     postList.push(...filteredData);
   }
 });

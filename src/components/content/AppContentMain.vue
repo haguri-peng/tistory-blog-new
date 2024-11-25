@@ -11,7 +11,7 @@ import { ref, onMounted, onUpdated } from 'vue';
 import ContentGallery from '@/components/content/ContentGallery.vue';
 
 import * as htmlparser2 from 'htmlparser2';
-import _ from 'lodash';
+import { filter, delay } from 'lodash-es';
 
 import loadScript from '@/utils/load-script';
 import { isNullStr, css } from '@/utils/utils';
@@ -25,7 +25,7 @@ const parseDom = (val: string) => {
     let modifiedContent = val;
 
     // 광고
-    const ads = _.filter(
+    const ads = filter(
       dom.children,
       (c) => c.name == 'figure' && c.attribs.class == 'ad-wp',
     );
@@ -56,7 +56,7 @@ const parseDom = (val: string) => {
     isUpdated.value = true;
 
     // load AdFit
-    adfitLoader().then(() => _.delay(adfit, 100));
+    adfitLoader().then(() => delay(adfit, 100));
 
     // Tenping
     loadScript('//tads.tenping.kr/scripts/adsbytenping.min.js', 'async');
@@ -122,7 +122,7 @@ onMounted(() => {
   // 블로그 내에서 설정한 스타일을 해제하고 다른 스타일(night-owl)로 적용
   const links = document.querySelectorAll<HTMLElement>('link');
   links.forEach((link) => {
-    if (link.href.startsWith('atom')) {
+    if (link.getAttribute('href')?.includes('atom')) {
       link.disabled = true;
     }
   });

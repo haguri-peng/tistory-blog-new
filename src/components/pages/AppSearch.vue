@@ -62,7 +62,7 @@ import { searchTags, searchPosts } from '@/api/posts';
 import { SearchInfo } from '@/types';
 import { isNullStr } from '@/utils/utils';
 
-import { debounce } from 'lodash';
+import { debounce } from 'lodash-es';
 
 const route = useRoute();
 const paramType = computed(() => (route.params.type || '').toString());

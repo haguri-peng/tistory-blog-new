@@ -29,7 +29,7 @@ import { ref, reactive, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
-import _ from 'lodash';
+import { find } from 'lodash-es';
 import * as htmlparser2 from 'htmlparser2';
 import * as cheerio from 'cheerio';
 
@@ -70,7 +70,7 @@ const fetchPostListByCategory = async (pageNum?: number) => {
   let pageParam = 0;
 
   if (!getCategoryId.value) {
-    const curCategory = _.find(
+    const curCategory = find(
       getAllCategories.value,
       (c) => c.path == getRouteCategoryPath.value,
     );
@@ -107,7 +107,7 @@ const fetchPostListByCategory = async (pageNum?: number) => {
     // htmlparser
     const dom = htmlparser2.parseDocument(sHtml);
     if (dom != null) {
-      const elHtml = _.find(
+      const elHtml = find(
         dom.children,
         (c: cheerio.Element) => c.type == 'tag',
       );

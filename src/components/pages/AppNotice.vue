@@ -23,7 +23,7 @@
 import { ref, reactive, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 
-import _ from 'lodash';
+import { find } from 'lodash-es';
 import * as htmlparser2 from 'htmlparser2';
 import * as cheerio from 'cheerio';
 
@@ -45,10 +45,7 @@ const fetchNotice = async () => {
   // htmlparser
   const dom = htmlparser2.parseDocument(sHtml);
   if (dom != null) {
-    const elHtml = _.find(
-      dom.children,
-      (c: cheerio.Element) => c.type == 'tag',
-    );
+    const elHtml = find(dom.children, (c: cheerio.Element) => c.type == 'tag');
     // console.log(elHtml);
 
     if (elHtml != null && elHtml != undefined) {

@@ -19,7 +19,7 @@
 import { reactive, toRefs, watch, onMounted, onUnmounted } from 'vue';
 
 import * as htmlparser2 from 'htmlparser2';
-import _ from 'lodash';
+import { chain, forEach, findIndex } from 'lodash-es';
 
 import PhotoSwipeLightbox from 'photoswipe/lightbox';
 import PhotoSwipe from 'photoswipe';
@@ -47,7 +47,7 @@ onMounted(() => {
 
     if (dom != null) {
       // Image Elements
-      let imgEls = _.chain(dom.children)
+      let imgEls = chain(dom.children)
         .filter(
           (c) =>
             c.name == 'figure' &&
@@ -59,7 +59,7 @@ onMounted(() => {
 
       // div 영역 내에 있는 경우도 있어서 재작업
       imgEls.push(
-        ..._.chain(dom.children)
+        ...chain(dom.children)
           .filter((c) => c.name == 'div')
           .map((c) => c.children)
           .flatten()
@@ -75,7 +75,7 @@ onMounted(() => {
       // console.log(imgEls);
 
       if (imgEls.length > 0) {
-        _.forEach(imgEls, function (el) {
+        forEach(imgEls, function (el) {
           const objImgInfo = <ImageInfo>{};
           objImgInfo.alt = el.attribs['data-alt'];
           objImgInfo.imageUrl = el.attribs['data-url'];
@@ -101,7 +101,7 @@ onMounted(() => {
 
 watch(imgSrc, (val) => {
   if (!isNullStr(val)) {
-    const fIdx = _.findIndex(imageDatas, function (image) {
+    const fIdx = findIndex(imageDatas, function (image) {
       return image.imageUrl == val;
     });
     if (lightbox && fIdx > -1) {

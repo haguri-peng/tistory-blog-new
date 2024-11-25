@@ -12,7 +12,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 
-import _ from 'lodash';
+import { unescape, find } from 'lodash-es';
 import * as htmlparser2 from 'htmlparser2';
 import * as cheerio from 'cheerio';
 
@@ -23,7 +23,7 @@ const noticeId = computed(() => route.params.noticeId.toString());
 
 const title = ref('');
 const date = ref('');
-const getUnescapedTitle = computed(() => _.unescape(title.value));
+const getUnescapedTitle = computed(() => unescape(title.value));
 
 const content = ref('');
 const fetchNotice = async () => {
@@ -33,10 +33,7 @@ const fetchNotice = async () => {
   // htmlparser
   const dom = htmlparser2.parseDocument(sHtml);
   if (dom != null) {
-    const elHtml = _.find(
-      dom.children,
-      (c: cheerio.Element) => c.type == 'tag',
-    );
+    const elHtml = find(dom.children, (c: cheerio.Element) => c.type == 'tag');
     // console.log(elHtml);
 
     if (elHtml != null && elHtml != undefined) {

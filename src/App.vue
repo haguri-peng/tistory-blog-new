@@ -25,7 +25,7 @@ import SearchInputModal from '@/components/SearchInputModal.vue';
 import { ref, reactive, onBeforeMount, onMounted, onUpdated } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
-import _ from 'lodash';
+import { find, uniq, filter } from 'lodash-es';
 import * as htmlparser2 from 'htmlparser2';
 import * as cheerio from 'cheerio';
 
@@ -59,7 +59,7 @@ const fetchBlogRss = async () => {
   // htmlparser
   const dom = htmlparser2.parseDocument(sXml);
   if (dom != null) {
-    const elHtml = _.find(
+    const elHtml = find(
       dom.children,
       (c: cheerio.Element) => c.type == 'tag' && c.tagName == 'rss',
     );
@@ -76,7 +76,7 @@ const fetchBlogRss = async () => {
         arrTmpTags.push($(this).text());
       });
     });
-    setRecentTag(_.uniq(arrTmpTags));
+    setRecentTag(uniq(arrTmpTags));
   }
 };
 
@@ -91,7 +91,7 @@ const fetchCategory = async () => {
   const { data } = await getCategories();
   if (data.data.items.length > 0) {
     const categories: Category[] = data.data.items;
-    category.push(..._.filter(categories, (c) => c.entryCount > 0));
+    category.push(...filter(categories, (c) => c.entryCount > 0));
   }
 };
 

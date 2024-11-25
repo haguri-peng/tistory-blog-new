@@ -81,7 +81,7 @@
 import { toRefs, computed } from 'vue';
 
 import { PageInfo } from '@/types';
-import _ from 'lodash';
+import { includes } from 'lodash-es';
 
 const props = defineProps<{
   page: PageInfo;
@@ -106,7 +106,7 @@ const getPageNum = (n: number) =>
 const clickPageNum = (evt: Event) => {
   const eventTarget = evt.target as HTMLElement;
   // 현재 페이지만 아니면 페이지 이동
-  if (!_.includes(eventTarget.parentElement!.classList, 'active')) {
+  if (!includes(eventTarget.parentElement!.classList, 'active')) {
     movePage(Number(eventTarget.innerText));
   }
 };

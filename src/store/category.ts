@@ -1,7 +1,7 @@
 import { reactive, computed } from 'vue';
 import { defineStore } from 'pinia';
 
-import _ from 'lodash';
+import { reduce, filter, find } from 'lodash-es';
 import { parseISO, differenceInDays } from 'date-fns';
 
 import { Category, CategoryInfo } from '@/types';
@@ -15,12 +15,12 @@ export const useCategoryStore = defineStore('category', () => {
   async function setAllCategories() {
     const { data } = await getCategories();
     if (data.data.items.length > 0) {
-      allCategories.push(..._.reduce(data.data.items, categoryReduce, []));
+      allCategories.push(...reduce(data.data.items, categoryReduce, []));
     }
   }
 
   function getRecentCategories() {
-    const recentCategories = _.filter(getAllCategories.value, (c) => {
+    const recentCategories = filter(getAllCategories.value, (c) => {
       const now = new Date();
       const updated = parseISO(c.lastUpdate);
       // 90일 이전에 업데이트된 카테고리만 가져온다.
@@ -31,9 +31,9 @@ export const useCategoryStore = defineStore('category', () => {
 
   function getCategoryPath(categoriId: string, separator?: string) {
     let result = '';
-    let currentCategory = _.find(getAllCategories.value, ['id', categoriId]);
+    let currentCategory = find(getAllCategories.value, ['id', categoriId]);
     if (currentCategory == undefined) {
-      currentCategory = _.find(getAllCategories.value, ['path', categoriId]);
+      currentCategory = find(getAllCategories.value, ['path', categoriId]);
     }
     if (currentCategory != undefined) {
       if (isNullStr(separator)) {

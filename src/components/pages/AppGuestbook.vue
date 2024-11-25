@@ -52,7 +52,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, onUnmounted } from 'vue';
-import _ from 'lodash';
+import { isEmpty } from 'lodash-es';
 
 import ModalComment from '@/components/shared/ModalComment.vue';
 
@@ -85,7 +85,7 @@ const getData = async () => {
 
   do {
     const { data } = await getGuestbook();
-    if (!_.isEmpty(data.data)) {
+    if (!isEmpty(data.data)) {
       for (const item of data.data.items) {
         gbList.push(item);
       }

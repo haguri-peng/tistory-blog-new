@@ -66,7 +66,7 @@
     <div
       class="subCategory"
       :class="{ hide: subCategoryList.length == 0 }"
-      @mouseleave="subCategoryOut"
+      @mouseleave="hideSubCategory"
     >
       <ul>
         <li
@@ -97,7 +97,7 @@ import { ref, reactive, toRefs, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
-import _ from 'lodash';
+import { find, findIndex, chain } from 'lodash-es';
 
 import { Category } from '@/types';
 import { getNoticeBaseInfo } from '@/api/posts';
@@ -148,7 +148,7 @@ const { getRecentCategories } = categoryStore;
 
 const showFlag = (categoryId: string) => {
   let result = '';
-  const fIdx = _.findIndex(getRecentCategories(), (c) => c.id == categoryId);
+  const fIdx = findIndex(getRecentCategories(), (c) => c.id == categoryId);
   if (fIdx > -1) {
     result = 'N';
   }
@@ -172,22 +172,19 @@ const clickCategory = (
     activeCategory.value = categoryId;
   }
 
-  const curCategory = _.find(getAllCategories.value, (c) => c.id == categoryId);
+  const curCategory = find(getAllCategories.value, (c) => c.id == categoryId);
 
   subCategoryList.length = 0;
   if (curCategory == undefined || curCategory.children.length == 0) {
     emit('moveCategory', categoryId, categoryPath);
   } else {
-    const filteredSubCategory = _.chain(curCategory.children)
+    const filteredSubCategory = chain(curCategory.children)
       .filter((c) => c.entryCount > 0)
       .value();
     subCategoryList.push(...filteredSubCategory);
   }
 };
 
-const subCategoryOut = () => {
-  hideSubCategory();
-};
 const hideSubCategory = () => {
   const elSubCategory = document.querySelector(
     'div.subCategory',

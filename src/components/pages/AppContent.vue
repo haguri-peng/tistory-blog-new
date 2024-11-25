@@ -276,7 +276,7 @@ import {
 import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
-import _ from 'lodash';
+import { unescape, find, reduce, delay } from 'lodash-es';
 import * as htmlparser2 from 'htmlparser2';
 import * as cheerio from 'cheerio';
 import axios, { AxiosResponse } from 'axios';
@@ -327,7 +327,7 @@ const content = ref('');
 const isContent = computed(() => (isNullStr(content) ? false : true));
 
 const title = ref('');
-const getUnescapedTitle = computed(() => _.unescape(title.value));
+const getUnescapedTitle = computed(() => unescape(title.value));
 
 const categoryId = ref('');
 const categoryName = ref('');
@@ -354,10 +354,7 @@ const getContent = async () => {
   // htmlparser
   const dom = htmlparser2.parseDocument(sHtml);
   if (dom != null) {
-    const elHtml = _.find(
-      dom.children,
-      (c: cheerio.Element) => c.type == 'tag',
-    );
+    const elHtml = find(dom.children, (c: cheerio.Element) => c.type == 'tag');
     // console.log(elHtml);
 
     // @ts-ignore
@@ -389,7 +386,7 @@ const getContent = async () => {
         .replace(/\)/g, '%29');
     }
 
-    const curCategory = _.find(
+    const curCategory = find(
       getAllCategories.value,
       (c) => c.path == categoryPath,
     );
@@ -425,7 +422,7 @@ const getComments = async () => {
 
   const { data } = await getCommentsInPost(postId.value);
   if (data.data.totalItems > 0) {
-    comments.push(..._.reduce(data.data.items, commentReduce, []));
+    comments.push(...reduce(data.data.items, commentReduce, []));
   }
 };
 const showModal = ref(false);
@@ -651,7 +648,7 @@ const setAdsense = () => {
 onMounted(() => {
   // Adsense
   setAdsense();
-  _.delay(setAdsense, 100);
+  delay(setAdsense, 100);
 
   getContent();
   getComments();

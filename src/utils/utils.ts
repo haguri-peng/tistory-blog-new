@@ -1,6 +1,6 @@
 import { type Ref, toRef } from 'vue';
 
-import _ from 'lodash';
+import { reduce, find } from 'lodash-es';
 
 import { Category, Comment } from '@/types';
 
@@ -38,7 +38,7 @@ const categoryReduce = (result: Category[], value: Category): Category[] => {
   if (value.children.length == 0) {
     return result;
   } else {
-    return _.reduce(value.children, categoryReduce, result);
+    return reduce(value.children, categoryReduce, result);
   }
 };
 
@@ -54,7 +54,7 @@ const commentReduce = (result: Comment[], value: Comment): Comment[] => {
   if (value.children.length == 0) {
     return result;
   } else {
-    return _.reduce(value.children, commentReduce, result);
+    return reduce(value.children, commentReduce, result);
   }
 };
 
@@ -62,7 +62,7 @@ const findCommentLevel = (result: Comment[], value: Comment): number => {
   if (value.parent == null) {
     return 1;
   } else {
-    const parentComment = _.find(result, ['id', value.parent]);
+    const parentComment = find(result, ['id', value.parent]);
     if (parentComment == undefined) {
       return 1;
     } else {
