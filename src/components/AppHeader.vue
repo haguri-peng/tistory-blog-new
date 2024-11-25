@@ -66,7 +66,7 @@
     <div
       class="subCategory"
       :class="{ hide: subCategoryList.length == 0 }"
-      @mouseleave="hideSubCategory"
+      @mouseleave="subCategoryOut"
     >
       <ul>
         <li
@@ -85,7 +85,7 @@
           title="close"
           bounce
           style="cursor: pointer"
-          @click="hideSubCategory"
+          @click="slideUpSubCategory"
         />
       </div>
     </div>
@@ -97,7 +97,7 @@ import { ref, reactive, toRefs, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
-import { find, findIndex, flow, filter } from 'lodash-es';
+import { find, findIndex, flow, filter, debounce } from 'lodash-es';
 
 import { Category } from '@/types';
 import { getNoticeBaseInfo } from '@/api/posts';
@@ -186,12 +186,16 @@ const clickCategory = (
   }
 };
 
-const hideSubCategory = () => {
+const subCategoryOut = () => {
+  hideSubCategory();
+};
+const slideUpSubCategory = () => {
   const elSubCategory = document.querySelector(
     'div.subCategory',
   ) as HTMLElement;
-  slideUp(elSubCategory, 500);
+  slideUp(elSubCategory, 400);
 };
+const hideSubCategory = debounce(slideUpSubCategory, 300);
 
 const notiCnt = ref(0);
 const fetchNoticeBaseInfo = async () => {
