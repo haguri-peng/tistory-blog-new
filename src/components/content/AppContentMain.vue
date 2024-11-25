@@ -93,7 +93,7 @@ const parseDom = (val: string) => {
           color: '#ccc',
           borderRight: '1px solid #ccc',
           verticalAlign: 'top',
-          paddingLeft: '5px',
+          paddingRight: '10px',
         });
 
         const elHljsLnCode = document.querySelectorAll<HTMLElement>(
