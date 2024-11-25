@@ -97,7 +97,7 @@ import { ref, reactive, toRefs, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
-import { find, findIndex, chain } from 'lodash-es';
+import { find, findIndex, flow, filter } from 'lodash-es';
 
 import { Category } from '@/types';
 import { getNoticeBaseInfo } from '@/api/posts';
@@ -178,9 +178,10 @@ const clickCategory = (
   if (curCategory == undefined || curCategory.children.length == 0) {
     emit('moveCategory', categoryId, categoryPath);
   } else {
-    const filteredSubCategory = chain(curCategory.children)
-      .filter((c) => c.entryCount > 0)
-      .value();
+    const subCategoryFlow = flow((children) =>
+      filter(children, (c: Category) => c.entryCount > 0),
+    );
+    const filteredSubCategory = subCategoryFlow(curCategory.children);
     subCategoryList.push(...filteredSubCategory);
   }
 };
