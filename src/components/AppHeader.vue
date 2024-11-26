@@ -97,7 +97,7 @@ import { ref, reactive, toRefs, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
-import { find, findIndex, flow, filter, debounce } from 'lodash-es';
+import { find, findIndex, flow, filter } from 'lodash-es';
 
 import { Category } from '@/types';
 import { getNoticeBaseInfo } from '@/api/posts';
@@ -186,16 +186,29 @@ const clickCategory = (
   }
 };
 
+let isClosBtnClicked = false;
 const subCategoryOut = () => {
-  hideSubCategory();
+  // 버튼이 클릭된 경우에는 처리하지 않음
+  if (!isClosBtnClicked) {
+    // 자연스럽게 slideUp이 되도록 timeout 설정
+    setTimeout(() => {
+      slideUpSubCategory();
+    }, 10);
+  }
 };
 const slideUpSubCategory = () => {
+  isClosBtnClicked = true;
+
   const elSubCategory = document.querySelector(
     'div.subCategory',
   ) as HTMLElement;
   slideUp(elSubCategory, 400);
+
+  // 버튼 클릭 변수 초기화
+  setTimeout(() => {
+    isClosBtnClicked = false;
+  }, 400);
 };
-const hideSubCategory = debounce(slideUpSubCategory, 300);
 
 const notiCnt = ref(0);
 const fetchNoticeBaseInfo = async () => {
