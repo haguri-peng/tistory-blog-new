@@ -1,10 +1,12 @@
 <template>
   <div class="w-full">
+    <!-- Category name -->
     <div class="category-title">
       <font-awesome-icon icon="fa-regular fa-folder-open" size="lg" />
       {{ categoryName }}
     </div>
     <div class="posts">
+      <!-- Content list -->
       <ul>
         <AppPost
           v-for="post in postList"
@@ -13,10 +15,8 @@
           @openContent="moveContent"
         ></AppPost>
       </ul>
-      <AppPaging
-        :page="pageInfo"
-        @movePage="fetchPostListByCategory"
-      ></AppPaging>
+      <!-- Pagination -->
+      <AppPaging :page="pageInfo" @movePage="fetchPostListByCategory" />
     </div>
   </div>
 </template>
@@ -45,7 +45,6 @@ const getRouteCategoryPath = computed(() =>
 const router = useRouter();
 const moveContent = (id: string) => {
   setCategoryInfo({ id: getCategoryId.value, page: pageInfo.currentPage });
-
   router.push(`/${id}`);
 };
 
@@ -60,12 +59,14 @@ const pageInfo = reactive({}) as PageInfo;
 
 const categoryName = ref('');
 const setCategoryName = () => {
+  // 카테고리명 설정 (e.g. Programming > Vue)
   categoryName.value = decodeURIComponent(
     getCategoryPath(getCategoryId.value, ' > '),
   );
 };
 
 const fetchPostListByCategory = async (pageNum?: number) => {
+  // 초기화
   postList.length = 0;
   let pageParam = 0;
 
@@ -102,7 +103,6 @@ const fetchPostListByCategory = async (pageNum?: number) => {
     const { data: sHtml } = await getFirstPostListByCategory(
       getCategoryPath(getCategoryId.value),
     );
-    // console.log(sHtml);
 
     // htmlparser
     const dom = htmlparser2.parseDocument(sHtml);
@@ -110,14 +110,13 @@ const fetchPostListByCategory = async (pageNum?: number) => {
       const elHtml = find(
         dom.children,
         (c: cheerio.Element) => c.type == 'tag',
-      );
-      // console.log(elHtml);
+      ) as cheerio.AnyNode;
 
       if (elHtml != null && elHtml != undefined) {
-        // @ts-ignore
         const $ = cheerio.load(elHtml);
         const $listPost = $('ul.list_post').eq(0);
-        // @ts-ignore
+
+        // @ts-expect-error
         // 10개만 가져오기
         $listPost.find('li:lt(10)').each(function (i, elem) {
           const visibility = $(elem)
@@ -175,7 +174,6 @@ div.category-title {
   font-size: 2rem;
   font-weight: bold;
   color: #76549a;
-  /* text-decoration: underline; */
   margin-bottom: 50px;
 }
 div.posts {

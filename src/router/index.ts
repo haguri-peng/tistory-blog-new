@@ -46,7 +46,6 @@ const routes = [
   },
   {
     path: '/:pathMatch(.*)*',
-    // redirect: '/404',
     component: NotFoundPage,
   },
 ];
@@ -54,11 +53,11 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
-  // @ts-ignore
   scrollBehavior(to, from, savedPosition) {
     return new Promise((resolve) => {
       let scrollTimeout = 10;
       if (from.path != to.path) {
+        // path가 다른 경우 timeout을 1초로 설정
         scrollTimeout = 1000;
       }
       setTimeout(() => {
@@ -67,7 +66,7 @@ const router = createRouter({
           resolve(savedPosition);
         } else {
           if (to.hash) {
-            // console.log('to.hash: ' + to.hash);
+            // 헤더 영역의 높이를 감안해서 top을 80 설정
             resolve({ el: to.hash, behavior: 'smooth', top: 80 });
           }
           resolve({ left: 0, top: 0 });
@@ -77,7 +76,6 @@ const router = createRouter({
   },
 });
 
-// @ts-ignore
 router.beforeEach((to, from, next) => {
   const { setLoading } = spinnerControl();
 

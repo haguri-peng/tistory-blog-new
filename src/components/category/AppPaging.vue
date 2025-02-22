@@ -1,5 +1,6 @@
 <template>
   <div class="h-10 mb-5 inline-flex items-center">
+    <!-- First -->
     <font-awesome-icon
       icon="fa-solid fa-backward"
       size="lg"
@@ -14,6 +15,7 @@
       v-if="showPreviousIcon"
       @click="clickFirstPage"
     />
+    <!-- Previous page's range -->
     <font-awesome-icon
       icon="fa-solid fa-backward-step"
       size="lg"
@@ -28,6 +30,7 @@
       v-if="showPreviousIcon"
       @click="clickPreviousPage"
     />
+    <!-- Page numbers -->
     <div class="pages">
       <span
         v-for="n in showPageCnt"
@@ -46,6 +49,7 @@
         </a>
       </span>
     </div>
+    <!-- Next page -->
     <font-awesome-icon
       icon="fa-solid fa-forward-step"
       size="lg"
@@ -60,6 +64,7 @@
       v-if="showNextIcon"
       @click="clickNextPage"
     />
+    <!-- Last page's range -->
     <font-awesome-icon
       icon="fa-solid fa-forward"
       size="lg"
@@ -92,7 +97,7 @@ const emit = defineEmits<{
   movePage: [pageNum?: number];
 }>();
 
-const showPageCnt = 5;
+const showPageCnt = 5; // page's range (e.g. [1 2 3 4 5])
 const showPreviousIcon = computed(() => page.value.currentPage > showPageCnt);
 const showNextIcon = computed(
   () =>

@@ -28,19 +28,18 @@ const getUnescapedTitle = computed(() => unescape(title.value));
 const content = ref('');
 const fetchNotice = async () => {
   const { data: sHtml } = await getNotice(noticeId.value);
-  // console.log(sHtml);
 
   // htmlparser
   const dom = htmlparser2.parseDocument(sHtml);
   if (dom != null) {
-    const elHtml = find(dom.children, (c: cheerio.Element) => c.type == 'tag');
-    // console.log(elHtml);
+    const elHtml = find(
+      dom.children,
+      (c: cheerio.Element) => c.type == 'tag',
+    ) as cheerio.AnyNode;
 
     if (elHtml != null && elHtml != undefined) {
-      // @ts-ignore
       const $ = cheerio.load(elHtml);
       const $mainContent = $('#mainContent');
-      // console.log($$mainContent);
 
       // Title
       const titleEl = $mainContent.find('.tit_blogview');

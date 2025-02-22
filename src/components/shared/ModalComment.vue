@@ -8,6 +8,7 @@
     <div class="wrapper text-black">
       <div class="p-5">
         <div class="text-3xl font-bold mb-5">【{{ title }}】</div>
+        <!-- Blog name (댓글 시에만 보이도록 설정) -->
         <input
           v-if="type === 'comment'"
           type="text"
@@ -20,17 +21,20 @@
             padding: 0 5px;
           "
         />
+        <!-- Comment -->
         <textarea
           v-model="comment"
           rows="5"
           placeholder="Insert your comment"
           style="font-size: 1rem; width: 97.4%; resize: none; padding: 5px"
         ></textarea>
+        <!-- Secret checkbox -->
         <label for="check">
           <input type="checkbox" id="check" v-model="arrChk" value="secret" />
           secret
         </label>
       </div>
+      <!-- Buttons -->
       <div class="actions flex justify-end">
         <button class="btn submit bg-violet-300" @click="submit">등록</button>
         <button class="btn close bg-violet-500" @click="close">닫기</button>

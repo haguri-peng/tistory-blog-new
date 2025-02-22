@@ -1,5 +1,5 @@
 <template>
-  <div ref="divMain">
+  <div>
     <div>Haguri & Peng's Blog</div>
     <div>
       <img
@@ -11,11 +11,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref } from 'vue';
-
-const divMain = ref<HTMLDivElement>();
-</script>
+<script setup lang="ts"></script>
 
 <style scoped>
 div {

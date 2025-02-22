@@ -24,8 +24,6 @@
     <div class="text-left">
       <ul class="list-none pl-2" style="border-left: 2px solid #df7861">
         <li v-for="heading in headings" :key="heading.id">
-          <!-- :href="`#${heading.id}`" -->
-          <!--@click.prevent="$router.push(`#${heading.id}`)" -->
           <a
             :data-url="`#${heading.id}`"
             :class="{
@@ -93,6 +91,7 @@
     <!-- 인기 Post -->
     <AppRelatedPost :postType="'popular'" @moveContent="moveContent" />
 
+    <!-- Tags -->
     <div class="tags">
       Tags
       <font-awesome-icon icon="fa-solid fa-tags" class="mr-5" />
@@ -106,6 +105,7 @@
       </span>
     </div>
 
+    <!-- 댓글 -->
     <div class="comments">
       <p>
         {{ comments.length }} Comments
@@ -195,7 +195,9 @@
       </div>
     </div>
 
+    <!-- Icons -->
     <div class="top-down" v-show="isContent">
+      <!-- Top icon -->
       <div @click="gotoTop" class="mb-5">
         <font-awesome-icon
           icon="fa-solid fa-circle-up"
@@ -205,6 +207,7 @@
           style="cursor: pointer"
         />
       </div>
+      <!-- Reaction icon -->
       <div class="mt-3">
         <font-awesome-layers full-width class="fa-xl">
           <font-awesome-icon
@@ -237,6 +240,7 @@
           />
         </font-awesome-layers>
       </div>
+      <!-- Comment icon -->
       <div @click="gotoComments" class="mt-3">
         <font-awesome-layers full-width class="fa-xl">
           <font-awesome-icon
@@ -286,7 +290,7 @@ import AppComment from '@/components/content/AppComment.vue';
 import AppRelatedPost from '@/components/content/AppRelatedPost.vue';
 import RecentTagModal from '@/components/content/RecentTagModal.vue';
 
-import { /*insertComment, modifyComment,*/ deleteComment } from '@/api/index';
+import { deleteComment } from '@/api/index';
 import {
   getPostInfo,
   searchReaction,
@@ -341,7 +345,6 @@ const setCategoryName = () => {
 };
 
 const postId = ref('');
-// let tags: string[] = reactive([]);
 let tags: string[] = [];
 const date = ref('');
 const acceptComment = ref(false);
@@ -349,19 +352,18 @@ const acceptComment = ref(false);
 const getContent = async () => {
   postId.value = route.params.id.toString();
   const { data: sHtml } = await getPostInfo(postId.value);
-  // console.log(sHtml);
 
   // htmlparser
   const dom = htmlparser2.parseDocument(sHtml);
   if (dom != null) {
-    const elHtml = find(dom.children, (c: cheerio.Element) => c.type == 'tag');
-    // console.log(elHtml);
+    const elHtml = find(
+      dom.children,
+      (c: cheerio.Element) => c.type == 'tag',
+    ) as cheerio.AnyNode;
 
-    // @ts-ignore
     const $$ = cheerio.load(elHtml);
     const $$main = $$('main.doc-main');
     const $$mainContent = $$('#mainContent');
-    // console.log($$mainContent);
 
     // Title
     const titleEl = $$mainContent.find('.tit_blogview');
@@ -446,8 +448,6 @@ const hideModal = async (action: string, objData?: CommentPost) => {
 
   // 댓글 등록 및 수정
   if (action == 'submit') {
-    // objData!.postId = postId.value;
-
     try {
       // 등록
       const { data } = await postComment(postId.value, objData!);
@@ -457,27 +457,6 @@ const hideModal = async (action: string, objData?: CommentPost) => {
       } else {
         alert('댓글 등록이 실패하였습니다.');
       }
-
-      // if (!isNullStr(objData!.commentId)) {
-      //   // 수정
-      //   const { data } = await modifyComment(objData!);
-      //   if (data.tistory.status == '200') {
-      //     alert('댓글이 수정되었습니다.');
-      //     getComments();
-      //   } else {
-      //     alert(data.tistory.result);
-      //   }
-      // } else {
-      //   // 등록
-      //   const { data } = await insertComment(objData!);
-      //   if (data.tistory.status == '200') {
-      //     alert('댓글이 등록되었습니다.');
-      //     getComments();
-      //     setHeight();
-      //   } else {
-      //     alert(data.tistory.result);
-      //   }
-      // }
     } catch (err) {
       if (axios.isAxiosError<AxiosResponse>(err)) {
         alert(err.message);
@@ -542,20 +521,13 @@ const setAsideSection = async () => {
 
   currentObserver = setupObserver();
 
-  // Array.from(document.querySelectorAll('h2, h3, h4')).map(
-  //   (heading: Element) => {
-  //     headings.push({
-  //       id: heading.id,
-  //       text: heading.textContent || '',
-  //     });
-  //     currentObserver.observe(heading);
-  //   },
-  // );
   Array.from(document.querySelectorAll('div')).map((div: Element) => {
+    // 블로그 작성 글에서 'haguri'란 클래스를 확인
+    // 다음 형태로 글이 작성되어야 Aside 영역에 제대로 적용됩니다.
+    // <div id="title_1" class="haguri"> ... </div>
     if (div.className == 'haguri') {
       headings.push({
         id: div.id,
-        // text: div.textContent || '',
         text: div.querySelector('h2, h3, h4')?.textContent || '',
       });
       currentObserver.observe(div);
@@ -570,7 +542,6 @@ function setupObserver() {
   const options = {
     root: null, // viewport 기준
     rootMargin: `-${headerHeight + 10}px 0px -${viewportHeight - headerHeight}px 0px`,
-    // rootMargin: `-${headerHeight + 10}px 0px 0px 0px`,
     threshold: [0, 1], // 조금이라도 보이거나 다 안 보일 때 콜백 실행
   };
 
@@ -587,9 +558,7 @@ function setupObserver() {
 }
 function scrollToSection(evt: MouseEvent) {
   const el = evt.target as HTMLElement;
-  // const targetId = el.getAttribute('href') || ''
   const targetId = el.getAttribute('data-url') || '';
-  // router.push({ hash: targetId.slice(1) });
   router.push({ hash: targetId });
 }
 
@@ -678,7 +647,6 @@ div.content {
   padding: 10px;
   top: 60px;
   width: 65%;
-  /* background-color: rgba(144, 200, 172, 0.3); */
   animation-name: fadeInUp;
   animation-duration: 1.1s;
 }

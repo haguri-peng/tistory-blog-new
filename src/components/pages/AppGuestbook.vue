@@ -1,5 +1,6 @@
 <template>
   <div class="absolute top-24 w-3/5" ref="guestbook">
+    <!-- Title -->
     <h2>
       【 Guest Book
       <span class="text-xl align-top" style="color: orangered">
@@ -11,6 +12,8 @@
         작성
       </button>
     </h2>
+
+    <!-- 방명록 -->
     <div class="mt-8 text-base">
       <div v-for="item in gbList" :key="item.id">
         <div v-if="reqUserRole == 'owner' || !item.isSecret">
@@ -63,7 +66,7 @@ import {
   postGuestbook,
 } from '@/api/posts';
 import { Guestbook, GuestbookPost } from '@/types';
-import { handleNewLine, css } from '@/utils/utils';
+import { handleNewLine, css, isNullStr } from '@/utils/utils';
 
 const reqUserId = ref(0);
 const reqUserRole = ref('');
@@ -105,6 +108,7 @@ const getCount = async () => {
 };
 
 const guestbook = ref<HTMLInputElement>();
+// 방명록 개수에 따라 높이 설정
 const setAppHeight = () => {
   const elApp = document.querySelector('#app') as HTMLElement;
   const top = 100;
@@ -159,7 +163,7 @@ const closeModal = async (
 };
 
 const moveUrl = (url: string) => {
-  if (url != '') {
+  if (!isNullStr(url)) {
     window.open(url, '_blank');
   }
 };

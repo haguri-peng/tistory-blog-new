@@ -1,5 +1,6 @@
 <template>
   <div class="app">
+    <!-- Header -->
     <AppHeader
       :categoryList="category"
       @moveCategory="moveCategory"
@@ -54,7 +55,6 @@ const moveCategory = (categoryId: string, categoryPath: string) => {
 
 const fetchBlogRss = async () => {
   const { data: sXml } = await getBlogRss();
-  // console.log(sXml);
 
   // htmlparser
   const dom = htmlparser2.parseDocument(sXml);
@@ -62,14 +62,13 @@ const fetchBlogRss = async () => {
     const elHtml = find(
       dom.children,
       (c: cheerio.Element) => c.type == 'tag' && c.tagName == 'rss',
-    );
-    // console.log(elHtml);
+    ) as cheerio.AnyNode;
 
-    // @ts-ignore
     const $ = cheerio.load(elHtml);
     const $item = $('item:lt(10)');
     const arrTmpTags: string[] = [];
-    // @ts-ignore
+
+    // @ts-expect-error
     $item.each(function (i, el) {
       const $category = $(el).find('category').not(':first');
       $category.each(function () {
@@ -110,6 +109,7 @@ const closeSearchModal = (type: string, keyword?: string) => {
 const domain = 'https://haguri-peng.tistory.com';
 const testDomain = 'http://localhost:5173';
 onBeforeMount(async () => {
+  // Mobile 기기이면, Mobile page로 이동
   if (isMobile()) {
     const path = location.href.replace(domain, '').replace(testDomain, '');
     location.href = domain + '/m' + path;

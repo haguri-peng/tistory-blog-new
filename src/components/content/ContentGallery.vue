@@ -40,10 +40,11 @@ const emit = defineEmits<{
 
 let lightbox;
 const imageDatas: ImageInfo[] = reactive([]);
+
 onMounted(() => {
+  // 작성한 글에 있는 이미지 Elements를 추출한 다음, PhotoSwipe를 이용하여 이미지갤러리를 생성
   setTimeout(() => {
     const dom = htmlparser2.parseDocument(content.value);
-    // console.log(dom);
 
     if (dom != null) {
       // Image Elements
@@ -74,6 +75,7 @@ onMounted(() => {
           ),
         (children) => map(children, (el) => el.children[0]),
       ]);
+
       const filteredImg = imgFlow(dom.children);
       imgEls.push(...filteredImg);
 
@@ -86,13 +88,11 @@ onMounted(() => {
           objImgInfo.height = el.children[0].attribs['data-origin-height'];
           imageDatas.push(objImgInfo);
         });
-        // console.log(imageDatas);
 
         if (!lightbox) {
           lightbox = new PhotoSwipeLightbox({
             gallery: '#content-gallery',
             children: 'a',
-            // pswpModule: () => import('photoswipe'),
             pswpModule: PhotoSwipe,
           });
           lightbox.init();

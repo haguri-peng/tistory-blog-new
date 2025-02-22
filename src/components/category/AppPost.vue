@@ -3,6 +3,7 @@
     <span class="post-id">ID: {{ postItem.id }}</span>
     <span class="post-title">
       <span>{{ postItem.title }}</span>
+      <!-- 댓글이 없으면, 댓글 Icon을 숨김 -->
       <span
         class="text-base ml-1"
         :class="{ hide: Number(postItem.comments) == 0 }"
@@ -34,7 +35,6 @@ const emit = defineEmits<{
   openContent: [id: string];
 }>();
 
-// methods
 const clickPost = (postId: string) => {
   emit('openContent', postId);
 };
@@ -44,10 +44,8 @@ const clickPost = (postId: string) => {
 li {
   display: table;
   width: 100%;
-  /* border: 3px solid #73a9ad; */
   font-size: 1.5rem;
   margin: 2px 10px;
-  /* opacity: 0.8; */
 }
 li:hover {
   color: #df7861;

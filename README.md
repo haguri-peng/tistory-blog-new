@@ -6,6 +6,7 @@
 
 ## ✐ Changelog
 
+- 2025/2/22 소스 정비 및 주석 구체화
 - 2024/11/20 날짜 관련 라이브러리 변경 (Moment.js -> date-fns)
 - 2024/11/10 Content에서 현재 활성화(active) 중인 aside 영역에 underline 설정
 - 2024/10/11 댓글 모달에서 ESC 키를 누르면 닫히도록 설정. 열릴 때 focus 설정
@@ -146,9 +147,20 @@ If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has a
    2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
 2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
 
+## Dev Server
+
+```shell
+npm run dev
+```
+
 ## 🏗️ Build & Deploy
 
-`npm run build`
+```shell
+npm run build
+
+# 아래 명령어를 실행하면 postbuild가 실행되지 않고 빌드만 진행합니다.
+npm run buildOnly
+```
 
 정상적으로 빌드되면, `dist` 폴더에 관련 파일들이 생성되는데, `index.html` 파일과 `/images` 폴더 내에 있는 파일을 모두 스킨에 업로드해야 합니다.
 
