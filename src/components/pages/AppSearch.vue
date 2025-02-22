@@ -1,5 +1,6 @@
 <template>
   <div class="search-area">
+    <!-- Title -->
     <div
       class="text-2xl font-bold text-left pl-2 pr-2"
       style="border-bottom: 1px solid purple"
@@ -13,6 +14,7 @@
       <span>({{ total }})</span>
     </div>
 
+    <!-- List -->
     <div v-for="item in items" :key="item.id">
       <div
         class="tag-item"
@@ -32,6 +34,7 @@
       </div>
     </div>
 
+    <!-- Next icon (spinner) -->
     <div
       style="
         height: 50px;
@@ -62,7 +65,7 @@ import { searchTags, searchPosts } from '@/api/posts';
 import { SearchInfo } from '@/types';
 import { isNullStr } from '@/utils/utils';
 
-import { debounce } from 'lodash-es';
+import { throttle } from 'lodash-es';
 
 const route = useRoute();
 const paramType = computed(() => (route.params.type || '').toString());
@@ -112,8 +115,8 @@ const initData = () => {
   showNextIcon.value = false;
 };
 
-function searchDebounce() {
-  return debounce(() => {
+function searchThrottle() {
+  return throttle(() => {
     if (isLast.value) {
       showNextIcon.value = false;
       return;
@@ -134,11 +137,10 @@ function searchDebounce() {
 }
 onMounted(() => {
   search(paramType.value, paramKeyword.value);
-
-  window.addEventListener('scroll', searchDebounce());
+  window.addEventListener('scroll', searchThrottle());
 });
 onUnmounted(() => {
-  window.removeEventListener('scroll', searchDebounce());
+  window.removeEventListener('scroll', searchThrottle());
 });
 </script>
 
