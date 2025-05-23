@@ -30,10 +30,12 @@ import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
 import { find } from 'lodash-es';
-import * as htmlparser2 from 'htmlparser2';
-import * as cheerio from 'cheerio';
+// import * as htmlparser2 from 'htmlparser2';
+// import * as cheerio from 'cheerio';
 
-import { getFirstPostListByCategory, getPostListByCategory } from '@/api/posts';
+import {
+  /*getFirstPostListByCategory,*/ getPostListByCategory,
+} from '@/api/posts';
 import { PageInfo, PostInfo } from '@/types';
 import { useCategoryStore } from '@/store/category';
 import { isNullStr } from '@/utils/utils';
@@ -99,68 +101,68 @@ const fetchPostListByCategory = async (pageNum?: number) => {
   setCategoryInfo({ id: getCategoryId.value, page: pageInfo.currentPage });
 
   // Post 정보
-  if (pageInfo.currentPage == 1) {
-    const { data: sHtml } = await getFirstPostListByCategory(
-      getCategoryPath(getCategoryId.value),
-    );
+  // if (pageInfo.currentPage == 1) {
+  //   const { data: sHtml } = await getFirstPostListByCategory(
+  //     getCategoryPath(getCategoryId.value),
+  //   );
 
-    // htmlparser
-    const dom = htmlparser2.parseDocument(sHtml);
-    if (dom != null) {
-      const elHtml = find(
-        dom.children,
-        (c: cheerio.Element) => c.type == 'tag',
-      ) as cheerio.AnyNode;
+  //   // htmlparser
+  //   const dom = htmlparser2.parseDocument(sHtml);
+  //   if (dom != null) {
+  //     const elHtml = find(
+  //       dom.children,
+  //       (c: cheerio.Element) => c.type == 'tag',
+  //     ) as cheerio.AnyNode;
 
-      if (elHtml != null && elHtml != undefined) {
-        const $ = cheerio.load(elHtml);
-        const $listPost = $('ul.list_post').eq(0);
+  //     if (elHtml != null && elHtml != undefined) {
+  //       const $ = cheerio.load(elHtml);
+  //       const $listPost = $('ul.list_post').eq(0);
 
-        // @ts-expect-error
-        // 10개만 가져오기
-        $listPost.find('li:lt(10)').each(function (i, elem) {
-          const visibility = $(elem)
-            .find('span.ico_entry')
-            .data('visibility') as string;
-          if (visibility != 'PUBLIC') return true;
+  //       // @ts-expect-error
+  //       // 10개만 가져오기
+  //       $listPost.find('li:lt(10)').each(function (i, elem) {
+  //         const visibility = $(elem)
+  //           .find('span.ico_entry')
+  //           .data('visibility') as string;
+  //         if (visibility != 'PUBLIC') return true;
 
-          const id = $(elem).find('a').attr('href')!.replace('/m/', '');
-          const title = $(elem).find('strong.tit_blog').text();
-          const comments = $(elem)
-            .find('span.link_comment')
-            .find('span.txt_btn')
-            .text();
-          const date = $(elem).find('span.txt_date').text();
+  //         const id = $(elem).find('a').attr('href')!.replace('/m/', '');
+  //         const title = $(elem).find('strong.tit_blog').text();
+  //         const comments = $(elem)
+  //           .find('span.link_comment')
+  //           .find('span.txt_btn')
+  //           .text();
+  //         const date = $(elem).find('span.txt_date').text();
 
-          const objPostInfo: PostInfo = {
-            id,
-            title,
-            postUrl: 'https://haguri-peng.tistory.com/',
-            visibility,
-            categoryId: getCategoryId.value,
-            comments,
-            trackbacks: '',
-            date,
-          };
-          postList.push(objPostInfo);
-        });
-      }
-    }
-  } else {
-    for (const post of data.data.items) {
-      const objPostInfo: PostInfo = {
-        id: post.id.toString(),
-        title: post.title,
-        postUrl: post.url,
-        visibility: post.visibility,
-        categoryId: post.categoryId.toString(),
-        comments: post.commentCount.toString(),
-        trackbacks: '',
-        date: post.published,
-      };
-      postList.push(objPostInfo);
-    }
+  //         const objPostInfo: PostInfo = {
+  //           id,
+  //           title,
+  //           postUrl: 'https://haguri-peng.tistory.com/',
+  //           visibility,
+  //           categoryId: getCategoryId.value,
+  //           comments,
+  //           trackbacks: '',
+  //           date,
+  //         };
+  //         postList.push(objPostInfo);
+  //       });
+  //     }
+  //   }
+  // } else {
+  for (const post of data.data.items) {
+    const objPostInfo: PostInfo = {
+      id: post.id.toString(),
+      title: post.title,
+      postUrl: post.url,
+      visibility: post.visibility,
+      categoryId: post.categoryId.toString(),
+      comments: post.commentCount.toString(),
+      trackbacks: '',
+      date: post.published,
+    };
+    postList.push(objPostInfo);
   }
+  // }
 };
 
 onMounted(() => {
