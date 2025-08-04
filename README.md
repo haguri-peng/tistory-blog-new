@@ -6,6 +6,7 @@
 
 ## ✐ Changelog
 
+- 2025/8/4 Custom Cursor 적용
 - 2025/2/22 소스 정비 및 주석 구체화
 - 2024/11/20 날짜 관련 라이브러리 변경 (Moment.js -> date-fns)
 - 2024/11/10 Content에서 현재 활성화(active) 중인 aside 영역에 underline 설정

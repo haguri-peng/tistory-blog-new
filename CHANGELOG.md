@@ -1,5 +1,9 @@
 # Changelog
 
+## 2025-08
+
+- 검색어 입력 Dialog에 Custom Cursor 적용
+
 ## 2025-02
 
 - 소스 및 주석 정비
