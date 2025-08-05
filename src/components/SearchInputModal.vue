@@ -41,7 +41,7 @@ const searchKeyword = async () => {
   await nextTick();
 
   if (inputKeyword.value == '') {
-    alert('검색어를 입력해주세요.');
+    // alert('검색어를 입력해주세요.');
     searchInput.value!.focus();
     return;
   }
@@ -49,7 +49,7 @@ const searchKeyword = async () => {
   emit('closeSearchModal', 'search', inputKeyword.value);
   resetData();
 };
-const throttleSearch = throttle(searchKeyword, 300);
+const throttleSearch = throttle(searchKeyword, 100);
 
 const dialogState = ref(false);
 const close = () => {
