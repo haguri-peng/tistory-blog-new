@@ -15,6 +15,9 @@
 
     <!-- Search Modal -->
     <SearchInputModal :showSearch @closeSearchModal="closeSearchModal" />
+
+    <!-- vue3-snackbar -->
+    <vue3-snackbar shadow />
   </div>
 </template>
 

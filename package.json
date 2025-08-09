@@ -26,7 +26,8 @@
     "pinia": "^2.1.7",
     "tistory-skin": "^2.1.0",
     "vue": "^3.4.13",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "vue3-snackbar": "^2.5.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.23.3",

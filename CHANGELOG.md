@@ -3,6 +3,7 @@
 ## 2025-08
 
 - 검색어 입력 Dialog에 Custom Cursor 적용
+- Vue3 Snackbar 적용
 
 ## 2025-02
 

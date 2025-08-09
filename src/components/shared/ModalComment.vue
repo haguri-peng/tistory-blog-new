@@ -46,6 +46,8 @@
 <script setup lang="ts">
 import { ref, reactive, watch } from 'vue';
 
+import { useSnackbarStore } from '@/store/snackbar';
+
 const showModal = defineModel<boolean>('showModal', { required: true });
 const type = defineModel<string>('type', { required: true });
 
@@ -67,17 +69,26 @@ if (type.value == 'comment') {
   title.value = '방명록';
 }
 
+const snackbarStore = useSnackbarStore();
 const blogName = ref('');
 const comment = ref('');
 let arrChk = reactive([]);
 const submit = () => {
   // input validation
   if (type.value == 'comment' && blogName.value == '') {
-    alert('블로그 주소는 필수입니다.');
+    //alert('블로그 주소는 필수입니다.');
+    snackbarStore.show({
+      type: 'warning',
+      text: '블로그 주소는 필수입니다.',
+    });
     return;
   }
   if (comment.value == '') {
-    alert('입력된 내용이 없습니다.');
+    //alert('입력된 내용이 없습니다.');
+    snackbarStore.show({
+      type: 'warning',
+      text: '입력된 내용이 없습니다.',
+    });
     return;
   }
 

@@ -6,12 +6,11 @@
 
 ## ✐ Changelog
 
+- 2025/8/9 Vue3 Snackbar 적용
 - 2025/8/4 Custom Cursor 적용
 - 2025/2/22 소스 정비 및 주석 구체화
 - 2024/11/20 날짜 관련 라이브러리 변경 (Moment.js -> date-fns)
 - 2024/11/10 Content에서 현재 활성화(active) 중인 aside 영역에 underline 설정
-- 2024/10/11 댓글 모달에서 ESC 키를 누르면 닫히도록 설정. 열릴 때 focus 설정
-- 2024/10/3 빌드된 파일을 블로그에 자동으로 업로드할 수 있도록 스크립트 반영
 
 ## <img src="./public/vue.svg" width="20px" height="20px"></img> Vue
 

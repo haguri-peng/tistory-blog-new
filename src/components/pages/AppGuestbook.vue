@@ -67,6 +67,7 @@ import {
 } from '@/api/posts';
 import { Guestbook, GuestbookPost } from '@/types';
 import { handleNewLine, css, isNullStr } from '@/utils/utils';
+import { useSnackbarStore } from '@/store/snackbar';
 
 const reqUserId = ref(0);
 const reqUserRole = ref('');
@@ -115,13 +116,18 @@ const setAppHeight = () => {
   css(elApp, { height: guestbook.value!.clientHeight + top + 'px' });
 };
 
+const snackbarStore = useSnackbarStore();
 const showModal = ref(false);
 const type = ref('guestbook');
 const addGuestbook = () => {
   // @ts-ignore
   const { user } = window.initData;
   if (user == null || user == undefined) {
-    alert('로그인이 필요합니다.');
+    //alert('로그인이 필요합니다.');
+    snackbarStore.show({
+      type: 'warning',
+      text: '로그인이 필요합니다.',
+    });
     return;
   }
   showModal.value = true;
@@ -138,7 +144,11 @@ const closeModal = async (
       // @ts-ignore
       const { user } = window.initData;
       if (user == null || user == undefined) {
-        alert('로그인이 필요합니다.');
+        //alert('로그인이 필요합니다.');
+        snackbarStore.show({
+          type: 'warning',
+          text: '로그인이 필요합니다.',
+        });
         return;
       }
 
@@ -151,13 +161,25 @@ const closeModal = async (
 
       const { data } = await postGuestbook(postData);
       if (data != null && data != undefined) {
-        alert('정상적으로 등록되었습니다.');
+        //alert('정상적으로 등록되었습니다.');
+        snackbarStore.show({
+          type: 'success',
+          text: '정상적으로 등록되었습니다.',
+        });
         getData();
       } else {
-        alert('에러가 발생하였습니다.');
+        //alert('에러가 발생하였습니다.');
+        snackbarStore.show({
+          type: 'error',
+          text: '에러가 발생하였습니다.',
+        });
       }
     } catch (err) {
-      alert('에러가 발생하였습니다.');
+      //alert('에러가 발생하였습니다.');
+      snackbarStore.show({
+        type: 'error',
+        text: '에러가 발생하였습니다.',
+      });
     }
   }
 };

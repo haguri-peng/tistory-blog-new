@@ -303,6 +303,7 @@ import {
 import { Comment, CommentInput, CommentPost, HeadingTagInfo } from '@/types';
 import { useCategoryStore } from '@/store/category';
 import { useCommentStore } from '@/store/comment';
+import { useSnackbarStore } from '@/store/snackbar';
 import { isNullStr, commentReduce, handleNewLine, toggle } from '@/utils/utils';
 
 const route = useRoute();
@@ -418,6 +419,7 @@ const getContent = async () => {
   }
 };
 
+const snackbarStore = useSnackbarStore();
 const comments: Comment[] = reactive([]);
 const getComments = async () => {
   comments.length = 0;
@@ -432,12 +434,20 @@ const addComment = () => {
   // @ts-ignore
   const { user } = window.initData;
   if (user == null || user == undefined) {
-    alert('로그인이 필요합니다.');
+    //alert('로그인이 필요합니다.');
+    snackbarStore.show({
+      type: 'warning',
+      text: '로그인이 필요합니다.',
+    });
     return;
   }
 
   if (!acceptComment.value) {
-    alert('댓글이 허용되지 않는 글입니다.');
+    //alert('댓글이 허용되지 않는 글입니다.');
+    snackbarStore.show({
+      type: 'warning',
+      text: '댓글이 허용되지 않는 글입니다.',
+    });
     return;
   }
 
@@ -452,14 +462,26 @@ const hideModal = async (action: string, objData?: CommentPost) => {
       // 등록
       const { data } = await postComment(postId.value, objData!);
       if (data.data.id != null) {
-        alert('댓글이 등록되었습니다.');
+        //alert('댓글이 등록되었습니다.');
+        snackbarStore.show({
+          type: 'success',
+          text: '댓글이 등록되었습니다.',
+        });
         getComments();
       } else {
-        alert('댓글 등록이 실패하였습니다.');
+        //alert('댓글 등록이 실패하였습니다.');
+        snackbarStore.show({
+          type: 'error',
+          text: '댓글 등록이 실패하였습니다.',
+        });
       }
     } catch (err) {
       if (axios.isAxiosError<AxiosResponse>(err)) {
-        alert(err.message);
+        //alert(err.message);
+        snackbarStore.show({
+          type: 'error',
+          text: err.message,
+        });
       }
     }
   }
@@ -490,7 +512,11 @@ const delComment = async (commentId: string, homepage: string) => {
     try {
       const { data } = await deleteComment(objData);
       if (data.tistory.status == '200') {
-        alert('댓글이 삭제되었습니다.');
+        //alert('댓글이 삭제되었습니다.');
+        snackbarStore.show({
+          type: 'success',
+          text: '댓글이 삭제되었습니다.',
+        });
 
         getComments();
       } else {
@@ -498,7 +524,11 @@ const delComment = async (commentId: string, homepage: string) => {
       }
     } catch (err) {
       if (axios.isAxiosError<AxiosResponse>(err)) {
-        alert(err.message);
+        //alert(err.message);
+        snackbarStore.show({
+          type: 'error',
+          text: err.message,
+        });
       }
     }
   }

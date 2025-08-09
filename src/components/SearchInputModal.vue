@@ -29,6 +29,7 @@ import { ref, defineModel, watch, nextTick, onUpdated } from 'vue';
 import { css } from '@/utils/utils';
 
 import { throttle } from 'lodash-es';
+import { useSnackbarStore } from '@/store/snackbar';
 
 const showSearch = defineModel<boolean>('showSearch', { required: true });
 
@@ -36,12 +37,17 @@ const emit = defineEmits<{
   closeSearchModal: [type: string, keyword?: string];
 }>();
 
+const snackbarStore = useSnackbarStore();
 const inputKeyword = ref('');
 const searchKeyword = async () => {
   await nextTick();
 
   if (inputKeyword.value == '') {
     // alert('검색어를 입력해주세요.');
+    snackbarStore.show({
+      type: 'warning',
+      text: '검색어를 입력해주세요.',
+    });
     searchInput.value!.focus();
     return;
   }

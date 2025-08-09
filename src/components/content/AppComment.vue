@@ -50,6 +50,7 @@ import { getGuestbookInit } from '@/api/posts';
 import { GuestbookInitRes } from '@/api/axiosResTypes';
 import { CommentPost } from '@/types';
 import { useCommentStore } from '@/store/comment';
+import { useSnackbarStore } from '@/store/snackbar';
 import { isNullStr } from '@/utils/utils';
 
 const showModal = defineModel<boolean>('showModal', { required: true });
@@ -65,6 +66,7 @@ const getCommentId = computed(() => getCommentInfo.value.commentId);
 const getModComment = computed(() => getCommentInfo.value.modComment);
 const { clearCommentInfo } = commentStore;
 
+const snackbarStore = useSnackbarStore();
 const dialogState = ref(false);
 const blogName = ref('');
 const comment = ref('');
@@ -72,11 +74,19 @@ let arrChk = reactive([]);
 const mode = ref('');
 const submit = () => {
   if (blogName.value == '') {
-    alert('블로그 주소는 필수입니다.');
+    //alert('블로그 주소는 필수입니다.');
+    snackbarStore.show({
+      type: 'warning',
+      text: '블로그 주소는 필수입니다.',
+    });
     return;
   }
   if (comment.value == '') {
-    alert('댓글이 입력되지 않았습니다.');
+    //alert('댓글이 입력되지 않았습니다.');
+    snackbarStore.show({
+      type: 'warning',
+      text: '댓글이 입력되지 않았습니다.',
+    });
     return;
   }
 
